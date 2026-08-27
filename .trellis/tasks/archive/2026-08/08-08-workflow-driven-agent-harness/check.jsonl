@@ -1,0 +1,5 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/backend/agent-harness.md", "reason": "审查工具授权、持久化与恢复"}
+{"file": ".trellis/spec/backend/workflow-contract.md", "reason": "审查流程快照与 Guard 契约"}
+{"file": ".trellis/spec/frontend/agent-progress.md", "reason": "审查前端流程进度与工具轨迹"}
+{"file": ".trellis/spec/guides/prompt-cache.md", "reason": "审查静态提示词和固定工具前缀"}

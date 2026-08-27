@@ -1,0 +1,42 @@
+# === 密钥与本地环境（必须最先屏蔽）===
+.env
+.env.*
+!.env.example
+
+# === Python ===
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.pytest-*/
+.pytest-tmp-check/
+.ruff_cache/
+.mypy_cache/
+
+# === Node ===
+node_modules/
+dist/
+dist-ssr/
+.playwright-cli/
+*.local
+
+# === 运行产物 ===
+output/
+.tmp/
+.tmp-progress-cmp/
+*.log
+
+# === 打包产物 ===
+*.zip
+
+# === 编辑器与系统 ===
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# === Claude Code 本地配置（含机器专属权限，不共享）===
+.claude/settings.local.json

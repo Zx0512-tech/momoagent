@@ -1,0 +1,15 @@
+{
+  "template_status": "legacy",
+  "template_note": "Legacy OpenSees command-stream workflow retained for compatibility. Prefer openseespy_inproc_run_joint_baseline_workflow_template.json for current STbridge parity work.",
+  "baseline_config": "opensees_run_earthquake_baseline_template.json",
+  "optimization_config": "opensees_run_joint_optimization_template.json",
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/opensees_joint/workflow_summary.json"
+}

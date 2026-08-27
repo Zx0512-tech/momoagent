@@ -1,0 +1,5 @@
+! Unified transient solver block and postprocess handoff
+{{ ansys_solver_execution_commands }}
+! Standard summary extraction is handled by the configured Python postprocessor.
+! Expected response channels: key-node displacement, tower-girder relative displacement,
+! damper force, damper stroke, and optimization objective summaries.

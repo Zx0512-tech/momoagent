@@ -1,0 +1,49 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "gravity_accel_x": 0.0,
+      "gravity_accel_y": 9.8,
+      "gravity_accel_z": 0.0,
+      "gravity_substeps": "10,20,5",
+      "modal_modes": 50
+    }
+  },
+  "load_case": {
+    "name": "earthquake",
+    "load_type": "earthquake",
+    "path": "../../../analysis_data/earthquake_inputs/earthquake_acceleration_record.txt",
+    "scale": 1.0,
+    "dt": 0.01,
+    "duration": 40.0
+  },
+  "damper_params": {
+    "c": 20000.0,
+    "alpha": 0.5
+  },
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "run",
+    "execution_timeout_s": 1800,
+    "include_modal": true,
+    "damper_module": "damper_user300_viscous",
+    "damper_c_scale": 1000.0,
+    "omit_dampers": true,
+    "physical_count_per_tower": 2,
+    "mapdl_executable": "D:/Program Files/ANSYS Inc/v242/ansys/bin/winx64/MAPDL.exe",
+    "mapdl_args": ["-smp", "-db", "32"],
+    "mapdl_memory_mb": 512,
+    "nproc": 1,
+    "cleanup_artifact_suffixes_on_success": [".rst"],
+    "postprocessor": {
+      "mode": "ansys-dpf-rst",
+      "ansys_path": "D:/Program Files/ANSYS Inc/v242",
+      "response_nodes": [36, 107],
+      "response_component": 0,
+      "cumulative_displacement_node": 107,
+      "damper_c_scale": 1000.0
+    }
+  },
+  "summary_path": "../../../output/run_templates/ansys_r4_single_solver_c100_a010_20260712/undamped_earthquake_summary.json"
+}

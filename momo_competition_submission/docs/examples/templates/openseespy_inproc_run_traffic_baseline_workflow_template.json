@@ -1,0 +1,11 @@
+{
+  "baseline_config": "openseespy_inproc_run_traffic_baseline_template.json",
+  "optimization_config": "openseespy_inproc_run_traffic_optimization_template.json",
+  "baseline_objective_limits": {
+    "scenario": "traffic",
+    "objectives": [
+      "cumulative_displacement"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/openseespy_inproc_traffic/workflow_summary.json"
+}

@@ -1,0 +1,5 @@
+{"file": ".trellis/tasks/08-13-analysis-traffic-scenario/research/traffic-load-foundation.md", "reason": "交通荷载既有基础、风工况接入模式细节与合并注意事项;实现前必读"}
+{"file": ".trellis/spec/backend/real-execution-capabilities.md", "reason": "能力目录与创建前门禁契约;registry/contracts 改动必须遵守"}
+{"file": ".trellis/spec/backend/api-boundaries.md", "reason": "严格请求、荷载制品、Live 门与 preflight 约定"}
+{"file": ".trellis/spec/backend/workflow-contract.md", "reason": "冻结工作流、审批门与状态迁移契约"}
+{"file": ".trellis/spec/backend/agent-harness.md", "reason": "类型化工具、审批与审计契约;frozen_action 字段约束"}

@@ -1,0 +1,335 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "gravity_accel_x": 0.0,
+      "gravity_accel_y": 9.8,
+      "gravity_accel_z": 0.0,
+      "gravity_substeps": "10,20,5",
+      "modal_modes": 50,
+      "template_note": "Traffic damper optimization template. Single objective: girder-end cumulative displacement. The load case path, dt, duration and per-node traffic_load_mappings are supplied only by the approval-frozen load Artifact pair (dense matrix + node mapping); this template ships no bundled traffic record on purpose. No traffic_load_component is declared: a named component makes ansys_load_rendering render one TABLE for the whole component and silently discard the 163 per-node columns. Shear and moment are deliberately NOT optimization objectives.",
+      "traffic_load_nodes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        551,
+        552,
+        553,
+        554,
+        567,
+        568,
+        569,
+        570,
+        571,
+        572,
+        573,
+        574,
+        575,
+        576,
+        577,
+        578,
+        579,
+        580,
+        581,
+        582,
+        583,
+        584
+      ]
+    }
+  },
+  "load_cases": [
+    {
+      "name": "traffic",
+      "load_type": "traffic",
+      "scale": 1.0,
+      "direction": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      }
+    }
+  ],
+  "active_load_cases": [
+    "traffic"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "traffic",
+      "objective": "cumulative_displacement",
+      "weight": 1.0
+    }
+  ],
+  "objective_limit_relative_tolerance": 0.001,
+  "bounds": {
+    "c": [
+      1000.0,
+      10000.0
+    ],
+    "alpha": [
+      0.3,
+      1.0
+    ]
+  },
+  "steps": {
+    "c": 100.0,
+    "alpha": 0.1
+  },
+  "n_doe_samples": 15,
+  "n_candidates": 728,
+  "surrogate_cv": 10,
+  "n_validation_points": 2,
+  "max_validation_designs": 2,
+  "run_validation": true,
+  "max_validation_peak_relative_error": 0.05,
+  "max_active_learning_iterations": 2,
+  "run_review": true,
+  "review_reuse_doe_results": false,
+  "review_relative_error_limit": 0.05,
+  "max_review_iterations": 1,
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "run",
+    "execution_timeout_s": 7200,
+    "include_modal": false,
+    "interpolate_time_history_tables": true,
+    "damper_module": "damper_user300_viscous",
+    "damper_c_scale": 1000.0,
+    "omit_dampers": false,
+    "physical_count_per_tower": 2,
+    "mapdl_executable": "D:/Program Files/ANSYS Inc/v242/ansys/bin/winx64/MAPDL.exe",
+    "mapdl_args": [
+      "-smp",
+      "-db",
+      "32"
+    ],
+    "mapdl_memory_mb": 64,
+    "nproc": 1,
+    "postprocessor": {
+      "mode": "ansys-dpf-rst",
+      "ansys_path": "D:/Program Files/ANSYS Inc/v242",
+      "response_nodes": [
+        1,
+        72
+      ],
+      "response_component": 0,
+      "cumulative_displacement_node": 1,
+      "damper_c_scale": 1000.0
+    },
+    "damper_calibration": {
+      "status": "verified",
+      "source": "ansys_joint_template_acceptance",
+      "artifact_path": "calibration/ansys_damper_calibration.txt",
+      "sha256": "e67c2903af5a90442ac7e4710ab819865c55fd64b2e058c8f2ac5568d542e722"
+    }
+  },
+  "parallel": {
+    "enabled": true,
+    "max_workers": 4,
+    "license_limit": 4,
+    "mode": "thread"
+  },
+  "seed": 20260822,
+  "output_dir": "../../../output/run_templates/ansys_traffic",
+  "summary_path": "../../../output/run_templates/ansys_traffic/optimization_summary.json",
+  "doe_designs": [
+    {
+      "c": 5500.0,
+      "alpha": 0.65
+    },
+    {
+      "c": 1000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 1000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 10000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 10000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 4666.831363083998,
+      "alpha": 0.383285331343867
+    },
+    {
+      "c": 9869.142570757214,
+      "alpha": 0.44620329129541103
+    },
+    {
+      "c": 3053.061117643646,
+      "alpha": 0.7206206844670173
+    },
+    {
+      "c": 3984.1978713837793,
+      "alpha": 0.8163208843618066
+    },
+    {
+      "c": 8684.71289697595,
+      "alpha": 0.9880081485172785
+    },
+    {
+      "c": 7975.796664173724,
+      "alpha": 0.5773143121385871
+    },
+    {
+      "c": 1810.065602719387,
+      "alpha": 0.3116469416704264
+    },
+    {
+      "c": 6328.326304637085,
+      "alpha": 0.5808393775819686
+    },
+    {
+      "c": 7226.743414245342,
+      "alpha": 0.7155362338760141
+    },
+    {
+      "c": 2199.6671911068884,
+      "alpha": 0.9273778667355668
+    }
+  ]
+}

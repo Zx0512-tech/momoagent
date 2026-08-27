@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "objectives": {
+    "max_girder_end_displacement": 0.02,
+    "max_tower_base_moment": 180.0,
+    "max_tower_base_shear": 27.0
+  },
+  "metadata": {
+    "baseline_type": "undamped_smoke_placeholder",
+    "note": "Replace these smoke values with a real undamped ANSYS or OpenSees run summary before engineering use."
+  }
+}

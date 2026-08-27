@@ -1,0 +1,11 @@
+ANSYS joint workflow acceptance load-calibration evidence.
+
+Scope:
+- operation load combination in docs/examples/templates/ansys_run_joint_optimization_template.json
+- wind component scale 0.4
+- traffic component scale 0.6
+- MAPDL command-stream load modules wind.apdl and traffic.apdl
+- ANSYS DPF RST response extraction through ansys-dpf-rst postprocessor
+
+This artifact is used to make the run-mode workflow evidence explicit and
+hash-checkable. It is not a bridge-specific design-code calibration report.

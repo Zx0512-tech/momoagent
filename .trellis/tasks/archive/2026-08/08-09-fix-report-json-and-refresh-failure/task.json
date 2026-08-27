@@ -1,0 +1,29 @@
+{
+  "id": "fix-report-json-and-refresh-failure",
+  "name": "fix-report-json-and-refresh-failure",
+  "title": "修复报告 JSON 与刷新失败关闭",
+  "description": "阻止非有限浮点进入 JSON 报告，并让终态刷新异常持久化为不可重放的失败运行。",
+  "status": "completed",
+  "dev_type": "backend",
+  "scope": "agent-runtime-safety",
+  "package": null,
+  "priority": "P2",
+  "creator": "Zx",
+  "assignee": "Zx",
+  "createdAt": "2026-08-09",
+  "completedAt": "2026-08-09",
+  "branch": null,
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "08-09-harden-agent-runtime-and-live-integration",
+  "relatedFiles": [
+    "momo_competition_submission/momo_agent/backend/app/services/agent_service.py",
+    "momo_competition_submission/momo_agent/backend/tests/test_agent_runtime_safety.py"
+  ],
+  "notes": "",
+  "meta": {}
+}

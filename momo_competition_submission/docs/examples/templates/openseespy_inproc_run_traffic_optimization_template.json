@@ -1,0 +1,184 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "deck_nodes": [
+        1,
+        72
+      ],
+      "template_note": "Traffic damper optimization template for the in-process OpenSeesPy solver. Single objective: girder-end cumulative displacement. The load case path, dt, duration and per-node traffic_load_mappings are supplied only by the approval-frozen load Artifact pair (dense 163-column force matrix plus its node/column mapping); this template ships no bundled traffic record and no node list on purpose. traffic_load_mappings is written by the dispatcher with one entry per node, each carrying its own source_column and scale=1.0, because traffic is a moving load: every node owns an independent time history and the OpenSees traffic module would otherwise fall back to applying the whole matrix column at every node. response_nodes is narrowed to node 1 alone because the opensees-csv postprocessor has no cumulative_displacement_node selector: its displacement column is a step-wise max-abs envelope over response_nodes, so keeping node 72 here would silently redefine the objective the ANSYS side pins to node 1. Shear and moment are deliberately NOT optimization objectives."
+    }
+  },
+  "load_cases": [
+    {
+      "name": "traffic",
+      "load_type": "traffic",
+      "scale": 1.0,
+      "direction": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      }
+    }
+  ],
+  "active_load_cases": [
+    "traffic"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "traffic",
+      "objective": "cumulative_displacement",
+      "weight": 1.0
+    }
+  ],
+  "objective_limit_relative_tolerance": 0.001,
+  "bounds": {
+    "c": [
+      1000.0,
+      10000.0
+    ],
+    "alpha": [
+      0.3,
+      1.0
+    ]
+  },
+  "steps": {
+    "c": 100.0,
+    "alpha": 0.1
+  },
+  "n_doe_samples": 15,
+  "n_candidates": 728,
+  "surrogate_cv": 10,
+  "n_validation_points": 2,
+  "max_validation_designs": 2,
+  "run_validation": true,
+  "max_validation_peak_relative_error": 0.05,
+  "max_active_learning_iterations": 2,
+  "run_review": true,
+  "review_reuse_doe_results": false,
+  "review_relative_error_limit": 0.05,
+  "max_review_iterations": 1,
+  "solver": {
+    "type": "openseespy_inproc",
+    "execution_mode": "run",
+    "execution_timeout_s": 7200,
+    "include_modal": true,
+    "damper_module": "damper_viscous",
+    "omit_dampers": false,
+    "physical_count_per_tower": 2,
+    "damper_c_scale": 1000.0,
+    "damper_calibration": {
+      "status": "verified",
+      "source": "openseespy_inproc_joint_template_acceptance",
+      "artifact_path": "calibration/opensees_damper_calibration.txt",
+      "sha256": "ad8447bd1d96829c98c04f3b8e3f854ec3a1050aa2b508c43330f64e174aa9aa"
+    },
+    "model_path": "../../../bridge_models/stbridge_opensees/stbridge_opensees_modal_builder.py",
+    "response_nodes": [
+      1
+    ],
+    "response_dof": 1,
+    "tower_base_nodes": [
+      494,
+      495,
+      511,
+      512,
+      525,
+      528,
+      530,
+      532,
+      534,
+      536,
+      538,
+      540,
+      542,
+      544,
+      547,
+      550
+    ],
+    "tower_base_shear_dofs": [
+      1,
+      2
+    ],
+    "tower_base_moment_dofs": [
+      5,
+      6
+    ],
+    "postprocessor": {
+      "mode": "opensees-csv",
+      "source": "timeseries.csv"
+    }
+  },
+  "parallel": {
+    "enabled": true,
+    "max_workers": 4,
+    "license_limit": 4,
+    "mode": "process"
+  },
+  "seed": 20260822,
+  "output_dir": "../../../output/run_templates/openseespy_inproc_traffic",
+  "summary_path": "../../../output/run_templates/openseespy_inproc_traffic/optimization_summary.json",
+  "doe_designs": [
+    {
+      "c": 5500.0,
+      "alpha": 0.65
+    },
+    {
+      "c": 1000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 1000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 10000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 10000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 4666.831363083998,
+      "alpha": 0.383285331343867
+    },
+    {
+      "c": 9869.142570757214,
+      "alpha": 0.44620329129541103
+    },
+    {
+      "c": 3053.061117643646,
+      "alpha": 0.7206206844670173
+    },
+    {
+      "c": 3984.1978713837793,
+      "alpha": 0.8163208843618066
+    },
+    {
+      "c": 8684.71289697595,
+      "alpha": 0.9880081485172785
+    },
+    {
+      "c": 7975.796664173724,
+      "alpha": 0.5773143121385871
+    },
+    {
+      "c": 1810.065602719387,
+      "alpha": 0.3116469416704264
+    },
+    {
+      "c": 6328.326304637085,
+      "alpha": 0.5808393775819686
+    },
+    {
+      "c": 7226.743414245342,
+      "alpha": 0.7155362338760141
+    },
+    {
+      "c": 2199.6671911068884,
+      "alpha": 0.9273778667355668
+    }
+  ]
+}

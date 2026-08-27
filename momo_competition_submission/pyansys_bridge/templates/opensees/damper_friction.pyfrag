@@ -1,0 +1,5 @@
+# Friction damper module
+# damper_type={{ damper_type }}
+import openseespy.opensees as ops
+
+{{ damper_commands }}

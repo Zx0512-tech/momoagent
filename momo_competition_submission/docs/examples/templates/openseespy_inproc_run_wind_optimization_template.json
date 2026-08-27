@@ -1,0 +1,184 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "deck_nodes": [
+        36,
+        107
+      ],
+      "template_note": "Wind damper optimization template for the in-process OpenSeesPy solver. The load case path, dt and duration are supplied only by the approval-frozen load Artifact; this template ships no bundled wind record on purpose. wind_load_mappings is written by the dispatcher from the frozen target set, one entry per node with an explicit equal weight, because the OpenSees wind module would otherwise fall back to applying the full target-set force at every node."
+    }
+  },
+  "load_cases": [
+    {
+      "name": "wind",
+      "load_type": "wind",
+      "scale": 1.0,
+      "direction": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      }
+    }
+  ],
+  "active_load_cases": [
+    "wind"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "wind",
+      "objective": "cumulative_displacement",
+      "weight": 1.0
+    }
+  ],
+  "objective_limit_relative_tolerance": 0.001,
+  "bounds": {
+    "c": [
+      1000.0,
+      10000.0
+    ],
+    "alpha": [
+      0.3,
+      1.0
+    ]
+  },
+  "steps": {
+    "c": 100.0,
+    "alpha": 0.1
+  },
+  "n_doe_samples": 15,
+  "n_candidates": 728,
+  "surrogate_cv": 10,
+  "n_validation_points": 2,
+  "max_validation_designs": 2,
+  "run_validation": true,
+  "max_validation_peak_relative_error": 0.05,
+  "max_active_learning_iterations": 2,
+  "run_review": true,
+  "review_reuse_doe_results": false,
+  "review_relative_error_limit": 0.05,
+  "max_review_iterations": 1,
+  "solver": {
+    "type": "openseespy_inproc",
+    "execution_mode": "run",
+    "execution_timeout_s": 1800,
+    "include_modal": true,
+    "damper_module": "damper_viscous",
+    "omit_dampers": false,
+    "physical_count_per_tower": 2,
+    "damper_c_scale": 1000.0,
+    "damper_calibration": {
+      "status": "verified",
+      "source": "openseespy_inproc_joint_template_acceptance",
+      "artifact_path": "calibration/opensees_damper_calibration.txt",
+      "sha256": "ad8447bd1d96829c98c04f3b8e3f854ec3a1050aa2b508c43330f64e174aa9aa"
+    },
+    "model_path": "../../../bridge_models/stbridge_opensees/stbridge_opensees_modal_builder.py",
+    "response_nodes": [
+      107
+    ],
+    "response_dof": 1,
+    "tower_base_nodes": [
+      494,
+      495,
+      511,
+      512,
+      525,
+      528,
+      530,
+      532,
+      534,
+      536,
+      538,
+      540,
+      542,
+      544,
+      547,
+      550
+    ],
+    "tower_base_shear_dofs": [
+      1,
+      2
+    ],
+    "tower_base_moment_dofs": [
+      5,
+      6
+    ],
+    "postprocessor": {
+      "mode": "opensees-csv",
+      "source": "timeseries.csv"
+    }
+  },
+  "parallel": {
+    "enabled": true,
+    "max_workers": 4,
+    "license_limit": 4,
+    "mode": "process"
+  },
+  "seed": 20260822,
+  "output_dir": "../../../output/run_templates/openseespy_inproc_wind",
+  "summary_path": "../../../output/run_templates/openseespy_inproc_wind/optimization_summary.json",
+  "doe_designs": [
+    {
+      "c": 5500.0,
+      "alpha": 0.65
+    },
+    {
+      "c": 1000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 1000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 10000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 10000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 4666.831363083998,
+      "alpha": 0.383285331343867
+    },
+    {
+      "c": 9869.142570757214,
+      "alpha": 0.44620329129541103
+    },
+    {
+      "c": 3053.061117643646,
+      "alpha": 0.7206206844670173
+    },
+    {
+      "c": 3984.1978713837793,
+      "alpha": 0.8163208843618066
+    },
+    {
+      "c": 8684.71289697595,
+      "alpha": 0.9880081485172785
+    },
+    {
+      "c": 7975.796664173724,
+      "alpha": 0.5773143121385871
+    },
+    {
+      "c": 1810.065602719387,
+      "alpha": 0.3116469416704264
+    },
+    {
+      "c": 6328.326304637085,
+      "alpha": 0.5808393775819686
+    },
+    {
+      "c": 7226.743414245342,
+      "alpha": 0.7155362338760141
+    },
+    {
+      "c": 2199.6671911068884,
+      "alpha": 0.9273778667355668
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "full-live-agent-integration",
+  "name": "full-live-agent-integration",
+  "title": "完整接入智能体真实流程",
+  "description": "将五类智能体和独立工程入口接入共享的真实求解、结果、DOE、代理、主动学习、优化与证据执行链。",
+  "status": "in_progress",
+  "dev_type": "backend",
+  "scope": "full-live-agent-integration",
+  "package": null,
+  "priority": "P1",
+  "creator": "Zx",
+  "assignee": "Zx",
+  "createdAt": "2026-08-09",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "08-13-isolate-platform-placeholders",
+    "08-13-unlock-standalone-solver-batch",
+    "08-13-unlock-standalone-surrogate-learning",
+    "08-13-align-capability-scenario-matrix",
+    "08-13-browser-live-e2e",
+    "08-13-analysis-traffic-scenario",
+    "08-21-damper-sweep-concurrency-progress"
+  ],
+  "parent": null,
+  "relatedFiles": [
+    "momo_competition_submission/momo_agent/backend/app/services/platform_store.py",
+    "momo_competition_submission/momo_agent/backend/app/services/agent_service.py",
+    "momo_competition_submission/momo_agent/backend/app/agents/workflows.py",
+    "momo_competition_submission/pyansys_bridge",
+    "momo_competition_submission/platform-ui/src/api/client.ts"
+  ],
+  "notes": "Phase 0–3 基座已实现并分别提交：能力目录/Live 门禁、共享 solver/result executor、确定性 DOE、真实 surrogate reload 证据、主动学习预算选择。现有 REAL_* Agent 原子路径和独立入口尚未全部切换，继续按 implement.md 阶段门执行。",
+  "meta": {}
+}

@@ -1,0 +1,4 @@
+{"file": ".trellis/tasks/08-13-analysis-traffic-scenario/prd.md", "reason": "验收标准来源;逐条核对"}
+{"file": ".trellis/tasks/08-13-analysis-traffic-scenario/design.md", "reason": "错误码、契约与合并策略;检查实现一致性"}
+{"file": ".trellis/spec/backend/real-execution-capabilities.md", "reason": "能力目录门禁合规检查"}
+{"file": ".trellis/spec/backend/api-boundaries.md", "reason": "失败关闭与结构化错误检查基准"}

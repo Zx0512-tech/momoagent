@@ -1,0 +1,5 @@
+/CLEAR
+! 允许 USER300/USERRC 在长瞬态分析中重复输出 warning，避免达到默认 10000 条后中止
+/NERR,999999,999999
+/PREP7
+/INPUT,{{ model_path }}

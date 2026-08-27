@@ -1,0 +1,3 @@
+! Eddy-current damper module
+! damper_type={{ damper_type }}
+{{ damper_commands }}

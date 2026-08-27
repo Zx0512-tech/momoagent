@@ -1,0 +1,65 @@
+# Gravity static preload module
+# This establishes and freezes the initial state shared by modal and transient analyses.
+opensees_system = {{ opensees_system }}
+opensees_system_args = {{ opensees_system_args }}
+if model_globals.get('gravity_preloaded'):
+    pass
+elif callable(getattr(model_module, 'apply_gravity_loads', None)):
+    gravity_result = model_module.apply_gravity_loads(model_context)
+    if isinstance(gravity_result, dict):
+        model_context.update(gravity_result)
+        model_globals.update(gravity_result)
+    if callable(getattr(model_module, 'commit_gravity_state', None)):
+        commit_result = model_module.commit_gravity_state(model_context)
+        if isinstance(commit_result, dict):
+            model_context.update(commit_result)
+            model_globals.update(commit_result)
+    else:
+        ops.loadConst('-time', 0.0)
+else:
+    gravity_nodes = model_globals.get('gravity_load_nodes', model_globals.get('deck_nodes', []))
+    if not gravity_nodes:
+        gravity_nodes = ops.getNodeTags()
+    if not gravity_nodes:
+        raise RuntimeError("OpenSees gravity module requires model nodes")
+    ops.timeSeries('Linear', 3001)
+    ops.pattern('Plain', 3001, 3001)
+    for node_tag in gravity_nodes:
+        ops.load(int(node_tag), {{ gravity_accel_x }}, {{ gravity_accel_y }}, {{ gravity_accel_z }}, 0.0, 0.0, 0.0)
+    ops.constraints('Plain')
+    ops.numberer('RCM')
+    ops.system(opensees_system, *opensees_system_args)
+    ops.test('NormDispIncr', 1.0e-8, 20)
+    ops.algorithm('Newton')
+    ops.integrator('LoadControl', 1.0 / {{ gravity_substeps }})
+    ops.analysis('Static')
+    if ops.analyze({{ gravity_substeps }}) != 0:
+        raise RuntimeError("OpenSees gravity static preload failed")
+    ops.loadConst('-time', 0.0)
+
+# 平均风与重力共同构成运营工况的静力平衡基线。
+wind_mappings = model_globals.get('wind_load_mappings') or []
+mean_wind_mappings = [mapping for mapping in wind_mappings if float(mapping.get('mean_force_N', 0.0)) != 0.0]
+if mean_wind_mappings:
+    ops.timeSeries('Constant', 3101)
+    ops.pattern('Plain', 3101, 3101)
+    for mapping in mean_wind_mappings:
+        node_tag = int(mapping.get('fem_node_id', mapping.get('node_id')))
+        dof = str(mapping.get('dof', 'FY')).upper()
+        axis = {'FX': 0, 'FY': 1, 'FZ': 2}.get(dof)
+        if axis is None:
+            raise RuntimeError(f'OpenSees mean wind mapping dof must be FX, FY, or FZ: {dof}')
+        load_vector = [0.0, 0.0, 0.0]
+        load_vector[axis] = float(mapping['mean_force_N']) * float(mapping.get('scale', 1.0))
+        ops.load(node_tag, load_vector[0], load_vector[1], load_vector[2], 0.0, 0.0, 0.0)
+    ops.wipeAnalysis()
+    ops.constraints('Plain')
+    ops.numberer('RCM')
+    ops.system(opensees_system, *opensees_system_args)
+    ops.test('NormDispIncr', 1.0e-8, 20)
+    ops.algorithm('Newton')
+    ops.integrator('LoadControl', 1.0 / {{ gravity_substeps }})
+    ops.analysis('Static')
+    if ops.analyze({{ gravity_substeps }}) != 0:
+        raise RuntimeError("OpenSees mean wind static preload failed")
+    ops.loadConst('-time', 0.0)

@@ -1,0 +1,70 @@
+{
+  "baseline": {
+    "source_ansys_model": "D:\\pyansys\\STbridge.txt",
+    "primary_openseespy_model": "bridge_models\\stbridge_opensees\\baseline_verified\\stbridge_baseline_openseespy_gravity_modal.py",
+    "tcl_modal_model": "bridge_models\\stbridge_opensees\\baseline_verified\\stbridge_baseline_modal_plain.tcl",
+    "python_runtime": "D:\\momo\\.runtime\\python312\\python.exe",
+    "openseespy_package": "openseespy 3.8.0.0 / openseespywin 3.8.0.0"
+  },
+  "modeling_assumptions": {
+    "constraints": "Plain",
+    "geom_transf": "PDelta",
+    "mass_mode": "element",
+    "beam_mass": "-mass DENS*A -cMass",
+    "link_mass": "-rho DENS*A -cMass 1",
+    "gravity_state": "static preload followed by loadConst('-time', 0.0)"
+  },
+  "modal_validation": {
+    "ansys_hz": [
+      0.05530750551942655,
+      0.10040736400449973,
+      0.18571922362932938,
+      0.22587850675860627,
+      0.2985259681015457,
+      0.3229275392524449,
+      0.37473462678490876,
+      0.38708968945802447,
+      0.39316339469550815,
+      0.4221885435709374
+    ],
+    "opensees_hz": [
+      0.05531738991851,
+      0.1004490749101,
+      0.186182475943,
+      0.2262661914074,
+      0.2994643310176,
+      0.323436682515,
+      0.375261721568,
+      0.387711329412,
+      0.393814361195,
+      0.422697068807
+    ],
+    "errors_pct": [
+      0.017872,
+      0.041542,
+      0.249437,
+      0.171634,
+      0.314332,
+      0.157665,
+      0.140658,
+      0.160593,
+      0.165572,
+      0.12045
+    ],
+    "max_error_pct": 0.314332,
+    "minimum_mac_first_10": 0.99997952553,
+    "all_first_10_within_5pct": true
+  },
+  "short_earthquake_validation": {
+    "case_dir": "D:\\momo\\output\\stbridge_short_earthquake_200",
+    "dt": 0.01,
+    "points": 200,
+    "duration_seconds": 2.0,
+    "response_nodes": [36, 107, 517, 518, 520, 521],
+    "response_dof": "UX",
+    "basis": "baseline-removed increments; ANSYS preload result dropped; index-aligned",
+    "max_increment_peak_relative_difference": 0.0053977048334394205,
+    "max_increment_rms_relative_difference": 0.03949148854773027,
+    "pass_5_percent": true
+  }
+}

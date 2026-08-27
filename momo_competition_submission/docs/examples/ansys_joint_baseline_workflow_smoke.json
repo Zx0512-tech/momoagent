@@ -1,0 +1,17 @@
+{
+  "baseline_config": "ansys_undamped_earthquake_baseline_smoke.json",
+  "optimization_config": "ansys_joint_dry_run_smoke.json",
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "optimization_overrides": {
+    "summary_path": "../../output/optimization_smoke/ansys_joint_baseline_workflow/optimization_summary.json",
+    "output_dir": "../../output/optimization_smoke/ansys_joint_baseline_workflow"
+  },
+  "summary_path": "../../output/optimization_smoke/ansys_joint_baseline_workflow/workflow_summary.json"
+}

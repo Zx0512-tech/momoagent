@@ -1,0 +1,74 @@
+# Traffic load module
+# load={{ traffic_name }}, path={{ traffic_path }}, scale={{ traffic_scale }}, dt={{ traffic_dt }}, duration={{ traffic_duration }}
+import csv
+from pathlib import Path
+
+traffic_path = r"{{ traffic_path }}"
+traffic_mappings = model_globals.get('traffic_load_mappings') or []
+
+def _load_matrix_rows(path):
+    rows = []
+    with Path(path).open('r', encoding='utf-8-sig', newline='') as handle:
+        for raw_line in handle:
+            text = raw_line.strip()
+            if not text or text.startswith(('#', '!', '/')):
+                continue
+            cells = next(csv.reader([text])) if ',' in text else text.split()
+            try:
+                rows.append([float(cell) for cell in cells if str(cell).strip()])
+            except ValueError:
+                continue
+    if len(rows) >= 2 and rows[0] == [float(index) for index in range(1, len(rows[0]) + 1)]:
+        rows = rows[1:]
+    if len(rows) >= 2 and len(rows[0]) >= 2 and rows[1][0] > rows[0][0]:
+        return [row[1:] for row in rows]
+    return rows
+
+def _matrix_column_path(path, column, tag):
+    rows = _load_matrix_rows(path)
+    column_index = int(column) - 1
+    if column_index < 0:
+        raise RuntimeError('OpenSees traffic source_column must be positive')
+    target = Path(__file__).with_name(f'traffic_load_{tag}.txt')
+    with target.open('w', encoding='utf-8', newline='') as handle:
+        for row in rows:
+            if column_index >= len(row):
+                raise RuntimeError('OpenSees traffic source_column exceeds load matrix width')
+            handle.write(f"{row[column_index]:.12g}\n")
+    return str(target)
+
+def _load_vector(mapping):
+    dof = str(mapping.get('dof', 'FY')).upper()
+    values = [0.0, 0.0, 0.0]
+    axis = {'FX': 0, 'FY': 1, 'FZ': 2}.get(dof)
+    if axis is None:
+        raise RuntimeError(f'OpenSees traffic mapping dof must be FX, FY, or FZ: {dof}')
+    values[axis] = 1.0
+    return values
+
+if traffic_mappings:
+    for index, mapping in enumerate(traffic_mappings, start=1):
+        series_tag = 4600 + index
+        pattern_tag = 5600 + index
+        source_column = int(mapping.get('source_column', index))
+        weight = float(mapping.get('scale', mapping.get('weight', 1.0)))
+        if traffic_path and traffic_path != "None":
+            series_path = _matrix_column_path(traffic_path, source_column, index)
+            ops.timeSeries('Path', series_tag, '-filePath', series_path, '-dt', {{ traffic_dt }}, '-factor', {{ traffic_scale }} * weight)
+        else:
+            ops.timeSeries('Constant', series_tag, '-factor', {{ traffic_scale }} * weight)
+        ops.pattern('Plain', pattern_tag, series_tag)
+        node_tag = int(mapping.get('fem_node_id', mapping.get('node_id')))
+        load_vector = _load_vector(mapping)
+        ops.load(node_tag, load_vector[0], load_vector[1], load_vector[2], 0.0, 0.0, 0.0)
+else:
+    if traffic_path and traffic_path != "None":
+        ops.timeSeries('Path', 4301, '-filePath', traffic_path, '-dt', {{ traffic_dt }}, '-factor', {{ traffic_scale }})
+    else:
+        ops.timeSeries('Constant', 4301, '-factor', {{ traffic_scale }})
+    ops.pattern('Plain', 4301, 4301)
+    traffic_nodes = model_globals.get('traffic_load_nodes', model_globals.get('deck_nodes', []))
+    if not traffic_nodes:
+        raise RuntimeError("OpenSees traffic load module requires traffic_load_nodes or deck_nodes")
+    for node_tag in traffic_nodes:
+        ops.load(int(node_tag), {{ traffic_direction_x }}, {{ traffic_direction_y }}, {{ traffic_direction_z }}, 0.0, 0.0, 0.0)

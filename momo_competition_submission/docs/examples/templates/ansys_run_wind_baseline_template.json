@@ -1,0 +1,66 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "gravity_accel_x": 0.0,
+      "gravity_accel_y": 9.8,
+      "gravity_accel_z": 0.0,
+      "gravity_substeps": "10,20,5",
+      "modal_modes": 50,
+      "wind_girder_load_nodes": [
+        1,
+        23,
+        43,
+        61,
+        132,
+        114,
+        94,
+        72
+      ],
+      "template_note": "Wind ANALYSIS baseline. The load case path, dt and duration are supplied only by the approval-frozen load Artifact; this template ships no bundled wind record on purpose. No wind_load_component is declared: the STbridge APDL model defines no such component, so the force is applied node by node over the frozen wind_girder_load_nodes. A single total-force channel is split by equal weight across those nodes; one channel per target node instead writes wind_load_mappings with scale 1.0 and source_column i, so each node gets its own force column at full magnitude. The per-node form must write mappings for ANSYS too: without them _wind_load_points falls back to equal weight on column 1, which is a silent N-fold under-load."
+    }
+  },
+  "load_case": {
+    "name": "wind",
+    "load_type": "wind",
+    "scale": 1.0,
+    "direction": {
+      "x": 0.0,
+      "y": 1.0,
+      "z": 0.0
+    }
+  },
+  "damper_params": {
+    "c": 20000.0,
+    "alpha": 0.5
+  },
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "run",
+    "execution_timeout_s": 1200,
+    "include_modal": true,
+    "interpolate_time_history_tables": true,
+    "damper_module": "damper_viscous",
+    "damper_c_scale": 1000.0,
+    "omit_dampers": true,
+    "physical_count_per_tower": 2,
+    "mapdl_executable": "D:/Program Files/ANSYS Inc/v242/ansys/bin/winx64/MAPDL.exe",
+    "mapdl_args": [
+      "-smp"
+    ],
+    "mapdl_memory_mb": 512,
+    "nproc": 1,
+    "postprocessor": {
+      "mode": "ansys-dpf-rst",
+      "ansys_path": "D:/Program Files/ANSYS Inc/v242",
+      "response_nodes": [
+        36,
+        107
+      ],
+      "response_component": 0,
+      "damper_c_scale": 1000.0
+    }
+  },
+  "summary_path": "../../../output/run_templates/ansys_undamped_wind_summary.json"
+}

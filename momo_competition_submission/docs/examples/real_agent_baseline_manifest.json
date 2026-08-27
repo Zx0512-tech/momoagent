@@ -1,0 +1,604 @@
+{
+  "schemaVersion": "1.0",
+  "manifestId": "momo-real-agent-baselines-20260809",
+  "purpose": "受控 Agent 真实执行链的输入模板、输出制品和关键响应字段基线；不包含未经求解器验证的固定数值。",
+  "cases": [
+    {
+      "caseId": "REAL_AGENT_ANALYSIS_ANSYS_EARTHQUAKE",
+      "taskType": "ANALYSIS",
+      "runMode": "REAL_AGENT_ANALYSIS",
+      "solver": "ANSYS",
+      "scenario": "EARTHQUAKE",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_earthquake_baseline_template.json",
+        "templateSha256": "79341d73a802a32a09d349aa34cb4494bb159b32cc871f18d0736fe4f52189af",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true
+      },
+      "expectedArtifacts": [
+        "real_analysis_summary.json",
+        "real_analysis_overview.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "metadata.execution_mode": "run",
+        "requiredFields": [
+          "objectives",
+          "executionUsage",
+          "solver",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_AGENT_ANALYSIS_OPENSEESPY_EARTHQUAKE",
+      "taskType": "ANALYSIS",
+      "runMode": "REAL_AGENT_ANALYSIS",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "EARTHQUAKE",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_earthquake_baseline_template.json",
+        "templateSha256": "bf3ec7b0919e7dc6217e99744bfd26a0cbd1cb80760239a3ea5bc8545f38eb3c",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true
+      },
+      "expectedArtifacts": [
+        "real_analysis_summary.json",
+        "real_analysis_overview.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "metadata.execution_mode": "run",
+        "requiredFields": [
+          "objectives",
+          "executionUsage",
+          "solver",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_AGENT_ANALYSIS_ANSYS_WIND",
+      "taskType": "ANALYSIS",
+      "runMode": "REAL_AGENT_ANALYSIS",
+      "solver": "ANSYS",
+      "scenario": "WIND",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_wind_baseline_template.json",
+        "templateSha256": "78aa4eaaa1df2dd3891af488dc4e0ca1f58d3fbc6e2d6717ef70c6f46f4213d6",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_WIND_DECK_NODES",
+        "requiresNodalForceChannel": true
+      },
+      "expectedArtifacts": [
+        "real_analysis_summary.json",
+        "real_analysis_overview.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "metadata.execution_mode": "run",
+        "requiredFields": [
+          "objectives",
+          "executionUsage",
+          "solver",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_AGENT_ANALYSIS_OPENSEESPY_WIND",
+      "taskType": "ANALYSIS",
+      "runMode": "REAL_AGENT_ANALYSIS",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "WIND",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_wind_baseline_template.json",
+        "templateSha256": "a84bfc63cc94997b607f7cc46b5b1ec5b276564b014dbc9f3ba083e7ea4d89f2",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_WIND_DECK_NODES",
+        "requiresNodalForceChannel": true
+      },
+      "expectedArtifacts": [
+        "real_analysis_summary.json",
+        "real_analysis_overview.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "metadata.execution_mode": "run",
+        "requiredFields": [
+          "objectives",
+          "executionUsage",
+          "solver",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_AGENT_ANALYSIS_ANSYS_TRAFFIC",
+      "taskType": "ANALYSIS",
+      "runMode": "REAL_AGENT_ANALYSIS",
+      "solver": "ANSYS",
+      "scenario": "TRAFFIC",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_traffic_baseline_template.json",
+        "templateSha256": "830aa503f11a5dc649017d4660ebd86f5936fed99930be62c5538aa8aad63318",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_TRAFFIC_DECK_NODES",
+        "requiresNodalForceChannel": true
+      },
+      "expectedArtifacts": [
+        "real_analysis_summary.json",
+        "real_analysis_overview.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "metadata.execution_mode": "run",
+        "requiredFields": [
+          "objectives",
+          "executionUsage",
+          "solver",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_AGENT_ANALYSIS_OPENSEESPY_TRAFFIC",
+      "taskType": "ANALYSIS",
+      "runMode": "REAL_AGENT_ANALYSIS",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "TRAFFIC",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_traffic_baseline_template.json",
+        "templateSha256": "1b3db8c42e079d2bfb6ade2863c4f6c99f630749f7a9c6822968f97962f984fd",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_TRAFFIC_DECK_NODES",
+        "requiresNodalForceChannel": true
+      },
+      "expectedArtifacts": [
+        "real_analysis_summary.json",
+        "real_analysis_overview.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "metadata.execution_mode": "run",
+        "requiredFields": [
+          "objectives",
+          "executionUsage",
+          "solver",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_DAMPER_COMPARISON_ANSYS_EARTHQUAKE",
+      "taskType": "DAMPER_COMPARISON",
+      "runMode": "REAL_DAMPER_COMPARISON",
+      "solver": "ANSYS",
+      "scenario": "EARTHQUAKE",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_earthquake_baseline_template.json",
+        "templateSha256": "79341d73a802a32a09d349aa34cb4494bb159b32cc871f18d0736fe4f52189af",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresTwoRegisteredDamperCases": true
+      },
+      "expectedArtifacts": [
+        "real_damper_comparison_summary.json",
+        "real_<caseId>_case_summary.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "allVerifiedExecution": true,
+        "requiredFields": [
+          "caseResults",
+          "responseComparison",
+          "executionUsage",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_DAMPER_COMPARISON_ANSYS_WIND",
+      "taskType": "DAMPER_COMPARISON",
+      "runMode": "REAL_DAMPER_COMPARISON",
+      "solver": "ANSYS",
+      "scenario": "WIND",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_wind_baseline_template.json",
+        "templateSha256": "78aa4eaaa1df2dd3891af488dc4e0ca1f58d3fbc6e2d6717ef70c6f46f4213d6",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_WIND_DECK_NODES",
+        "requiresNodalForceChannel": true,
+        "requiresTwoRegisteredDamperCases": true
+      },
+      "expectedArtifacts": [
+        "real_damper_comparison_summary.json",
+        "real_<caseId>_case_summary.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "allVerifiedExecution": true,
+        "requiredFields": ["caseResults", "responseComparison", "executionUsage", "runMode"],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_DAMPER_COMPARISON_OPENSEESPY_EARTHQUAKE",
+      "taskType": "DAMPER_COMPARISON",
+      "runMode": "REAL_DAMPER_COMPARISON",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "EARTHQUAKE",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_earthquake_baseline_template.json",
+        "templateSha256": "bf3ec7b0919e7dc6217e99744bfd26a0cbd1cb80760239a3ea5bc8545f38eb3c",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresTwoRegisteredDamperCases": true
+      },
+      "expectedArtifacts": [
+        "real_damper_comparison_summary.json",
+        "real_<caseId>_case_summary.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "allVerifiedExecution": true,
+        "requiredFields": ["caseResults", "responseComparison", "executionUsage", "runMode"],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_DAMPER_COMPARISON_OPENSEESPY_WIND",
+      "taskType": "DAMPER_COMPARISON",
+      "runMode": "REAL_DAMPER_COMPARISON",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "WIND",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_wind_baseline_template.json",
+        "templateSha256": "a84bfc63cc94997b607f7cc46b5b1ec5b276564b014dbc9f3ba083e7ea4d89f2",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_WIND_DECK_NODES",
+        "requiresNodalForceChannel": true,
+        "requiresTwoRegisteredDamperCases": true
+      },
+      "expectedArtifacts": [
+        "real_damper_comparison_summary.json",
+        "real_<caseId>_case_summary.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "allVerifiedExecution": true,
+        "requiredFields": [
+          "caseResults",
+          "responseComparison",
+          "executionUsage",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_DAMPER_COMPARISON_ANSYS_TRAFFIC",
+      "taskType": "DAMPER_COMPARISON",
+      "runMode": "REAL_DAMPER_COMPARISON",
+      "solver": "ANSYS",
+      "scenario": "TRAFFIC",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_traffic_baseline_template.json",
+        "templateSha256": "830aa503f11a5dc649017d4660ebd86f5936fed99930be62c5538aa8aad63318",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_TRAFFIC_DECK_NODES",
+        "requiresNodalForceMatrixChannel": true,
+        "requiresLoadPointMappingArtifact": true,
+        "requiresTwoRegisteredDamperCases": true
+      },
+      "expectedArtifacts": [
+        "real_damper_comparison_summary.json",
+        "real_<caseId>_case_summary.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "allVerifiedExecution": true,
+        "requiredFields": [
+          "caseResults",
+          "responseComparison",
+          "executionUsage",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_DAMPER_COMPARISON_OPENSEESPY_TRAFFIC",
+      "taskType": "DAMPER_COMPARISON",
+      "runMode": "REAL_DAMPER_COMPARISON",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "TRAFFIC",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_traffic_baseline_template.json",
+        "templateSha256": "1b3db8c42e079d2bfb6ade2863c4f6c99f630749f7a9c6822968f97962f984fd",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_TRAFFIC_DECK_NODES",
+        "requiresNodalForceMatrixChannel": true,
+        "requiresLoadPointMappingArtifact": true,
+        "requiresTwoRegisteredDamperCases": true
+      },
+      "expectedArtifacts": [
+        "real_damper_comparison_summary.json",
+        "real_<caseId>_case_summary.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "status": "completed",
+        "allVerifiedExecution": true,
+        "requiredFields": [
+          "caseResults",
+          "responseComparison",
+          "executionUsage",
+          "runMode"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_BASELINE_OPTIMIZATION_ANSYS_EARTHQUAKE",
+      "taskType": "MULTI_OBJECTIVE_OPTIMIZATION",
+      "runMode": "REAL_BASELINE_OPTIMIZATION",
+      "solver": "ANSYS",
+      "scenario": "EARTHQUAKE",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_joint_baseline_workflow_template.json",
+        "templateSha256": "ec43fef05a2ca7995e9ee9b7c116e6ba99f5102e6c1158899342fa1c88ec76ae",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "doeDesignCountRange": [
+          5,
+          24
+        ],
+        "defaultDoeDesignCount": 15
+      },
+      "expectedArtifacts": [
+        "real_workflow_summary.json",
+        "real_optimization_summary.json",
+        "real_baseline_summary.json",
+        "real_earthquake_workflow_overview.json",
+        "real_design_set.json",
+        "real_training_dataset.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "finalRecommendationStatus": "ACCEPTED",
+        "requiredFields": [
+          "optimization",
+          "review_status",
+          "executionEvidence",
+          "topsis"
+        ],
+        "requiredEvidence": [
+          "designSetSha256",
+          "trainingDatasetSha256",
+          "realSolveCount"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_BASELINE_OPTIMIZATION_OPENSEESPY_EARTHQUAKE",
+      "taskType": "MULTI_OBJECTIVE_OPTIMIZATION",
+      "runMode": "REAL_BASELINE_OPTIMIZATION",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "EARTHQUAKE",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_joint_baseline_workflow_template.json",
+        "templateSha256": "097c390a4d90d599546440c36a03ecddc6136885bf134a94250a52b150b30600",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "doeDesignCountRange": [
+          5,
+          24
+        ],
+        "defaultDoeDesignCount": 15
+      },
+      "expectedArtifacts": [
+        "real_workflow_summary.json",
+        "real_optimization_summary.json",
+        "real_baseline_summary.json",
+        "real_earthquake_workflow_overview.json",
+        "real_design_set.json",
+        "real_training_dataset.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "finalRecommendationStatus": "ACCEPTED",
+        "requiredFields": [
+          "optimization",
+          "review_status",
+          "executionEvidence",
+          "topsis"
+        ],
+        "requiredEvidence": [
+          "designSetSha256",
+          "trainingDatasetSha256",
+          "realSolveCount"
+        ],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_BASELINE_OPTIMIZATION_ANSYS_WIND",
+      "taskType": "MULTI_OBJECTIVE_OPTIMIZATION",
+      "runMode": "REAL_BASELINE_OPTIMIZATION",
+      "solver": "ANSYS",
+      "scenario": "WIND",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_wind_baseline_workflow_template.json",
+        "templateSha256": "02d054f3a18c5d74677622b87f4184e48c03e9676f260a2ca6c8e1bba381054d",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_WIND_DECK_NODES",
+        "requiresNodalForceChannel": true,
+        "doeDesignCountRange": [5, 24],
+        "defaultDoeDesignCount": 15
+      },
+      "expectedArtifacts": [
+        "real_workflow_summary.json",
+        "real_optimization_summary.json",
+        "real_baseline_summary.json",
+        "real_wind_workflow_overview.json",
+        "real_design_set.json",
+        "real_training_dataset.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "finalRecommendationStatus": "ACCEPTED",
+        "requiredFields": ["optimization", "review_status", "executionEvidence", "topsis"],
+        "requiredEvidence": ["designSetSha256", "trainingDatasetSha256", "realSolveCount"],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_BASELINE_OPTIMIZATION_OPENSEESPY_WIND",
+      "taskType": "MULTI_OBJECTIVE_OPTIMIZATION",
+      "runMode": "REAL_BASELINE_OPTIMIZATION",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "WIND",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_wind_baseline_workflow_template.json",
+        "templateSha256": "be03747385296f18ecf286ddf1ee339e96f546f6dc105424b2d5433904430a3a",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_WIND_DECK_NODES",
+        "requiresNodalForceChannel": true,
+        "requiresSingleResponseNode": 107,
+        "doeDesignCountRange": [5, 24],
+        "defaultDoeDesignCount": 15
+      },
+      "expectedArtifacts": [
+        "real_workflow_summary.json",
+        "real_optimization_summary.json",
+        "real_baseline_summary.json",
+        "real_wind_workflow_overview.json",
+        "real_design_set.json",
+        "real_training_dataset.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "finalRecommendationStatus": "ACCEPTED",
+        "requiredFields": ["optimization", "review_status", "executionEvidence", "topsis"],
+        "requiredEvidence": ["designSetSha256", "trainingDatasetSha256", "realSolveCount"],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_BASELINE_OPTIMIZATION_ANSYS_TRAFFIC",
+      "taskType": "MULTI_OBJECTIVE_OPTIMIZATION",
+      "runMode": "REAL_BASELINE_OPTIMIZATION",
+      "solver": "ANSYS",
+      "scenario": "TRAFFIC",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/ansys_run_traffic_baseline_workflow_template.json",
+        "templateSha256": "af6489daa86af12a5a989299621a50e75135d26778f3c571d9344715dd5a025a",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_TRAFFIC_DECK_NODES",
+        "requiresNodalForceMatrixChannel": true,
+        "requiresLoadPointMappingArtifact": true,
+        "requiresCumulativeDisplacementNode": 1,
+        "doeDesignCountRange": [5, 24],
+        "defaultDoeDesignCount": 15
+      },
+      "expectedArtifacts": [
+        "real_workflow_summary.json",
+        "real_optimization_summary.json",
+        "real_baseline_summary.json",
+        "real_traffic_workflow_overview.json",
+        "real_design_set.json",
+        "real_training_dataset.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "finalRecommendationStatus": "ACCEPTED",
+        "requiredFields": ["optimization", "review_status", "executionEvidence", "topsis"],
+        "requiredEvidence": ["designSetSha256", "trainingDatasetSha256", "realSolveCount"],
+        "finiteNumericsOnly": true
+      }
+    },
+    {
+      "caseId": "REAL_BASELINE_OPTIMIZATION_OPENSEESPY_TRAFFIC",
+      "taskType": "MULTI_OBJECTIVE_OPTIMIZATION",
+      "runMode": "REAL_BASELINE_OPTIMIZATION",
+      "solver": "OPENSEESPY_INPROC",
+      "scenario": "TRAFFIC",
+      "input": {
+        "workflowConfigPath": "docs/examples/templates/openseespy_inproc_run_traffic_baseline_workflow_template.json",
+        "templateSha256": "fee008c732c484c7cecbc1ad8780e4d8ae80585d41812c5200dca5a621398df3",
+        "requiresLoadArtifact": true,
+        "requiresLoadSha256": true,
+        "requiresLoadTargetSetId": "STBRIDGE_TRAFFIC_DECK_NODES",
+        "requiresNodalForceMatrixChannel": true,
+        "requiresLoadPointMappingArtifact": true,
+        "requiresSingleResponseNode": 1,
+        "doeDesignCountRange": [5, 24],
+        "defaultDoeDesignCount": 15
+      },
+      "expectedArtifacts": [
+        "real_workflow_summary.json",
+        "real_optimization_summary.json",
+        "real_baseline_summary.json",
+        "real_traffic_workflow_overview.json",
+        "real_design_set.json",
+        "real_training_dataset.json",
+        "result_catalog.json",
+        "real_output_manifest.json"
+      ],
+      "goldenResponse": {
+        "finalRecommendationStatus": "ACCEPTED",
+        "requiredFields": ["optimization", "review_status", "executionEvidence", "topsis"],
+        "requiredEvidence": ["designSetSha256", "trainingDatasetSha256", "realSolveCount"],
+        "finiteNumericsOnly": true
+      }
+    }
+  ]
+}

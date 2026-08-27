@@ -1,0 +1,72 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "deck_nodes": [
+        36,
+        107
+      ],
+      "template_note": "OpenSeesPy in-process run template. Validate model builder import side effects and modal parity before engineering use."
+    }
+  },
+  "load_case": {
+    "name": "earthquake",
+    "load_type": "earthquake",
+    "scale": 1.0,
+    "path": "../../../analysis_data/earthquake_inputs/earthquake_acceleration_record.txt",
+    "dt": 0.01,
+    "duration": 40.0
+  },
+  "damper_params": {
+    "c": 20000.0,
+    "alpha": 0.5
+  },
+  "solver": {
+    "type": "openseespy_inproc",
+    "execution_mode": "run",
+    "execution_timeout_s": 1200,
+    "include_modal": true,
+    "damper_module": "damper_viscous",
+    "omit_dampers": true,
+    "damper_c_scale": 1000.0,
+    "physical_count_per_tower": 2,
+    "model_path": "../../../bridge_models/stbridge_opensees/stbridge_opensees_modal_builder.py",
+    "response_nodes": [
+      36,
+      107
+    ],
+    "response_dof": 1,
+    "tower_base_nodes": [
+      494,
+      495,
+      511,
+      512,
+      525,
+      528,
+      530,
+      532,
+      534,
+      536,
+      538,
+      540,
+      542,
+      544,
+      547,
+      550
+    ],
+    "tower_base_shear_dofs": [
+      1,
+      2
+    ],
+    "tower_base_moment_dofs": [
+      5,
+      6
+    ],
+    "postprocessor": {
+      "mode": "opensees-csv",
+      "source": "timeseries.csv"
+    }
+  },
+  "summary_path": "../../../output/run_templates/openseespy_inproc_undamped_earthquake_summary.json"
+}

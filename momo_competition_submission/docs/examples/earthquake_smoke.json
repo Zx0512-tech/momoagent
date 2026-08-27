@@ -1,0 +1,65 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../STbridge.txt"
+  },
+  "load_cases": [
+    {
+      "name": "earthquake",
+      "load_type": "earthquake",
+      "scale": 1.0,
+      "dt": 0.02,
+      "duration": 60.0
+    }
+  ],
+  "active_load_cases": [
+    "earthquake"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "earthquake",
+      "objective": "max_girder_end_displacement",
+      "weight": 1.0
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_moment",
+      "weight": 1.0
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_shear",
+      "weight": 1.0
+    }
+  ],
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "source": "baselines/undamped_earthquake_smoke_summary.json",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "bounds": {
+    "c": [
+      80000.0,
+      180000.0
+    ],
+    "alpha": [
+      0.3,
+      0.55
+    ]
+  },
+  "steps": {
+    "c": 20000.0,
+    "alpha": 0.05
+  },
+  "n_doe_samples": 6,
+  "n_candidates": 30,
+  "n_validation_points": 2,
+  "solver": "mock",
+  "seed": 201,
+  "output_dir": "../../output/optimization_smoke/earthquake",
+  "summary_path": "../../output/optimization_smoke/earthquake/optimization_summary.json"
+}

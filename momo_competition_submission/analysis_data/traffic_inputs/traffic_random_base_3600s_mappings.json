@@ -1,0 +1,1306 @@
+[
+  {
+    "fem_node_id": 1,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 1,
+    "group": "traffic",
+    "label": "traffic_1"
+  },
+  {
+    "fem_node_id": 2,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 2,
+    "group": "traffic",
+    "label": "traffic_2"
+  },
+  {
+    "fem_node_id": 3,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 3,
+    "group": "traffic",
+    "label": "traffic_3"
+  },
+  {
+    "fem_node_id": 4,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 4,
+    "group": "traffic",
+    "label": "traffic_4"
+  },
+  {
+    "fem_node_id": 5,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 5,
+    "group": "traffic",
+    "label": "traffic_5"
+  },
+  {
+    "fem_node_id": 6,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 6,
+    "group": "traffic",
+    "label": "traffic_6"
+  },
+  {
+    "fem_node_id": 7,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 7,
+    "group": "traffic",
+    "label": "traffic_7"
+  },
+  {
+    "fem_node_id": 8,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 8,
+    "group": "traffic",
+    "label": "traffic_8"
+  },
+  {
+    "fem_node_id": 9,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 9,
+    "group": "traffic",
+    "label": "traffic_9"
+  },
+  {
+    "fem_node_id": 10,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 10,
+    "group": "traffic",
+    "label": "traffic_10"
+  },
+  {
+    "fem_node_id": 11,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 11,
+    "group": "traffic",
+    "label": "traffic_11"
+  },
+  {
+    "fem_node_id": 12,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 12,
+    "group": "traffic",
+    "label": "traffic_12"
+  },
+  {
+    "fem_node_id": 13,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 13,
+    "group": "traffic",
+    "label": "traffic_13"
+  },
+  {
+    "fem_node_id": 14,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 14,
+    "group": "traffic",
+    "label": "traffic_14"
+  },
+  {
+    "fem_node_id": 15,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 15,
+    "group": "traffic",
+    "label": "traffic_15"
+  },
+  {
+    "fem_node_id": 16,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 16,
+    "group": "traffic",
+    "label": "traffic_16"
+  },
+  {
+    "fem_node_id": 17,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 17,
+    "group": "traffic",
+    "label": "traffic_17"
+  },
+  {
+    "fem_node_id": 18,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 18,
+    "group": "traffic",
+    "label": "traffic_18"
+  },
+  {
+    "fem_node_id": 19,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 19,
+    "group": "traffic",
+    "label": "traffic_19"
+  },
+  {
+    "fem_node_id": 20,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 20,
+    "group": "traffic",
+    "label": "traffic_20"
+  },
+  {
+    "fem_node_id": 21,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 21,
+    "group": "traffic",
+    "label": "traffic_21"
+  },
+  {
+    "fem_node_id": 22,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 22,
+    "group": "traffic",
+    "label": "traffic_22"
+  },
+  {
+    "fem_node_id": 23,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 23,
+    "group": "traffic",
+    "label": "traffic_23"
+  },
+  {
+    "fem_node_id": 24,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 24,
+    "group": "traffic",
+    "label": "traffic_24"
+  },
+  {
+    "fem_node_id": 25,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 25,
+    "group": "traffic",
+    "label": "traffic_25"
+  },
+  {
+    "fem_node_id": 26,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 26,
+    "group": "traffic",
+    "label": "traffic_26"
+  },
+  {
+    "fem_node_id": 27,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 27,
+    "group": "traffic",
+    "label": "traffic_27"
+  },
+  {
+    "fem_node_id": 28,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 28,
+    "group": "traffic",
+    "label": "traffic_28"
+  },
+  {
+    "fem_node_id": 29,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 29,
+    "group": "traffic",
+    "label": "traffic_29"
+  },
+  {
+    "fem_node_id": 30,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 30,
+    "group": "traffic",
+    "label": "traffic_30"
+  },
+  {
+    "fem_node_id": 31,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 31,
+    "group": "traffic",
+    "label": "traffic_31"
+  },
+  {
+    "fem_node_id": 32,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 32,
+    "group": "traffic",
+    "label": "traffic_32"
+  },
+  {
+    "fem_node_id": 33,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 33,
+    "group": "traffic",
+    "label": "traffic_33"
+  },
+  {
+    "fem_node_id": 34,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 34,
+    "group": "traffic",
+    "label": "traffic_34"
+  },
+  {
+    "fem_node_id": 35,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 35,
+    "group": "traffic",
+    "label": "traffic_35"
+  },
+  {
+    "fem_node_id": 36,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 36,
+    "group": "traffic",
+    "label": "traffic_36"
+  },
+  {
+    "fem_node_id": 37,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 37,
+    "group": "traffic",
+    "label": "traffic_37"
+  },
+  {
+    "fem_node_id": 38,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 38,
+    "group": "traffic",
+    "label": "traffic_38"
+  },
+  {
+    "fem_node_id": 39,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 39,
+    "group": "traffic",
+    "label": "traffic_39"
+  },
+  {
+    "fem_node_id": 40,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 40,
+    "group": "traffic",
+    "label": "traffic_40"
+  },
+  {
+    "fem_node_id": 41,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 41,
+    "group": "traffic",
+    "label": "traffic_41"
+  },
+  {
+    "fem_node_id": 42,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 42,
+    "group": "traffic",
+    "label": "traffic_42"
+  },
+  {
+    "fem_node_id": 43,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 43,
+    "group": "traffic",
+    "label": "traffic_43"
+  },
+  {
+    "fem_node_id": 44,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 44,
+    "group": "traffic",
+    "label": "traffic_44"
+  },
+  {
+    "fem_node_id": 45,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 45,
+    "group": "traffic",
+    "label": "traffic_45"
+  },
+  {
+    "fem_node_id": 46,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 46,
+    "group": "traffic",
+    "label": "traffic_46"
+  },
+  {
+    "fem_node_id": 47,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 47,
+    "group": "traffic",
+    "label": "traffic_47"
+  },
+  {
+    "fem_node_id": 48,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 48,
+    "group": "traffic",
+    "label": "traffic_48"
+  },
+  {
+    "fem_node_id": 49,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 49,
+    "group": "traffic",
+    "label": "traffic_49"
+  },
+  {
+    "fem_node_id": 50,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 50,
+    "group": "traffic",
+    "label": "traffic_50"
+  },
+  {
+    "fem_node_id": 51,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 51,
+    "group": "traffic",
+    "label": "traffic_51"
+  },
+  {
+    "fem_node_id": 52,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 52,
+    "group": "traffic",
+    "label": "traffic_52"
+  },
+  {
+    "fem_node_id": 53,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 53,
+    "group": "traffic",
+    "label": "traffic_53"
+  },
+  {
+    "fem_node_id": 54,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 54,
+    "group": "traffic",
+    "label": "traffic_54"
+  },
+  {
+    "fem_node_id": 55,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 55,
+    "group": "traffic",
+    "label": "traffic_55"
+  },
+  {
+    "fem_node_id": 56,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 56,
+    "group": "traffic",
+    "label": "traffic_56"
+  },
+  {
+    "fem_node_id": 57,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 57,
+    "group": "traffic",
+    "label": "traffic_57"
+  },
+  {
+    "fem_node_id": 58,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 58,
+    "group": "traffic",
+    "label": "traffic_58"
+  },
+  {
+    "fem_node_id": 59,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 59,
+    "group": "traffic",
+    "label": "traffic_59"
+  },
+  {
+    "fem_node_id": 60,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 60,
+    "group": "traffic",
+    "label": "traffic_60"
+  },
+  {
+    "fem_node_id": 61,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 61,
+    "group": "traffic",
+    "label": "traffic_61"
+  },
+  {
+    "fem_node_id": 62,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 62,
+    "group": "traffic",
+    "label": "traffic_62"
+  },
+  {
+    "fem_node_id": 63,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 63,
+    "group": "traffic",
+    "label": "traffic_63"
+  },
+  {
+    "fem_node_id": 64,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 64,
+    "group": "traffic",
+    "label": "traffic_64"
+  },
+  {
+    "fem_node_id": 65,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 65,
+    "group": "traffic",
+    "label": "traffic_65"
+  },
+  {
+    "fem_node_id": 66,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 66,
+    "group": "traffic",
+    "label": "traffic_66"
+  },
+  {
+    "fem_node_id": 67,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 67,
+    "group": "traffic",
+    "label": "traffic_67"
+  },
+  {
+    "fem_node_id": 68,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 68,
+    "group": "traffic",
+    "label": "traffic_68"
+  },
+  {
+    "fem_node_id": 69,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 69,
+    "group": "traffic",
+    "label": "traffic_69"
+  },
+  {
+    "fem_node_id": 70,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 70,
+    "group": "traffic",
+    "label": "traffic_70"
+  },
+  {
+    "fem_node_id": 71,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 71,
+    "group": "traffic",
+    "label": "traffic_71"
+  },
+  {
+    "fem_node_id": 72,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 72,
+    "group": "traffic",
+    "label": "traffic_72"
+  },
+  {
+    "fem_node_id": 73,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 73,
+    "group": "traffic",
+    "label": "traffic_73"
+  },
+  {
+    "fem_node_id": 74,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 74,
+    "group": "traffic",
+    "label": "traffic_74"
+  },
+  {
+    "fem_node_id": 75,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 75,
+    "group": "traffic",
+    "label": "traffic_75"
+  },
+  {
+    "fem_node_id": 76,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 76,
+    "group": "traffic",
+    "label": "traffic_76"
+  },
+  {
+    "fem_node_id": 77,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 77,
+    "group": "traffic",
+    "label": "traffic_77"
+  },
+  {
+    "fem_node_id": 78,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 78,
+    "group": "traffic",
+    "label": "traffic_78"
+  },
+  {
+    "fem_node_id": 79,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 79,
+    "group": "traffic",
+    "label": "traffic_79"
+  },
+  {
+    "fem_node_id": 80,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 80,
+    "group": "traffic",
+    "label": "traffic_80"
+  },
+  {
+    "fem_node_id": 81,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 81,
+    "group": "traffic",
+    "label": "traffic_81"
+  },
+  {
+    "fem_node_id": 82,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 82,
+    "group": "traffic",
+    "label": "traffic_82"
+  },
+  {
+    "fem_node_id": 83,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 83,
+    "group": "traffic",
+    "label": "traffic_83"
+  },
+  {
+    "fem_node_id": 84,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 84,
+    "group": "traffic",
+    "label": "traffic_84"
+  },
+  {
+    "fem_node_id": 85,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 85,
+    "group": "traffic",
+    "label": "traffic_85"
+  },
+  {
+    "fem_node_id": 86,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 86,
+    "group": "traffic",
+    "label": "traffic_86"
+  },
+  {
+    "fem_node_id": 87,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 87,
+    "group": "traffic",
+    "label": "traffic_87"
+  },
+  {
+    "fem_node_id": 88,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 88,
+    "group": "traffic",
+    "label": "traffic_88"
+  },
+  {
+    "fem_node_id": 89,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 89,
+    "group": "traffic",
+    "label": "traffic_89"
+  },
+  {
+    "fem_node_id": 90,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 90,
+    "group": "traffic",
+    "label": "traffic_90"
+  },
+  {
+    "fem_node_id": 91,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 91,
+    "group": "traffic",
+    "label": "traffic_91"
+  },
+  {
+    "fem_node_id": 92,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 92,
+    "group": "traffic",
+    "label": "traffic_92"
+  },
+  {
+    "fem_node_id": 93,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 93,
+    "group": "traffic",
+    "label": "traffic_93"
+  },
+  {
+    "fem_node_id": 94,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 94,
+    "group": "traffic",
+    "label": "traffic_94"
+  },
+  {
+    "fem_node_id": 95,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 95,
+    "group": "traffic",
+    "label": "traffic_95"
+  },
+  {
+    "fem_node_id": 96,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 96,
+    "group": "traffic",
+    "label": "traffic_96"
+  },
+  {
+    "fem_node_id": 97,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 97,
+    "group": "traffic",
+    "label": "traffic_97"
+  },
+  {
+    "fem_node_id": 98,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 98,
+    "group": "traffic",
+    "label": "traffic_98"
+  },
+  {
+    "fem_node_id": 99,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 99,
+    "group": "traffic",
+    "label": "traffic_99"
+  },
+  {
+    "fem_node_id": 100,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 100,
+    "group": "traffic",
+    "label": "traffic_100"
+  },
+  {
+    "fem_node_id": 101,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 101,
+    "group": "traffic",
+    "label": "traffic_101"
+  },
+  {
+    "fem_node_id": 102,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 102,
+    "group": "traffic",
+    "label": "traffic_102"
+  },
+  {
+    "fem_node_id": 103,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 103,
+    "group": "traffic",
+    "label": "traffic_103"
+  },
+  {
+    "fem_node_id": 104,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 104,
+    "group": "traffic",
+    "label": "traffic_104"
+  },
+  {
+    "fem_node_id": 105,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 105,
+    "group": "traffic",
+    "label": "traffic_105"
+  },
+  {
+    "fem_node_id": 106,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 106,
+    "group": "traffic",
+    "label": "traffic_106"
+  },
+  {
+    "fem_node_id": 107,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 107,
+    "group": "traffic",
+    "label": "traffic_107"
+  },
+  {
+    "fem_node_id": 108,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 108,
+    "group": "traffic",
+    "label": "traffic_108"
+  },
+  {
+    "fem_node_id": 109,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 109,
+    "group": "traffic",
+    "label": "traffic_109"
+  },
+  {
+    "fem_node_id": 110,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 110,
+    "group": "traffic",
+    "label": "traffic_110"
+  },
+  {
+    "fem_node_id": 111,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 111,
+    "group": "traffic",
+    "label": "traffic_111"
+  },
+  {
+    "fem_node_id": 112,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 112,
+    "group": "traffic",
+    "label": "traffic_112"
+  },
+  {
+    "fem_node_id": 113,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 113,
+    "group": "traffic",
+    "label": "traffic_113"
+  },
+  {
+    "fem_node_id": 114,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 114,
+    "group": "traffic",
+    "label": "traffic_114"
+  },
+  {
+    "fem_node_id": 115,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 115,
+    "group": "traffic",
+    "label": "traffic_115"
+  },
+  {
+    "fem_node_id": 116,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 116,
+    "group": "traffic",
+    "label": "traffic_116"
+  },
+  {
+    "fem_node_id": 117,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 117,
+    "group": "traffic",
+    "label": "traffic_117"
+  },
+  {
+    "fem_node_id": 118,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 118,
+    "group": "traffic",
+    "label": "traffic_118"
+  },
+  {
+    "fem_node_id": 119,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 119,
+    "group": "traffic",
+    "label": "traffic_119"
+  },
+  {
+    "fem_node_id": 120,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 120,
+    "group": "traffic",
+    "label": "traffic_120"
+  },
+  {
+    "fem_node_id": 121,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 121,
+    "group": "traffic",
+    "label": "traffic_121"
+  },
+  {
+    "fem_node_id": 122,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 122,
+    "group": "traffic",
+    "label": "traffic_122"
+  },
+  {
+    "fem_node_id": 123,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 123,
+    "group": "traffic",
+    "label": "traffic_123"
+  },
+  {
+    "fem_node_id": 124,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 124,
+    "group": "traffic",
+    "label": "traffic_124"
+  },
+  {
+    "fem_node_id": 125,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 125,
+    "group": "traffic",
+    "label": "traffic_125"
+  },
+  {
+    "fem_node_id": 126,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 126,
+    "group": "traffic",
+    "label": "traffic_126"
+  },
+  {
+    "fem_node_id": 127,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 127,
+    "group": "traffic",
+    "label": "traffic_127"
+  },
+  {
+    "fem_node_id": 128,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 128,
+    "group": "traffic",
+    "label": "traffic_128"
+  },
+  {
+    "fem_node_id": 129,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 129,
+    "group": "traffic",
+    "label": "traffic_129"
+  },
+  {
+    "fem_node_id": 130,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 130,
+    "group": "traffic",
+    "label": "traffic_130"
+  },
+  {
+    "fem_node_id": 131,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 131,
+    "group": "traffic",
+    "label": "traffic_131"
+  },
+  {
+    "fem_node_id": 132,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 132,
+    "group": "traffic",
+    "label": "traffic_132"
+  },
+  {
+    "fem_node_id": 133,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 133,
+    "group": "traffic",
+    "label": "traffic_133"
+  },
+  {
+    "fem_node_id": 134,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 134,
+    "group": "traffic",
+    "label": "traffic_134"
+  },
+  {
+    "fem_node_id": 135,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 135,
+    "group": "traffic",
+    "label": "traffic_135"
+  },
+  {
+    "fem_node_id": 136,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 136,
+    "group": "traffic",
+    "label": "traffic_136"
+  },
+  {
+    "fem_node_id": 137,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 137,
+    "group": "traffic",
+    "label": "traffic_137"
+  },
+  {
+    "fem_node_id": 138,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 138,
+    "group": "traffic",
+    "label": "traffic_138"
+  },
+  {
+    "fem_node_id": 139,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 139,
+    "group": "traffic",
+    "label": "traffic_139"
+  },
+  {
+    "fem_node_id": 140,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 140,
+    "group": "traffic",
+    "label": "traffic_140"
+  },
+  {
+    "fem_node_id": 141,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 141,
+    "group": "traffic",
+    "label": "traffic_141"
+  },
+  {
+    "fem_node_id": 551,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 142,
+    "group": "traffic",
+    "label": "traffic_142"
+  },
+  {
+    "fem_node_id": 552,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 143,
+    "group": "traffic",
+    "label": "traffic_143"
+  },
+  {
+    "fem_node_id": 553,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 144,
+    "group": "traffic",
+    "label": "traffic_144"
+  },
+  {
+    "fem_node_id": 554,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 145,
+    "group": "traffic",
+    "label": "traffic_145"
+  },
+  {
+    "fem_node_id": 567,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 146,
+    "group": "traffic",
+    "label": "traffic_146"
+  },
+  {
+    "fem_node_id": 568,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 147,
+    "group": "traffic",
+    "label": "traffic_147"
+  },
+  {
+    "fem_node_id": 569,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 148,
+    "group": "traffic",
+    "label": "traffic_148"
+  },
+  {
+    "fem_node_id": 570,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 149,
+    "group": "traffic",
+    "label": "traffic_149"
+  },
+  {
+    "fem_node_id": 571,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 150,
+    "group": "traffic",
+    "label": "traffic_150"
+  },
+  {
+    "fem_node_id": 572,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 151,
+    "group": "traffic",
+    "label": "traffic_151"
+  },
+  {
+    "fem_node_id": 573,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 152,
+    "group": "traffic",
+    "label": "traffic_152"
+  },
+  {
+    "fem_node_id": 574,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 153,
+    "group": "traffic",
+    "label": "traffic_153"
+  },
+  {
+    "fem_node_id": 575,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 154,
+    "group": "traffic",
+    "label": "traffic_154"
+  },
+  {
+    "fem_node_id": 576,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 155,
+    "group": "traffic",
+    "label": "traffic_155"
+  },
+  {
+    "fem_node_id": 577,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 156,
+    "group": "traffic",
+    "label": "traffic_156"
+  },
+  {
+    "fem_node_id": 578,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 157,
+    "group": "traffic",
+    "label": "traffic_157"
+  },
+  {
+    "fem_node_id": 579,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 158,
+    "group": "traffic",
+    "label": "traffic_158"
+  },
+  {
+    "fem_node_id": 580,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 159,
+    "group": "traffic",
+    "label": "traffic_159"
+  },
+  {
+    "fem_node_id": 581,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 160,
+    "group": "traffic",
+    "label": "traffic_160"
+  },
+  {
+    "fem_node_id": 582,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 161,
+    "group": "traffic",
+    "label": "traffic_161"
+  },
+  {
+    "fem_node_id": 583,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 162,
+    "group": "traffic",
+    "label": "traffic_162"
+  },
+  {
+    "fem_node_id": 584,
+    "dof": "FY",
+    "scale": 1.0,
+    "source_column": 163,
+    "group": "traffic",
+    "label": "traffic_163"
+  }
+]

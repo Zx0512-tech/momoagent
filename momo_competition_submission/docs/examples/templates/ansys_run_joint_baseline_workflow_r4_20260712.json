@@ -1,0 +1,13 @@
+{
+  "baseline_config": "ansys_run_earthquake_baseline_r4_20260712.json",
+  "optimization_config": "ansys_run_joint_optimization_r4_20260712.json",
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/ansys_r4_single_solver_c100_a010_20260712/workflow_summary.json"
+}
