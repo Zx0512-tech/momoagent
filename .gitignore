@@ -1,8 +1,44 @@
+# Secrets and local environment
 .env
+.env.*
+!.env.example
+
+# Python
 .venv/
+venv/
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
-output/platform_store/
-platform-ui/node_modules/
+.pytest-*/
+.pytest-tmp-check/
+.ruff_cache/
+.mypy_cache/
 
+# Node
+node_modules/
+dist-ssr/
+.playwright-cli/
+*.local
+
+# Runtime/build artifacts
+output/
+.tmp/
+.tmp-progress-cmp/
+*.log
+*.zip
+
+# Local editor/system files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+.claude/settings.local.json
+
+# Removed development scaffolding
+.agents/
+.codex/
+.cursor/
+.trellis/
+AGENTS.md
