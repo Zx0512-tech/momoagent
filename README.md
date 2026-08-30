@@ -1,6 +1,6 @@
 # MOMO 桥梁地震分析与阻尼器优化智能体（比赛提交版）
 
-本目录是从完整 MOMO 工程中提取的独立 OpenSeesPy 比赛作品。它包含智能体前后端、受控工具链、桥梁模型、登记地震记录、USER300 黏滞阻尼器运行时、多目标优化流程，以及一组可离线核验的真实分析证据。
+本仓库是从完整 MOMO 工程中提取的独立 OpenSeesPy 比赛作品。它包含智能体前后端、受控工具链、桥梁模型、登记地震记录、USER300 黏滞阻尼器运行时、多目标优化流程，以及一组可离线核验的真实分析证据。
 
 ## 核心能力
 
@@ -21,7 +21,7 @@
 ## 快速开始
 
 ```powershell
-cd D:\path\to\momo_competition_submission
+cd D:\path\to\momoagent
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkipFrontendBuild
 powershell -ExecutionPolicy Bypass -File .\start.ps1
 ```

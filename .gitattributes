@@ -1,31 +1,15 @@
-# Trellis: append-only developer journals should merge cleanly across
-# parallel sessions/worktrees — each session only appends a new block, so
-# there is nothing to actually conflict on.
-#
-# Do NOT add a rule for workspace/*/index.md here — it is fully regenerated
-# every session, so a real conflict there is expected and safe to resolve by
-# picking either side (task state lives in task.json, not index.md). See
-# .trellis/spec/cli/backend/directory-structure.md for details.
-.trellis/workspace/*/journal-*.md merge=union
-
 # Windows 双击启动器必须保持原生 CRLF，避免旧版命令解释器误解析。
 /momo.cmd text eol=crlf
-/momo_competition_submission/start.ps1 text eol=crlf
+/start.ps1 text eol=crlf
 
 # 地震记录夹具是逐字节原样保存的外部数据（PEER NGA）。autocrlf 会在检出时
-# 改写行尾，夹具就不再与原始记录逐字节一致，按裸字节登记的 SHA 也会漂移
-# （本仓库已两次踩到：提交清单模板门、ANSYS 标定门）。一律不做行尾转换。
-/momo_competition_submission/momo_agent/backend/tests/fixtures/earthquake/*.AT1 -text
-/momo_competition_submission/momo_agent/backend/tests/fixtures/earthquake/*.AT2 -text
+# 改写行尾，夹具就不再与原始记录逐字节一致，按裸字节登记的 SHA 也会漂移。
+/momo_agent/backend/tests/fixtures/earthquake/*.AT1 -text
+/momo_agent/backend/tests/fixtures/earthquake/*.AT2 -text
 
-# 风荷载生成脚本与其产出的逐节点记录：提交清单按磁盘裸字节校验 SHA，检出时
-# 改写行尾会让这两条永久失配（同上面夹具的教训）。
-# 刻意不覆盖旧的 wind_vertical_10mps_3600s.csv —— 它的清单条目是按 CRLF 检出
-# 后的裸字节登记的，给它钉 LF 反而会把已经绿的条目弄红。
-/momo_competition_submission/analysis_data/wind_inputs/generate_wind_nodal_force.py text eol=lf
-/momo_competition_submission/analysis_data/wind_inputs/wind_vertical_*nodes_*.csv text eol=lf
+# 风荷载生成脚本与其产出的逐节点记录：提交清单按磁盘裸字节校验 SHA。
+/analysis_data/wind_inputs/generate_wind_nodal_force.py text eol=lf
+/analysis_data/wind_inputs/wind_vertical_*nodes_*.csv text eol=lf
 
-# 标定件的 SHA256 按 LF 字节登记（模板里的 damper_calibration.sha256、标定目录的
-# sourceSha256、SUBMISSION_MANIFEST.json 三处都是 LF），而校验器一律读磁盘裸字节。
-# 不锁定 eol 时，autocrlf=true 的环境按 CRLF 检出，三条 USER300 标定永久 UNVERIFIED。
-/momo_competition_submission/docs/examples/templates/calibration/** text eol=lf
+# 标定件的 SHA256 按 LF 字节登记；校验器按磁盘裸字节核验。
+/docs/examples/templates/calibration/** text eol=lf

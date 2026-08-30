@@ -1,4 +1,0 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
-{"file": ".trellis/spec/backend/real-execution-capabilities.md", "reason": "能力目录 solverScenarios 的登记与失败关闭约定"}
-{"file": ".trellis/spec/backend/workflow-contract.md", "reason": "冻结动作与工作流契约字段约定"}
-{"file": ".trellis/spec/backend/index.md", "reason": "后端规范入口与开发前检查单"}
