@@ -55,6 +55,9 @@ def test_full_task_is_not_registered_in_new_system() -> None:
 
 
 def test_new_api_and_harness_reject_retired_full_task_type() -> None:
+    schema_text = str(WorkflowStartInput.model_json_schema(by_alias=True))
+    assert "DAMPER_OPTIMIZATION" in schema_text
+    assert "FULL_OPTIMIZATION" not in schema_text
     with pytest.raises(ValidationError):
         AgentMessageCreateRequest(content="完整优化", taskType="FULL_OPTIMIZATION")
     with pytest.raises(ValidationError):
