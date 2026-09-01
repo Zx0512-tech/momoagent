@@ -49,6 +49,7 @@ def test_full_profile_uses_canonical_task_and_preserves_solver_and_load() -> Non
 def test_full_task_is_not_registered_in_new_system() -> None:
     assert engineering_task_spec("FULL_OPTIMIZATION") is None
     assert orchestration_handler("FULL_OPTIMIZATION") is None
+    assert workflow_definition("DAMPER_OPTIMIZATION").workflow_id == "damper_optimization"
     with pytest.raises(ToolExecutionError):
         workflow_definition("FULL_OPTIMIZATION")
 
