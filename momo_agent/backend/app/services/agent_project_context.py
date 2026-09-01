@@ -255,17 +255,12 @@ class EngineeringProjectContextService:
             updates['optimization_profile'] = explicit_profile
             sources['optimizationProfile'] = 'USER_SPECIFIED'
 
-        # 自定义 FEM 模型当前只在 ANALYSIS 合同中可执行。其他任务仍把模型引用
-        # 作为 Project 上下文供选择历史结果，不把它强行灌入不支持的执行合同。
+        # PR4 Workspace 目前没有持久化自定义模型分析所需的 responseNodes /
+        # responseElementIds。只记住 modelArtifactId/SHA 用于历史匹配，不能单独
+        # 把模型引用灌入新 ANALYSIS，否则会制造不完整合同。用户本轮显式提供
+        # artifactId 时仍由原始 EngineeringIntent 负责传入并标记来源。
         explicit_artifact = bool(re.search(r'art_[A-Za-z0-9_-]+', user_content))
-        if (
-            not explicit_artifact
-            and workspace.get('modelArtifactId')
-            and getattr(intent, 'task_type', None) == 'ANALYSIS'
-        ):
-            updates['model_artifact_id'] = workspace['modelArtifactId']
-            sources['modelArtifactId'] = 'PROJECT_WORKSPACE'
-        elif explicit_artifact:
+        if explicit_artifact:
             sources['modelArtifactId'] = 'USER_SPECIFIED'
 
         inherited_slots = {
@@ -381,17 +376,17 @@ class EngineeringProjectContextService:
         if compatible:
             score += 5
         raw_summary = run.get('resultSummary') if isinstance(run.get('resultSummary'), dict) else {}
+        # Project memory only carries selection metadata. Engineering numbers and narrative
+        # stay behind registered result artifacts / inquiry tools, so bootstrap context can
+        # never become an alternate numeric evidence channel.
         compact_summary = {
             key: raw_summary.get(key)
             for key in (
-                'evidenceMode', 'objectives', 'baselineObjectives', 'recommendedObjectives',
-                'responseComparison', 'validationStatus', 'reviewStatus',
+                'evidenceMode', 'validationStatus', 'reviewStatus',
                 'finalRecommendationStatus',
             )
             if raw_summary.get(key) is not None
         }
-        if raw_summary.get('message'):
-            compact_summary['message'] = str(raw_summary['message'])[:500]
         return {
             'runId': run_id,
             'sessionId': run.get('sessionId'),
