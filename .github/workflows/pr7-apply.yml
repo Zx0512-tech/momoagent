@@ -1,0 +1,46 @@
+name: PR7 apply
+
+on:
+  push:
+    branches: [feat/chat-first-engineering-workflow]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply fail-closed migration
+        run: python scripts/pr7_apply.py
+      - name: Sanity checks
+        run: |
+          python -m py_compile momo_agent/backend/app/services/agent_task_proposal.py momo_agent/backend/tests/test_agent_task_proposal.py
+          git diff --check
+      - name: Commit PR7 implementation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add momo_agent/backend/app/services/agent_service.py \
+                  momo_agent/backend/app/services/agent_task_proposal.py \
+                  momo_agent/backend/tests/test_agent_task_proposal.py \
+                  platform-ui/src/api/agentApi.ts \
+                  platform-ui/src/pages/chat/ChatPage.tsx \
+                  platform-ui/src/pages/chat/cards/ResultCard.tsx \
+                  platform-ui/src/pages/chat/cards/TaskProposalCard.tsx \
+                  platform-ui/src/pages/chat/cards/TaskProposalCard.test.tsx
+          git commit -m 'feat: add chat-first engineering task proposals'
+          git push
+      - name: Remove one-shot migration files
+        run: |
+          git rm scripts/pr7_apply.py .github/workflows/pr7-apply.yml
+          git commit -m 'chore: remove PR7 migration helper'
+          git push
