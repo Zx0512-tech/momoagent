@@ -237,6 +237,7 @@ export interface AgentRun {
     inquiryMetrics?: InquiryMetric[];
     inquiryTopsis?: InquiryTopsisRow[];
     inquiryTopsisWeights?: InquiryTopsisWeights;
+    inquiryRunComparison?: RunComparisonResult;
     queryProgress?: { completed: number; message: string };
   };
   resultMetadata?: {
@@ -276,6 +277,74 @@ export interface InquiryTopsisRow {
 export interface InquiryTopsisWeights {
   objectiveNames: string[];
   weights: number[];
+}
+
+export type RunComparisonCompatibility = "DIRECT" | "CROSS_SOLVER" | "LIMITED" | "NOT_COMPARABLE";
+
+export interface RunComparisonMetric {
+  value: number;
+  unit: string;
+  label: string;
+  direction: "LOWER_IS_BETTER" | "HIGHER_IS_BETTER";
+  evidence: Record<string, unknown>;
+}
+
+export interface RunComparisonRun {
+  targetKey: string;
+  runId: string;
+  taskType: string;
+  solver?: string | null;
+  loadKind?: string | null;
+  modelArtifactId?: string | null;
+  modelSha256?: string | null;
+  modelIdentity?: string | null;
+  loadArtifactId?: string | null;
+  loadSha256?: string | null;
+  loadIdentity?: string | null;
+  responseIds: string[];
+  reportArtifactId?: string | null;
+  caseId?: string;
+  candidateRank?: number;
+  metrics: Record<string, RunComparisonMetric>;
+}
+
+export interface RunComparisonDelta {
+  baseline: number;
+  candidate: number;
+  difference: number;
+  relativeChange: number | null;
+  relativeChangePercent: number | null;
+  unit: string;
+  interpretation: "PERFORMANCE_CHANGE" | "SOLVER_DIFFERENCE";
+}
+
+export interface RunComparisonPair {
+  baselineTargetKey: string;
+  targetKey: string;
+  baselineRunId: string;
+  runId: string;
+  caseId?: string;
+  candidateRank?: number;
+  compatibility: RunComparisonCompatibility;
+  metrics: Record<string, RunComparisonDelta>;
+}
+
+export interface RunComparisonResult {
+  schemaVersion: "1.0";
+  sessionId: string;
+  projectId: string | null;
+  baselineRunId: string | null;
+  compatibility: RunComparisonCompatibility;
+  metricIds: string[];
+  runs: RunComparisonRun[];
+  comparisons: RunComparisonPair[];
+  rankings: Array<{
+    metricId: string;
+    direction: string;
+    rows: Array<{ rank: number; targetKey: string; runId: string; caseId?: string; candidateRank?: number; value: number }>;
+  }>;
+  warnings: string[];
+  interpretationLimit: string;
 }
 
 export type AgentMessageStreamEvent =

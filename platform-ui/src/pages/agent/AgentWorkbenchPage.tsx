@@ -11,6 +11,7 @@ import {
   type LoadSourceUnit
 } from "../../api/agentApi";
 import FullOptimizationPanel from "./FullOptimizationPanel";
+import RunComparisonCard from "./RunComparisonCard";
 
 const stageLabels: Record<string, string> = {
   LOAD_IMPORT: "上传文件",
@@ -255,6 +256,7 @@ const AgentWorkbenchPage = () => {
           <h2 style={styles.panelTitle}>运行与证据</h2>
           <div style={styles.meta}>Run：{run.runId}　状态：{run.status}{run.jobId ? `　Job：${run.jobId}` : ""}</div>
           <AgentEvidencePanel run={run} />
+          {run.resultSummary?.inquiryRunComparison && <RunComparisonCard comparison={run.resultSummary.inquiryRunComparison} />}
           <div style={styles.artifacts}>{run.artifactIds.map(artifactId => <a key={artifactId} href={agentApi.artifactDownloadUrl(artifactId)}>{artifactId}</a>)}</div>
           {run.status === "WAITING_JOB" && <button className="btn btn-secondary" disabled={busy} onClick={() => execute(async () => setRun(await agentApi.cancelRun(run.runId)))}>取消运行</button>}
         </section>
