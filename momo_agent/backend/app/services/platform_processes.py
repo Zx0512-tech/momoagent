@@ -72,7 +72,7 @@ def _windows_process_tree(root_pid: int) -> list[int]:
 
 
 def terminate_process_tree(pid: int) -> None:
-    """终止 worker 及其执行器子进程。"""
+    """终止 worker 及其执行器子进程，同时避免误杀当前服务进程组。"""
 
     if not process_exists(pid):
         return
@@ -87,6 +87,13 @@ def terminate_process_tree(pid: int) -> None:
                 ctypes.windll.kernel32.CloseHandle(handle)
         return
     try:
-        os.killpg(os.getpgid(pid), signal.SIGTERM)
+        target_pgid = os.getpgid(pid)
+        # 正常 dispatcher worker 通过 start_new_session=True 启动，拥有独立进程组；
+        # 恢复的外部 PID 或测试进程可能与服务本身同组。此时 killpg 会连同 API/CI
+        # 主进程一起终止，必须降级为只终止目标 PID，宁可留下未知子进程也不能自杀。
+        if target_pgid == os.getpgrp():
+            os.kill(pid, signal.SIGTERM)
+            return
+        os.killpg(target_pgid, signal.SIGTERM)
     except ProcessLookupError:
         return
