@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
 
 # Importing the router installs the same compatibility layer used by production API startup.
 from app.api.v1 import agent_router as _agent_router  # noqa: F401
 from app.services import agent_llm
+from app.services.agent_conversation import AgentConversationMixin
 from app.services.agent_engineering import EngineeringIntent, resolve_optimization_profile
 from app.services.agent_harness import WorkflowStartInput
 from app.services.agent_optimization_compat import (
@@ -51,6 +53,36 @@ def test_historical_full_workflow_payload_remains_readable_outside_new_start_sco
     assert parsed.task_type == LEGACY_FULL_TASK
     assert parsed.full_optimization_intent is not None
     assert parsed.full_optimization_intent.solver == 'ANSYS'
+
+
+def test_explicit_legacy_full_dispatch_bypasses_llm_and_creates_canonical_run() -> None:
+    captured: dict = {}
+
+    class Service(AgentConversationMixin):
+        def _create_engineering_run(self, repository, session, content, now, **kwargs):
+            captured.update(kwargs)
+            captured['content'] = content
+            return {'runId': 'run-canonical', 'taskType': CANONICAL_OPTIMIZATION_TASK}
+
+        def _decorate_run(self, run):
+            return run
+
+    repository = SimpleNamespace(get_run=lambda _run_id: None)
+    result = Service()._dispatch_message(
+        repository,
+        {'sessionId': 'session-1'},
+        '执行完整阻尼优化',
+        '2026-09-01T00:00:00Z',
+        None,
+        LEGACY_FULL_TASK,
+    )
+
+    assert result['taskType'] == CANONICAL_OPTIMIZATION_TASK
+    assert captured['requested_task'] == CANONICAL_OPTIMIZATION_TASK
+    assert captured['intent_override'].task_type == CANONICAL_OPTIMIZATION_TASK
+    assert captured['intent_override'].optimization_profile == 'FULL'
+    assert captured['route_evidence']['requestedTask'] == LEGACY_FULL_TASK
+    assert captured['route_evidence']['resolvedTask'] == CANONICAL_OPTIMIZATION_TASK
 
 
 def test_llm_engineering_parser_preserves_optimization_profile() -> None:
