@@ -59,29 +59,6 @@ replace_regex(
                 }\2""",
     'harness solver rewrite canonical mock',
 )
-# Make the repaired second turn stay on the same FULL profile as well.
-replace_exact(
-    'momo_agent/backend/tests/test_agent_harness.py',
-    """                        'responseIds': [
-                            'max_girder_end_displacement',
-                            'max_tower_base_shear',
-                            'max_tower_base_moment',
-                        ],
-                        'missingFields': [],
-                        'summary': '使用 OpenSeesPy 执行黏滞阻尼器 baseline-first 真实优化。',
-""",
-    """                        'responseIds': [
-                            'max_girder_end_displacement',
-                            'max_tower_base_shear',
-                            'max_tower_base_moment',
-                        ],
-                        'optimizationProfile': 'FULL',
-                        'missingFields': [],
-                        'summary': '使用 OpenSeesPy 执行黏滞阻尼器 baseline-first 真实优化。',
-""",
-    'harness repaired full profile',
-    count=1,
-)
 
 # 3) LLM prompt test: native engineering payload requires explicit attachment summary.
 replace_exact(
