@@ -7,6 +7,21 @@ import signal
 from ctypes import wintypes
 
 
+def _posix_process_is_zombie(pid: int) -> bool:
+    """Linux 上把僵尸进程视为已退出；其他 POSIX 平台安全回退。"""
+
+    stat_path = f'/proc/{pid}/stat'
+    try:
+        raw = open(stat_path, encoding='utf-8').read()
+    except (FileNotFoundError, PermissionError, OSError):
+        return False
+    closing_paren = raw.rfind(')')
+    if closing_paren < 0:
+        return False
+    fields = raw[closing_paren + 2:].split()
+    return bool(fields) and fields[0] == 'Z'
+
+
 def process_exists(pid: int) -> bool:
     """判断平台 worker 是否仍存活，不向目标进程发送信号。"""
 
@@ -27,7 +42,9 @@ def process_exists(pid: int) -> bool:
         os.kill(pid, 0)
     except OSError:
         return False
-    return True
+    # kill(pid, 0) 对已退出但尚未被父进程 wait() 的 zombie 仍返回成功。
+    # Dispatcher 的语义需要的是“还能执行工作吗”，因此 zombie 必须按已退出处理。
+    return not _posix_process_is_zombie(pid)
 
 
 class _ProcessEntry32W(ctypes.Structure):
