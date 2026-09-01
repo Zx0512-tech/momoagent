@@ -52,6 +52,7 @@ from app.services.agent_llm import (
 )
 from app.services.agent_repository import AgentRepository, DEFAULT_OWNER, run_state_lock
 from app.services.agent_project_context import engineering_project_context_service
+from app.services.agent_task_proposal import build_engineering_task_proposal
 from app.services.load_import_service import load_import_service
 from app.services.load_artifact_service import load_artifact_service
 from app.services.load_mapping_inference import (
@@ -566,6 +567,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             'createdAt': now,
             'updatedAt': now,
         }
+        run['taskProposal'] = build_engineering_task_proposal(run)
         if load_import:
             platform_store.claim_artifact_for_run(load_import['fileArtifactId'], run['runId'])
         repository.save_run(run)
@@ -672,6 +674,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             run['workflowContract'] = contract
         if prepared.plan:
             run['plan'] = list(prepared.plan)
+        run['taskProposal'] = build_engineering_task_proposal(run)
         if agent.task_type != 'ANALYSIS' and prepared.preflight:
             repository.save_step({
                 'stepId': gen_id('step'),

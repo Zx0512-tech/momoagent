@@ -7,6 +7,7 @@ import { MessageBubble } from "./MessageBubble";
 import { Composer } from "./Composer";
 import { EmptyState } from "./EmptyState";
 import { PlanCard } from "./cards/PlanCard";
+import { TaskProposalCard } from "./cards/TaskProposalCard";
 import MappingCard from "./cards/MappingCard";
 import { ApprovalCard } from "./cards/ApprovalCard";
 import { ProgressCard } from "./cards/ProgressCard";
@@ -59,6 +60,7 @@ export const ChatPage = () => {
       || resultSummary?.figures
       || resultSummary?.inquiryMetrics?.length
       || resultSummary?.inquiryTopsis?.length
+      || resultSummary?.inquiryRunComparison
       || cardRun.figureArtifactIds?.length
       || resultSummary?.narrativeSummary,
     );
@@ -67,7 +69,11 @@ export const ChatPage = () => {
       && !isTerminalStatus(cardRun.status);
     return (
       <>
-        {cardRun.workflowContract || cardRun.plan || cardRun.intent ? <PlanCard run={cardRun} /> : null}
+        {cardRun.taskProposal
+          ? <TaskProposalCard proposal={cardRun.taskProposal} />
+          : cardRun.workflowContract || cardRun.plan || cardRun.intent
+            ? <PlanCard run={cardRun} />
+            : null}
         {current && loadImport && mapping && (
           <MappingCard
             loadImport={loadImport}
@@ -126,6 +132,7 @@ export const ChatPage = () => {
                       && Boolean(
                         runHistory[message.runId]?.resultSummary?.inquiryMetrics?.length
                         || runHistory[message.runId]?.resultSummary?.inquiryTopsis?.length
+                        || runHistory[message.runId]?.resultSummary?.inquiryRunComparison
                       )
                         ? ""
                         : message.content
@@ -150,7 +157,9 @@ export const ChatPage = () => {
             {busy && messages[messages.length - 1]?.role === "USER" && (
               <MessageBubble role="ASSISTANT" content="">
                 {run?.taskType === "INQUIRY" && (
-                  run.resultSummary?.inquiryMetrics?.length || run.resultSummary?.inquiryTopsis?.length
+                  run.resultSummary?.inquiryMetrics?.length
+                  || run.resultSummary?.inquiryTopsis?.length
+                  || run.resultSummary?.inquiryRunComparison
                 ) ? (
                   renderRunCards(run, true)
                 ) : (

@@ -84,8 +84,9 @@ export interface ApprovalUpdatePayload {
   budget?: { doeDesignCount?: number };
 }
 
-export type AgentTaskType = "AUTO" | "ANALYSIS" | "DAMPER_OPTIMIZATION" | "DAMPER_COMPARISON" | "DAMPER_PARAMETER_SWEEP" | "LOAD_IMPORT" | "FULL_OPTIMIZATION";
-export type AgentRunTaskType = AgentTaskType | "CONVERSATION" | "INQUIRY" | "UNSUPPORTED" | "LLM_UNAVAILABLE" | "WORKFLOW_HARNESS";
+export type AgentTaskType = "AUTO" | "ANALYSIS" | "DAMPER_OPTIMIZATION" | "DAMPER_COMPARISON" | "DAMPER_PARAMETER_SWEEP" | "LOAD_IMPORT";
+/** FULL_OPTIMIZATION 只保留为历史 Run 身份；新请求统一使用 DAMPER_OPTIMIZATION + optimizationProfile=FULL。 */
+export type AgentRunTaskType = AgentTaskType | "FULL_OPTIMIZATION" | "CONVERSATION" | "INQUIRY" | "UNSUPPORTED" | "LLM_UNAVAILABLE" | "WORKFLOW_HARNESS";
 
 export type AgentInputSource = "USER_DECISION" | "VERIFIED_TEMPLATE" | "FILE_DERIVED" | "OPERATIONAL_DEFAULT";
 
@@ -163,6 +164,40 @@ export interface AgentToolCallTrace {
   error?: Record<string, unknown> | null;
 }
 
+export type EngineeringProposalSource =
+  | "USER_CONFIRMED"
+  | "PROJECT_WORKSPACE"
+  | "VERIFIED_RUN"
+  | "VERIFIED_TEMPLATE"
+  | "FILE_DERIVED"
+  | "SYSTEM_DEFAULT"
+  | "UNKNOWN";
+
+export interface EngineeringProposalField {
+  field: string;
+  label: string;
+  value: unknown;
+  source: EngineeringProposalSource;
+  rawSource?: string | null;
+  inherited: boolean;
+}
+
+export interface EngineeringTaskProposal {
+  schemaVersion: "1.0";
+  proposalId: string;
+  taskType: string;
+  summary: string;
+  proposalState: "NEEDS_CLARIFICATION" | "NEEDS_INPUT" | "READY_FOR_CONFIRMATION" | "BLOCKED";
+  fields: EngineeringProposalField[];
+  unresolvedFields: string[];
+  inheritedFields: string[];
+  warnings: string[];
+  proposedActions: string[];
+  approvalRequired: boolean;
+  readyForApproval: boolean;
+  preflightPassed?: boolean | null;
+}
+
 export interface AgentRun {
   runId: string;
   sessionId: string;
@@ -192,6 +227,7 @@ export interface AgentRun {
   plan?: string[];
   preflight?: FullOptimizationPreflight;
   workflowContract?: Record<string, unknown>;
+  taskProposal?: EngineeringTaskProposal;
   solverVersionProfile?: SolverVersionProfile;
   inputProvenance?: AgentInputProvenanceItem[];
   outputManifestArtifactId?: string;
