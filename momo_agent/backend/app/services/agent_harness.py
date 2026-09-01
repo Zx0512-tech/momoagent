@@ -50,21 +50,6 @@ from app.services.result_inquiry import ResultInquiryService
 logger = get_platform_logger('agent_harness')
 
 
-class FullOptimizationStartIntent(BaseModel):
-    model_config = ConfigDict(populate_by_name=True, extra='forbid', strict=True)
-
-    task_type: Literal['FULL_OPTIMIZATION'] = Field(alias='taskType')
-    solver: Literal['ANSYS'] = Field(
-        description=(
-            'FULL_OPTIMIZATION 仅支持用户明确要求的 ANSYS 地震联合优化；'
-            '用户指定 OpenSeesPy 时必须改用 DAMPER_OPTIMIZATION 并保留该求解器。'
-        ),
-    )
-    scenario: Literal['EARTHQUAKE']
-    use_verified_template_loads: Literal[True] = Field(alias='useVerifiedTemplateLoads')
-    requires_real_fem: Literal[True] = Field(alias='requiresRealFem')
-    summary: str = Field(min_length=1, max_length=500)
-
 
 class WorkflowStartInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra='forbid', strict=True)
@@ -74,20 +59,9 @@ class WorkflowStartInput(BaseModel):
         'DAMPER_COMPARISON',
         'DAMPER_PARAMETER_SWEEP',
         'DAMPER_OPTIMIZATION',
-        'FULL_OPTIMIZATION',
         'RESULT_INQUIRY',
-    ] = Field(
-        alias='taskType',
-        description=(
-            'FULL_OPTIMIZATION 只用于用户明确指定 ANSYS 的地震联合完整优化；'
-            '显式 OpenSeesPy baseline-first 优化使用 DAMPER_OPTIMIZATION，不能为适配 Schema 改写求解器。'
-        ),
-    )
+    ] = Field(alias='taskType')
     engineering_intent: EngineeringIntent | None = Field(default=None, alias='engineeringIntent')
-    full_optimization_intent: FullOptimizationStartIntent | None = Field(
-        default=None,
-        alias='fullOptimizationIntent',
-    )
 
 
 class HarnessRunInput(BaseModel):
@@ -409,7 +383,6 @@ def _build_harness_tool_catalog() -> list[dict[str, Any]]:
         'DAMPER_COMPARISON',
         'DAMPER_PARAMETER_SWEEP',
         'DAMPER_OPTIMIZATION',
-        'FULL_OPTIMIZATION',
         'RESULT_INQUIRY',
     ):
         definition = workflow_definition(task_type)
@@ -554,9 +527,9 @@ def _initial_runtime_cursor(
     elif status == 'WAITING_APPROVAL':
         target = 'WAITING_APPROVAL'
     elif status == 'WAITING_JOB':
-        target = 'BASELINE' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'} else 'EXECUTION'
+        target = 'BASELINE' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'} else 'EXECUTION'  # legacy FULL snapshots only
     elif status == 'REVIEWING':
-        target = 'REVIEW' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'} else 'EVIDENCE_REVIEW'
+        target = 'REVIEW' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'} else 'EVIDENCE_REVIEW'  # legacy FULL snapshots only
     elif status in {'SUCCEEDED', 'COMPLETED_DIAGNOSTIC'}:
         target = 'COMPLETED'
     elif status == 'CANCELLED':
@@ -1280,14 +1253,9 @@ class WorkflowHarnessMixin:
                 start = WorkflowStartInput.model_validate(call.arguments)
                 if start.task_type != run.get('taskType'):
                     raise ValueError('澄清回复的 taskType 与原 run 不匹配')
-                if start.task_type == 'FULL_OPTIMIZATION':
-                    if start.full_optimization_intent is None:
-                        raise ValueError('FULL_OPTIMIZATION 澄清回复缺少 fullOptimizationIntent')
-                    intent_for_plan = start.full_optimization_intent
-                else:
-                    if start.engineering_intent is None:
-                        raise ValueError('澄清回复缺少 engineeringIntent')
-                    intent_for_plan = start.engineering_intent
+                if start.engineering_intent is None:
+                    raise ValueError('澄清回复缺少 engineeringIntent')
+                intent_for_plan = start.engineering_intent
                 task_spec = engineering_task_spec(str(run.get('taskType')))
                 if task_spec is None:
                     raise ValueError(f'未登记的工程任务类型: {run.get("taskType")}')
@@ -1335,51 +1303,6 @@ class WorkflowHarnessMixin:
                     },
                 ])
         effective_arguments = start.model_dump(by_alias=True, mode='json')
-        if start.task_type == 'FULL_OPTIMIZATION':
-            # 完整优化使用专用 intent；旧澄清 run 结束后创建新的冻结优化 run，原 run 保留审计记录。
-            result = self._create_full_optimization_run(
-                repository,
-                session,
-                content,
-                now,
-                route_evidence={
-                    'routeMode': 'LLM_TOOL_CALL',
-                    'resolvedTask': 'FULL_OPTIMIZATION',
-                    'reason': '澄清回复通过 workflow.start 提供 fullOptimizationIntent。',
-                },
-                intent_override=intent_for_plan,
-            )
-            stored_result = repository.get_run(result['runId']) or dict(result)
-            self._attach_workflow_runtime(repository, stored_result, 'FULL_OPTIMIZATION')
-            run.update({
-                'status': 'CANCELLED',
-                'currentStep': 'CANCELLED',
-                'pendingApprovalId': None,
-                'updatedAt': utc_now(),
-            })
-            repository.save_run(run)
-            self._record_harness_tool_call(
-                repository,
-                run_id=stored_result['runId'],
-                call_id=call.tool_call_id,
-                name=call.name,
-                arguments=call.arguments,
-                effective_arguments=effective_arguments,
-                cached_tokens=turn.cached_tokens,
-            )
-            self._persist_native_tool_exchange(
-                repository,
-                session_id=session['sessionId'],
-                run_id=stored_result['runId'],
-                call=call,
-                assistant_content=turn.content,
-                tool_result={
-                    'resolvedTask': 'FULL_OPTIMIZATION',
-                    'effectiveArguments': effective_arguments,
-                    'workflowState': self._workflow_state_from_run(stored_result),
-                },
-            )
-            return self._decorate_run(stored_result)
         resolved = self._resolve_clarification(
             repository,
             session,
@@ -1603,15 +1526,6 @@ class WorkflowHarnessMixin:
                 prior_messages=messages,
                 event_sink=event_sink,
             )
-        elif task_type == 'FULL_OPTIMIZATION':
-            result = self._create_full_optimization_run(
-                repository,
-                session,
-                content,
-                now,
-                route_evidence=route_evidence,
-                intent_override=start.full_optimization_intent,
-            )
         else:
             intent = start.engineering_intent
             result = self._create_engineering_run(
@@ -1659,11 +1573,9 @@ class WorkflowHarnessMixin:
         if start.task_type == 'RESULT_INQUIRY':
             return None
         explicit_solver = _explicit_solver_from_user_content(user_content)
-        selected_solver = None
-        if start.task_type == 'FULL_OPTIMIZATION' and start.full_optimization_intent is not None:
-            selected_solver = start.full_optimization_intent.solver
-        elif start.engineering_intent is not None:
-            selected_solver = start.engineering_intent.solver
+        selected_solver = (
+            start.engineering_intent.solver if start.engineering_intent is not None else None
+        )
         if explicit_solver and selected_solver and selected_solver != explicit_solver:
             requested_label = 'OpenSeesPy' if explicit_solver == 'OPENSEESPY_INPROC' else 'ANSYS'
             selected_label = 'OpenSeesPy' if selected_solver == 'OPENSEESPY_INPROC' else 'ANSYS'
@@ -1671,8 +1583,6 @@ class WorkflowHarnessMixin:
                 f'用户明确指定 {requested_label}，workflow.start 不得改写为 {selected_label}；'
                 '请保留用户求解器并选择与其兼容的工作流。'
             )
-        if start.task_type == 'FULL_OPTIMIZATION':
-            return None if start.full_optimization_intent is not None else '缺少 fullOptimizationIntent'
         intent = start.engineering_intent
         if intent is None or intent.task_type != start.task_type:
             return '缺少 taskType 一致的 engineeringIntent'
@@ -2419,7 +2329,15 @@ class WorkflowHarnessMixin:
         run: dict[str, Any],
         task_type: str,
     ) -> None:
-        workflow_type = 'RESULT_INQUIRY' if task_type == 'INQUIRY' else task_type
+        # Historical persisted FULL runs may predate workflow snapshots.  Project them
+        # onto the canonical optimization workflow at read/resume time only; FULL is
+        # intentionally absent from WorkflowStartInput and the workflow registry.
+        if task_type == 'INQUIRY':
+            workflow_type = 'RESULT_INQUIRY'
+        elif task_type == 'FULL_OPTIMIZATION':
+            workflow_type = 'DAMPER_OPTIMIZATION'
+        else:
+            workflow_type = task_type
         frozen = freeze_workflow(workflow_definition(workflow_type))
         current_step, completed = _initial_runtime_cursor(run, frozen['workflowSnapshot'], workflow_type)
         run.update({

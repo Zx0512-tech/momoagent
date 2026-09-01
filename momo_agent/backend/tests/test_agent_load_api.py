@@ -766,13 +766,13 @@ def test_engineering_reflection_requires_frozen_load_and_layout_evidence() -> No
         },
     }
 
-    accepted = agent_service._reflect_full_optimization(job, run=run)
+    accepted = agent_service._reflect_optimization(job, run=run)
     assert accepted['runStatus'] == 'SUCCEEDED'
     assert accepted['checks']['approvedLoadArtifact'] is True
     assert accepted['checks']['approvedDamperLayout'] is True
 
     job['result']['customLoadEvidence']['sha256'] = 'b' * 64
-    rejected = agent_service._reflect_full_optimization(job, run=run)
+    rejected = agent_service._reflect_optimization(job, run=run)
     assert rejected['runStatus'] == 'COMPLETED_DIAGNOSTIC'
     assert rejected['checks']['approvedLoadArtifact'] is False
 

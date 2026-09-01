@@ -89,10 +89,10 @@ const FullOptimizationPanel = ({ loadToolActive, onLoadTool }: FullOptimizationP
       {!attachment && !loadToolActive && <section style={styles.panel}>
         <h2 style={styles.title}>可用的受控工程能力</h2>
         <div style={styles.grid}>
-          <Info label="求解器" value="ANSYS / MAPDL" />
+          <Info label="求解器" value="ANSYS / OpenSeesPy" />
           <Info label="阻尼器" value="USER300 黏滞 / 电涡流 / 摩擦" />
           <Info label="双工况对比" value="同荷载、同布置、等最大出力" />
-          <Info label="完整优化" value="40 s 地震 + 3600 s 运营" />
+          <Info label="优化 Profile" value="STANDARD / FULL / CUSTOM" />
           <Info label="DOE / CV" value="15 个设计 / 稳定 10 折" />
           <Info label="候选网格" value="728 个离散候选" />
           <Info label="复核预算" value="主动学习≤2轮，review修正≤1轮，误差≤5%" />
@@ -129,7 +129,7 @@ const FullOptimizationPanel = ({ loadToolActive, onLoadTool }: FullOptimizationP
         </section>
       )}
 
-      {run?.pendingApproval && ["RUN_FULL_OPTIMIZATION", "RUN_DAMPER_COMPARISON"].includes(run.pendingApproval.action) && (
+      {run?.pendingApproval && ["RUN_ENGINEERING_WORKFLOW", "RUN_DAMPER_COMPARISON"].includes(run.pendingApproval.action) && (
         <section style={styles.approval}>
           <h2 style={styles.title}>{run.pendingApproval.action === "RUN_DAMPER_COMPARISON" ? "双工况整单审批" : "整单计划审批"}</h2>
           <p>{run.pendingApproval.summary}</p>

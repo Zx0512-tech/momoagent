@@ -175,10 +175,10 @@ def _parameter_sweep_workflow() -> WorkflowDefinition:
     )
 
 
-def _optimization_workflow(*, full: bool = False) -> WorkflowDefinition:
-    workflow_id = 'full_optimization' if full else 'damper_optimization'
+def _optimization_workflow() -> WorkflowDefinition:
+    """所有优化 Profile 共用的一条 baseline-first 工作流。"""
     return WorkflowDefinition(
-        workflowId=workflow_id,
+        workflowId='damper_optimization',
         version=ENGINEERING_WORKFLOW_VERSION,
         initialStep='REQUIREMENTS',
         terminalSteps=('COMPLETED', 'FAILED', 'CANCELLED'),
@@ -232,7 +232,6 @@ _WORKFLOWS = {
     'DAMPER_COMPARISON': _comparison_workflow(),
     'DAMPER_PARAMETER_SWEEP': _parameter_sweep_workflow(),
     'DAMPER_OPTIMIZATION': _optimization_workflow(),
-    'FULL_OPTIMIZATION': _optimization_workflow(full=True),
     'RESULT_INQUIRY': _inquiry_workflow(),
 }
 

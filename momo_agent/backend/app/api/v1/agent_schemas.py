@@ -29,7 +29,6 @@ class AgentMessageCreateRequest(AgentModel):
         'DAMPER_COMPARISON',
         'DAMPER_PARAMETER_SWEEP',
         'LOAD_IMPORT',
-        'FULL_OPTIMIZATION',
     ] = 'AUTO'
 
 

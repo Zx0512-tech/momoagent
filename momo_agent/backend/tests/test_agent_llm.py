@@ -72,27 +72,41 @@ def test_llm_planner_returns_valid_structured_intent(monkeypatch) -> None:
         lambda _payload, *, stage=None: {
             'choices': [{
                 'message': {
-                    'content': '{"taskType":"FULL_OPTIMIZATION","solver":"ANSYS",'
-                    '"scenario":"EARTHQUAKE","useVerifiedTemplateLoads":true,'
-                    '"requiresRealFem":true,"summary":"运行完整优化"}'
+                    'content': json.dumps({
+                        'taskType': 'DAMPER_OPTIMIZATION',
+                        'solver': 'ANSYS',
+                        'damperType': 'VISCOUS',
+                        'loadKind': 'EARTHQUAKE',
+                        'selectedLayoutId': 'TWO_PER_TOWER',
+                        'responseIds': ['cumulative_displacement'],
+                        'budgetProfile': 'STANDARD',
+                        'optimizationProfile': 'FULL',
+                        'requiresRealFem': True,
+                        'missingFields': [],
+                        'summary': '运行完整优化',
+                    }, ensure_ascii=False),
                 }
             }]
         },
     )
 
-    result = planner.plan('执行完整阻尼优化')
+    result = planner.plan_engineering(
+        '执行完整阻尼优化', requested_task='DAMPER_OPTIMIZATION', has_file=False,
+    )
 
     assert result.planner_mode == 'LLM'
+    assert result.intent.task_type == 'DAMPER_OPTIMIZATION'
+    assert result.intent.optimization_profile == 'FULL'
     assert result.intent.solver == 'ANSYS'
-    assert result.intent.scenario == 'EARTHQUAKE'
-
+    assert result.intent.load_kind == 'EARTHQUAKE'
 
 def test_llm_planner_requires_configuration() -> None:
     with pytest.raises(LLMUnavailableError) as error:
-        OpenAICompatiblePlanner(base_url='', model='').plan('执行完整阻尼优化')
+        OpenAICompatiblePlanner(base_url='', model='').plan_engineering(
+            '执行完整阻尼优化', requested_task='DAMPER_OPTIMIZATION', has_file=False,
+        )
     assert error.value.stage == 'INTENT'
     assert error.value.reason == 'LLM_NOT_CONFIGURED'
-
 
 def test_llm_planner_raises_on_request_failure_or_invalid_json(monkeypatch) -> None:
     planner = OpenAICompatiblePlanner(base_url='http://127.0.0.1:11434/v1', model='momo-planner')
@@ -104,7 +118,9 @@ def test_llm_planner_raises_on_request_failure_or_invalid_json(monkeypatch) -> N
         ),
     )
     with pytest.raises(LLMUnavailableError) as error:
-        planner.plan('执行完整阻尼优化')
+        planner.plan_engineering(
+            '执行完整阻尼优化', requested_task='DAMPER_OPTIMIZATION', has_file=False,
+        )
     assert error.value.reason == 'LLM_CONNECTION_FAILED'
 
     monkeypatch.setattr(
@@ -113,19 +129,23 @@ def test_llm_planner_raises_on_request_failure_or_invalid_json(monkeypatch) -> N
         lambda _payload, *, stage=None: {'choices': [{'message': {'content': 'not-json'}}]},
     )
     with pytest.raises(LLMUnavailableError) as error:
-        planner.plan('执行完整阻尼优化')
+        planner.plan_engineering(
+            '执行完整阻尼优化', requested_task='DAMPER_OPTIMIZATION', has_file=False,
+        )
     assert error.value.reason == 'LLM_INVALID_RESPONSE'
-
 
 def test_llm_planner_prompt_freezes_supported_intent_values() -> None:
     planner = OpenAICompatiblePlanner(base_url='http://127.0.0.1:11434/v1', model='momo-planner')
 
-    system_prompt = planner._payload('执行完整阻尼优化')['messages'][0]['content']
+    system_prompt = planner._engineering_payload(
+        '执行完整阻尼优化', requested_task='DAMPER_OPTIMIZATION', has_file=False,
+        attachment_summary=None,
+    )['messages'][0]['content']
 
-    assert 'taskType 必须逐字返回 FULL_OPTIMIZATION' in system_prompt
-    assert 'solver 必须逐字返回 ANSYS' in system_prompt
-    assert 'scenario 必须逐字返回 EARTHQUAKE' in system_prompt
-
+    assert 'DAMPER_OPTIMIZATION' in system_prompt
+    assert 'optimizationProfile' in system_prompt
+    assert 'FULL' in system_prompt
+    assert 'FULL_OPTIMIZATION' not in system_prompt
 
 def test_harness_payload_keeps_static_prefix_and_sorted_tool_definitions() -> None:
     planner = OpenAICompatiblePlanner(base_url='http://127.0.0.1:11434/v1', model='momo-planner')
@@ -1380,8 +1400,8 @@ def test_full_optimization_report_adds_narrative_without_changing_evidence(monke
         'message': '模板结论：仅供诊断。',
     }
 
-    artifact = service._register_full_optimization_report(
-        {'runId': 'agr_1', 'goal': '完整优化', 'taskType': 'FULL_OPTIMIZATION', 'plannerMode': 'LLM'},
+    artifact = service._register_optimization_report(
+        {'runId': 'agr_1', 'goal': '完整优化', 'taskType': 'DAMPER_OPTIMIZATION', 'plannerMode': 'LLM'},
         {'jobId': 'job_1', 'status': 'SUCCEEDED', 'result': {'mode': 'real_baseline_optimization'}},
         reflection,
     )
@@ -1405,8 +1425,8 @@ def test_report_registration_survives_narrative_exception(monkeypatch) -> None:
         lambda **kwargs: captured.update(kwargs) or SimpleNamespace(artifact_id='art_fallback'),
     )
 
-    artifact = service._register_full_optimization_report(
-        {'runId': 'agr_2', 'goal': '完整优化', 'taskType': 'FULL_OPTIMIZATION'},
+    artifact = service._register_optimization_report(
+        {'runId': 'agr_2', 'goal': '完整优化', 'taskType': 'DAMPER_OPTIMIZATION'},
         {'jobId': 'job_2', 'status': 'FAILED', 'result': {}},
         {
             'accepted': False,

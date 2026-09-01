@@ -175,7 +175,7 @@ class AgentConversationMixin:
         if (
             self._runtime_mode() == 'WORKFLOW_HARNESS'
             and task_type in {
-                'AUTO', 'ANALYSIS', 'DAMPER_OPTIMIZATION', 'DAMPER_COMPARISON', 'DAMPER_PARAMETER_SWEEP', 'FULL_OPTIMIZATION',
+                'AUTO', 'ANALYSIS', 'DAMPER_OPTIMIZATION', 'DAMPER_COMPARISON', 'DAMPER_PARAMETER_SWEEP',
             }
         ):
             inquirable = self._find_inquirable_run(repository, session['sessionId'])
@@ -214,14 +214,6 @@ class AgentConversationMixin:
                 'confidence': route_result.route.confidence,
                 'reason': route_result.route.reason,
             }
-        if resolved_task == 'FULL_OPTIMIZATION':
-            return self._create_full_optimization_run(
-                repository,
-                session,
-                content,
-                now,
-                route_evidence=route_evidence,
-            )
         if resolved_task == 'CLARIFICATION':
             return self._create_conversation_run(
                 repository,

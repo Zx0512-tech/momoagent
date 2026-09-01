@@ -639,12 +639,15 @@ def test_optimization_capabilities_advertise_wind_on_both_solvers() -> None:
         assert capability.supports(solver='OPENSEESPY_INPROC', scenario='TRAFFIC')
 
 
-def test_full_optimization_capability_matches_its_ansys_earthquake_only_gate() -> None:
-    """完整优化的真实门只认 ANSYS + EARTHQUAKE，目录不得广告 OpenSeesPy。"""
-    capability = real_execution_registry.resolve('FULL_OPTIMIZATION', {'source': 'AGENT'})
+def test_canonical_optimization_capability_replaces_retired_full_gate() -> None:
+    capability = real_execution_registry.resolve('DAMPER_OPTIMIZATION', {'source': 'AGENT'})
 
-    assert capability.scenarios == ('EARTHQUAKE',)
-    assert capability.solvers == ('ANSYS',)
+    assert capability.status == 'LIVE'
     assert capability.supports(solver='ANSYS', scenario='EARTHQUAKE')
-    assert not capability.supports(solver='OPENSEESPY_INPROC', scenario='EARTHQUAKE')
-    assert not capability.supports(solver='ANSYS', scenario='WIND')
+    assert capability.supports(solver='OPENSEESPY_INPROC', scenario='WIND')
+    assert capability.supports(solver='ANSYS', scenario='TRAFFIC')
+
+    retired = real_execution_registry.resolve('FULL_OPTIMIZATION', {'source': 'AGENT'})
+    assert retired.status == 'DISABLED'
+    assert retired.handler == 'unregistered'
+

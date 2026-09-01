@@ -15,10 +15,10 @@ from typing import Any
 
 from fastapi import HTTPException
 
-from app.agents.damper_optimization import FULL_OPTIMIZATION_CONTRACT
 from app.core.engineering_limits import (
     DOE_ACTIVE_LEARNING_MAX_ADDITIONAL,
     DOE_FIXED_REAL_SOLVE_OVERHEAD,
+    DOE_INITIAL_DEFAULT,
 )
 from app.services.agent_engineering import (
     build_damper_comparison_contract,
@@ -286,28 +286,67 @@ class DamperParameterSweepTaskHandler(EngineeringTaskHandler):
 class DamperOptimizationTaskHandler(EngineeringTaskHandler):
     prepare_approval_method = '_prepare_engineering_optimization_approval'
 
-    def __init__(self, task_type: str = 'DAMPER_OPTIMIZATION') -> None:
-        super().__init__(task_type)
+    def __init__(self) -> None:
+        super().__init__('DAMPER_OPTIMIZATION')
+
+    def build_contract_from_intent(self, intent, *, load_import, field_sources=None):
+        profile = str(getattr(intent, 'optimization_profile', None) or 'STANDARD').upper()
+        sources = dict(field_sources or {})
+        sources.setdefault(
+            'optimizationProfile',
+            'USER_SPECIFIED' if profile != 'STANDARD' else 'DEFAULT',
+        )
+        return build_engineering_contract(
+            task_type=self.task_type,
+            solver=intent.solver,
+            damper_type=intent.damper_type,
+            response_ids=list(intent.response_ids),
+            selected_layout_id=intent.selected_layout_id or 'TWO_PER_TOWER',
+            load_kind=intent.load_kind or 'EARTHQUAKE',
+            optimization_profile=profile,
+            load_artifact_id=load_import.get('fileArtifactId') if load_import else None,
+            field_sources=sources,
+        )
+
+    def rebuild_contract(self, update):
+        profile = str(
+            update.previous_contract.get('optimizationProfile')
+            or update.frozen.get('optimizationProfile')
+            or 'STANDARD'
+        ).upper()
+        return build_engineering_contract(
+            task_type=self.task_type,
+            solver=update.solver,
+            damper_type=update.damper_type,
+            response_ids=list(update.response_ids),
+            selected_layout_id=(
+                update.changes.get('selectedLayoutId')
+                or update.frozen.get('selectedLayoutId')
+                or update.previous_contract.get('selectedLayoutId')
+                or 'TWO_PER_TOWER'
+            ),
+            load_kind=(
+                update.frozen.get('loadKind')
+                or update.previous_contract.get('loadKind')
+                or 'EARTHQUAKE'
+            ),
+            optimization_profile=profile,
+            load_artifact_id=update.load_artifact_id,
+            load_sha256=update.load_sha256,
+        )
+
+    def apply_intent_updates(self, intent, update, *, contract):
+        super().apply_intent_updates(intent, update, contract=contract)
+        intent['optimizationProfile'] = contract.get('optimizationProfile', 'STANDARD')
 
     def estimated_solves(self, *, budget, contract, cases):
         initial_doe_count = int(
             budget.get('doeDesignCount')
             or contract.get('doeDesignCount')
-            or FULL_OPTIMIZATION_CONTRACT.get('doeDesignCount')
-            or 0
+            or DOE_INITIAL_DEFAULT
         )
         estimated_min = initial_doe_count + DOE_FIXED_REAL_SOLVE_OVERHEAD
         return (estimated_min, estimated_min + DOE_ACTIVE_LEARNING_MAX_ADDITIONAL)
-
-
-class FullOptimizationTaskHandler(DamperOptimizationTaskHandler):
-    def __init__(self) -> None:
-        super().__init__('FULL_OPTIMIZATION')
-
-    def rebuild_contract(self, update):
-        # 完整优化的合同在计划阶段冻结，审批前修改只允许白名单字段
-        # （预算等）覆盖，不重建合同本体。
-        return dict(update.previous_contract)
 
 
 _HANDLERS: dict[str, EngineeringTaskHandler] = {
@@ -317,7 +356,6 @@ _HANDLERS: dict[str, EngineeringTaskHandler] = {
         DamperComparisonTaskHandler(),
         DamperParameterSweepTaskHandler(),
         DamperOptimizationTaskHandler(),
-        FullOptimizationTaskHandler(),
     )
 }
 

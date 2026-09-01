@@ -117,7 +117,6 @@ class AgentContext(BaseModel):
         'DAMPER_OPTIMIZATION',
         'DAMPER_COMPARISON',
         'DAMPER_PARAMETER_SWEEP',
-        'FULL_OPTIMIZATION',
     ] = 'ANALYSIS'
     has_attachment: bool = False
     attachment_summary: dict[str, Any] | None = None

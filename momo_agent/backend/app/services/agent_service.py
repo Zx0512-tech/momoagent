@@ -21,11 +21,7 @@ from app.agents.analysis import (
 from app.agents.core import AgentContext, AgentState, AgentStateMachine, RepositorySessionMemory
 from app.agents.damper_comparison import DamperComparisonAgent
 from app.agents.damper_parameter_sweep import DamperParameterSweepAgent
-from app.agents.damper_optimization import (
-    DamperOptimizationAgent,
-    FULL_OPTIMIZATION_CONTRACT,
-    FULL_OPTIMIZATION_PLAN,
-)
+from app.agents.damper_optimization import DamperOptimizationAgent
 from app.agents.engineering import EngineeringAgent, PreparedApproval, ReviewOutcome
 from app.agents.task_registry import engineering_task_spec, report_file_name
 from app.agents.tools import ToolExecutionError
@@ -772,98 +768,6 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             })
         return registered
 
-    def _create_full_optimization_run(
-        self,
-        repository: AgentRepository,
-        session: dict[str, Any],
-        content: str,
-        now: str,
-        *,
-        route_evidence: dict[str, Any] | None = None,
-        intent_override: Any | None = None,
-    ) -> dict[str, Any]:
-        run = {
-            'runId': gen_id('agr'),
-            'sessionId': session['sessionId'],
-            'goal': content,
-            'taskType': 'FULL_OPTIMIZATION',
-            'status': 'PLANNING',
-            'currentStage': 'PLANNING',
-            'artifactIds': [],
-            'jobId': None,
-            **({'routeEvidence': route_evidence} if route_evidence else {}),
-            'createdAt': now,
-            'updatedAt': now,
-        }
-        agent = self._agent_for('FULL_OPTIMIZATION')
-        optimization_plan = agent.plan(AgentContext(
-            session_id=session['sessionId'],
-            goal=content,
-            requested_task='FULL_OPTIMIZATION',
-        )) if intent_override is None else None
-        intent = optimization_plan.intent if optimization_plan is not None else intent_override
-        run.update({
-            'plannerMode': optimization_plan.planner_mode if optimization_plan is not None else 'LLM_TOOL_CALL',
-            'intent': intent.model_dump(by_alias=True),
-            'plan': list(optimization_plan.plan) if optimization_plan is not None else list(FULL_OPTIMIZATION_PLAN),
-            'workflowContract': (
-                dict(optimization_plan.workflow_contract)
-                if optimization_plan is not None
-                else dict(FULL_OPTIMIZATION_CONTRACT)
-            ),
-            'resultSummary': {
-                'message': intent.summary,
-            },
-            'updatedAt': utc_now(),
-        })
-        repository.save_step({
-            'stepId': gen_id('step'),
-            'runId': run['runId'],
-            'idempotencyKey': f'{run["runId"]}:PLANNING',
-            'title': '生成受控工程计划',
-            'status': 'SUCCEEDED',
-            'createdAt': utc_now(),
-        })
-        if not DamperOptimizationAgent.is_supported_full_optimization_intent(run['intent']):
-            run.update({
-                'status': 'UNSUPPORTED',
-                'currentStage': 'UNSUPPORTED',
-                'resultSummary': {
-                    **run['resultSummary'],
-                    'message': '仅支持使用已验证模板的 ANSYS 地震与运营联合完整优化。',
-                },
-                'updatedAt': utc_now(),
-            })
-            assistant_content = run['resultSummary']['message']
-        else:
-            run.update({'status': 'PREFLIGHT', 'currentStage': 'PREFLIGHT', 'updatedAt': utc_now()})
-            bundled_load = self._provision_bundled_earthquake(repository, run)
-            prepared = self._prepare_agent_approval(
-                repository,
-                run,
-                agent,
-                mapping=bundled_load['mapping'],
-                standard_artifact_id=bundled_load['standardArtifactId'],
-                standard_sha256=bundled_load['standardSha256'],
-            )
-            if prepared.passed:
-                approval = repository.get_approval(run.get('pendingApprovalId')) if run.get('pendingApprovalId') else None
-                assistant_content = str((approval or {}).get('summary') or '真实运行环境与配置预检通过，请审查并一次批准整单计划。')
-            else:
-                assistant_content = run['resultSummary']['message']
-        repository.save_run(run)
-        repository.add_message({
-            'messageId': gen_id('msg'),
-            'sessionId': session['sessionId'],
-            'role': 'ASSISTANT',
-            'content': assistant_content,
-            'runId': run['runId'],
-            **({'messageType': 'APPROVAL', 'approvalId': run.get('pendingApprovalId')} if run.get('pendingApprovalId') else {}),
-            'createdAt': utc_now(),
-        })
-        session['updatedAt'] = utc_now()
-        repository.save_session(session)
-        return self._decorate_run(run)
 
     def _try_auto_standardize(
         self,
@@ -2039,11 +1943,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             damper_type = [case.get('damperType') for case in cases if case.get('damperType')]
         task_type = str(frozen_action.get('taskType') or contract.get('taskType') or '')
         budget = frozen_action.get('budget') or contract.get('budget') or {}
-        optimization_defaults = (
-            FULL_OPTIMIZATION_CONTRACT
-            if task_type in {'FULL_OPTIMIZATION', 'DAMPER_OPTIMIZATION'}
-            else {}
-        )
+        optimization_defaults = {}  # canonical contracts freeze all optimization defaults
         task_handler = orchestration_handler(task_type)
         estimated_solves_min: int | None
         estimated_solves_max: int | None
@@ -2457,7 +2357,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             })
         elif action in {'RUN_ENGINEERING_WORKFLOW', 'RUN_FULL_OPTIMIZATION', 'RUN_DAMPER_COMPARISON', 'RUN_DAMPER_PARAMETER_SWEEP'}:
             prefix, title = {
-                'RUN_ENGINEERING_WORKFLOW': ('FULL_OPTIMIZATION', '创建工程优化任务'),
+                'RUN_ENGINEERING_WORKFLOW': ('DAMPER_OPTIMIZATION', '创建工程优化任务'),
                 'RUN_FULL_OPTIMIZATION': ('FULL_OPTIMIZATION', '创建完整优化任务'),
                 'RUN_DAMPER_COMPARISON': ('DAMPER_COMPARISON', '创建双工况阻尼器对比任务'),
                 'RUN_DAMPER_PARAMETER_SWEEP': ('DAMPER_PARAMETER_SWEEP', '创建阻尼器参数批量任务'),
@@ -2523,18 +2423,18 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             self._agent_for('DAMPER_COMPARISON'),
             job,
         )
-    def _reflect_full_optimization(
+    def _reflect_optimization(
         self,
         job: dict[str, Any],
         *,
         run: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        return orchestration_handler_or_generic('FULL_OPTIMIZATION').reflect(
-            self._agent_for('FULL_OPTIMIZATION'),
+        return orchestration_handler_or_generic('DAMPER_OPTIMIZATION').reflect(
+            self._agent_for('DAMPER_OPTIMIZATION'),
             job,
             run=run,
         )
-    def _register_full_optimization_report(
+    def _register_optimization_report(
         self,
         run: dict[str, Any],
         job: dict[str, Any],
@@ -2548,7 +2448,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             message=str(reflection['message']),
             extra={key: reflection[key] for key in ('validationStatus', 'reviewStatus', 'finalRecommendationStatus') if key in reflection},
         )
-        return self._register_agent_report(run, job, outcome, self._agent_for('FULL_OPTIMIZATION'))
+        return self._register_agent_report(run, job, outcome, self._agent_for('DAMPER_OPTIMIZATION'))
     @staticmethod
     def _payload_sha256(payload: dict[str, Any]) -> str:
         return sha256(
