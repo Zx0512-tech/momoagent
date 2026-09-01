@@ -15,16 +15,13 @@ from app.agents.evidence_gates import (
     input_provenance_passed,
     output_manifest_passed,
     result_catalog_passed,
-    real_preflight_passed,
     solver_version_profile_passed,
 )
 from app.services.agent_engineering import build_engineering_contract
 from app.services.agent_evidence import build_agent_input_provenance, build_solver_version_profile
 from app.services.platform_readiness import build_readiness_report
 from app.core.engineering_limits import (
-    DOE_ACTIVE_LEARNING_MAX_ADDITIONAL,
     DOE_ACTIVE_LEARNING_MAX_ITERATIONS,
-    DOE_FIXED_REAL_SOLVE_OVERHEAD,
     DOE_INITIAL_DEFAULT,
     DOE_INITIAL_MAX,
     DOE_INITIAL_MIN,
@@ -69,7 +66,6 @@ OPTIMIZATION_RESPONSE_CATALOG_BY_LOAD_KIND = {
     'WIND': frozenset({'cumulative_displacement'}),
     'TRAFFIC': frozenset({'cumulative_displacement'}),
 }
-FULL_OPTIMIZATION_WORKFLOW_PATH = 'docs/examples/templates/ansys_run_joint_baseline_workflow_template.json'
 ENGINEERING_OPTIMIZATION_PLAN = [
     '校验标准荷载 Artifact 的 ID、SHA256、时间轴和作用方式。',
     '检查求解器、Dispatcher、模型、模板和阻尼器校准证据。',
@@ -81,51 +77,6 @@ ENGINEERING_OPTIMIZATION_PLAN = [
     '执行独立 FEM validation 和最多 1 轮 final review 修正。',
     '生成带 Job、Artifact、SHA256、运行模式和验收措辞的证据报告。',
 ]
-FULL_OPTIMIZATION_PLAN = [
-    '检查数据库、Artifact、磁盘、Dispatcher 和 MAPDL。',
-    '对已登记 ANSYS baseline-first 模板执行真实 preflight_config。',
-    '运行无控地震基线。',
-    f'运行审批冻结的 {DOE_INITIAL_MIN}–{DOE_INITIAL_MAX} 个初始 DOE 设计（默认 {DOE_INITIAL_DEFAULT}）。',
-    '训练并比较代理模型，使用稳定 10 折交叉验证。',
-    '最多执行 2 轮主动学习。',
-    '枚举 728 个离散候选并应用无控基线物理约束。',
-    '生成 Pareto 前沿与熵权 TOPSIS 推荐。',
-    '执行独立 FEM validation 和 final review。',
-    '生成带哈希、Job、Artifact 和运行模式的报告。',
-]
-FULL_OPTIMIZATION_ACTION = {
-    'jobType': 'MULTI_OBJECTIVE_OPTIMIZATION',
-    'solver': 'ANSYS',
-    'scenario': 'EARTHQUAKE',
-    'executionTarget': 'OPTIMIZATION_DECISION',
-    'runMode': 'REAL_BASELINE_OPTIMIZATION',
-    'workflowConfigPath': FULL_OPTIMIZATION_WORKFLOW_PATH,
-    'executionTimeoutS': 7200,
-}
-FULL_OPTIMIZATION_CONTRACT = {
-    **FULL_OPTIMIZATION_ACTION,
-    'taskType': 'FULL_OPTIMIZATION',
-    'damperElement': 'USER300',
-    'loadCases': ['EARTHQUAKE_40S', 'OPERATION_3600S'],
-    'dampingCoefficient': {'min': 1000, 'max': 10000, 'step': 100},
-    'velocityExponent': {'min': 0.3, 'max': 1.0, 'step': 0.1},
-    'doeDesignCount': DOE_INITIAL_DEFAULT,
-    'candidateCount': 728,
-    'executionEstimate': {
-        'mode': 'PARAMETER_OPTIMIZATION',
-        'realSolveCount': DOE_INITIAL_DEFAULT + DOE_FIXED_REAL_SOLVE_OVERHEAD + DOE_ACTIVE_LEARNING_MAX_ADDITIONAL,
-        'estimatedRealSolvesMin': DOE_INITIAL_DEFAULT + DOE_FIXED_REAL_SOLVE_OVERHEAD,
-        'estimatedRealSolvesMax': DOE_INITIAL_DEFAULT + DOE_FIXED_REAL_SOLVE_OVERHEAD + DOE_ACTIVE_LEARNING_MAX_ADDITIONAL,
-        'doeDesignCount': DOE_INITIAL_DEFAULT,
-        'candidateCount': 728,
-    },
-    'surrogateCv': 10,
-    'maxActiveLearningIterations': DOE_ACTIVE_LEARNING_MAX_ITERATIONS,
-    'maxReviewIterations': 1,
-    'maxFemRelativeError': 0.05,
-    'customLoadFilesUsed': False,
-    'customDamperNodesUsed': False,
-}
 REQUIRED_REAL_OPTIMIZATION_ARTIFACTS = {
     'real_workflow_summary.json',
     'real_optimization_summary.json',
@@ -160,8 +111,6 @@ def required_real_optimization_artifacts(load_kind: str) -> set[str]:
 class EngineeringPlanner:
     def plan_engineering(self, goal: str, **kwargs: Any) -> Any: ...
 
-    def plan(self, goal: str) -> Any: ...
-
 
 @dataclass(frozen=True)
 class OptimizationPlan:
@@ -172,7 +121,11 @@ class OptimizationPlan:
 
 
 class DamperOptimizationAgent(EngineeringAgent):
-    """DAMPER_OPTIMIZATION 与 FULL_OPTIMIZATION 共用的工程 Agent。"""
+    """DAMPER_OPTIMIZATION 的统一 baseline-first 工程 Agent。
+
+    优化严格度由 workflowContract.optimizationProfile / optimizationPolicy 决定；
+    求解器、荷载、阻尼器和布置仍是独立工程配置，不再存在专用“完整优化”执行分支。
+    """
 
     task_type = 'DAMPER_OPTIMIZATION'
     approval_action = 'RUN_ENGINEERING_WORKFLOW'
@@ -198,14 +151,6 @@ class DamperOptimizationAgent(EngineeringAgent):
         self.solver_profile_builder = solver_profile_builder or build_solver_version_profile
 
     def plan(self, context: AgentContext) -> OptimizationPlan:
-        if context.requested_task == 'FULL_OPTIMIZATION':
-            result = self.planner.plan(context.goal)
-            return OptimizationPlan(
-                planner_mode=result.planner_mode,
-                intent=result.intent,
-                workflow_contract=dict(FULL_OPTIMIZATION_CONTRACT),
-                plan=list(FULL_OPTIMIZATION_PLAN),
-            )
         result = self.planner.plan_engineering(
             context.goal,
             requested_task=context.requested_task,
@@ -217,6 +162,9 @@ class DamperOptimizationAgent(EngineeringAgent):
         selected_layout_id = getattr(intent, 'selected_layout_id', None)
         load_kind = getattr(intent, 'load_kind', None)
         response_ids = list(getattr(intent, 'response_ids', []) or [])
+        optimization_profile = str(
+            getattr(intent, 'optimization_profile', None) or 'STANDARD'
+        ).upper()
         contract = (
             build_engineering_contract(
                 task_type=contract_task,
@@ -225,11 +173,15 @@ class DamperOptimizationAgent(EngineeringAgent):
                 response_ids=response_ids,
                 selected_layout_id=selected_layout_id or 'TWO_PER_TOWER',
                 load_kind=load_kind or 'EARTHQUAKE',
+                optimization_profile=optimization_profile,
                 field_sources={
                     'solver': 'USER_SPECIFIED',
                     'loadKind': 'USER_SPECIFIED' if load_kind else 'DEFAULT',
                     'selectedLayoutId': 'USER_SPECIFIED' if selected_layout_id else 'DEFAULT',
                     'responseIds': 'USER_SPECIFIED' if response_ids else 'DEFAULT',
+                    'optimizationProfile': (
+                        'USER_SPECIFIED' if optimization_profile != 'STANDARD' else 'DEFAULT'
+                    ),
                     'budget': 'DEFAULT',
                 },
             )
@@ -251,21 +203,14 @@ class DamperOptimizationAgent(EngineeringAgent):
         standard_artifact_id: str | None,
         standard_sha256: str | None,
     ) -> PreparedApproval:
-        if run.get('taskType') == 'FULL_OPTIMIZATION':
-            return self._prepare_full_optimization(
-                run,
-                mapping=mapping,
-                standard_artifact_id=standard_artifact_id,
-                standard_sha256=standard_sha256,
-            )
-        return self._prepare_engineering_optimization(
+        return self._prepare_optimization(
             run,
             mapping=mapping,
             standard_artifact_id=standard_artifact_id,
             standard_sha256=standard_sha256,
         )
 
-    def _prepare_engineering_optimization(
+    def _prepare_optimization(
         self,
         run: dict[str, Any],
         *,
@@ -360,6 +305,8 @@ class DamperOptimizationAgent(EngineeringAgent):
             'selectedLayoutId': contract.get('selectedLayoutId'),
             'selectedLayout': contract.get('selectedLayout'),
             'responseIds': contract.get('responseIds') or [],
+            'optimizationProfile': contract.get('optimizationProfile') or 'STANDARD',
+            'optimizationPolicy': contract.get('optimizationPolicy') or {},
             'budget': contract.get('budget') or {},
             'solverVersionProfile': solver_version_profile,
         }
@@ -383,87 +330,13 @@ class DamperOptimizationAgent(EngineeringAgent):
             passed=True,
             frozen_action=frozen_action,
             approval_action=self.approval_action,
-            approval_summary='批准后将用附件标准荷载创建一个原子真实 baseline-first 优化 Job。',
+            approval_summary=(
+                '批准后将用审批冻结的标准荷载、工程配置和优化 Profile '
+                '创建一个原子真实 baseline-first 优化 Job。'
+            ),
             preflight=preflight,
             contract_updates=contract_updates,
             plan=list(ENGINEERING_OPTIMIZATION_PLAN),
-            extra_run_fields={
-                'solverVersionProfile': solver_version_profile,
-                'inputProvenance': frozen_action['inputProvenance'],
-            },
-        )
-
-    def _prepare_full_optimization(
-        self,
-        run: dict[str, Any],
-        *,
-        mapping: dict[str, Any],
-        standard_artifact_id: str | None,
-        standard_sha256: str | None,
-    ) -> PreparedApproval:
-        preflight_config_result = {}
-        solver_version_profile = {}
-        readiness = self.readiness_builder(
-            self.store,
-            self.dispatcher,
-            require_platform_ui=False,
-            require_ansys=True,
-        )
-        try:
-            preflight_config_result = self.preflight_runner(self.repo_root / FULL_OPTIMIZATION_WORKFLOW_PATH)
-            solver_version_profile = self.solver_profile_builder(
-                self.repo_root / FULL_OPTIMIZATION_WORKFLOW_PATH,
-                solver='ANSYS',
-            )
-        except Exception as exc:
-            preflight_config_result = {'error': type(exc).__name__, 'message': str(exc)}
-            solver_version_profile = {'error': type(exc).__name__, 'message': str(exc)}
-        passed = (
-            readiness.get('status') == 'READY'
-            and real_preflight_passed(preflight_config_result)
-            and solver_version_profile_passed(solver_version_profile, require_user300=True)
-        )
-        preflight = {
-            'passed': passed,
-            'readiness': readiness,
-            'config': preflight_config_result,
-            'solverVersionProfile': solver_version_profile,
-        }
-        if not passed:
-            return PreparedApproval(
-                passed=False,
-                preflight=preflight,
-                plan=list(FULL_OPTIMIZATION_PLAN),
-                failure_status='FAILED',
-                failure_message='运行环境或真实配置预检未通过，未生成审批和 Job。',
-            )
-        frozen_action = {
-            **FULL_OPTIMIZATION_ACTION,
-            'loadDatasetArtifactId': standard_artifact_id,
-            'loadDatasetSha256': standard_sha256,
-            'loadMapping': mapping,
-            'budget': dict(
-                (run.get('workflowContract') or {}).get('budget')
-                or {'doeDesignCount': DOE_INITIAL_DEFAULT}
-            ),
-            'solverVersionProfile': solver_version_profile,
-        }
-        frozen_action['inputProvenance'] = build_agent_input_provenance(
-            frozen_action,
-            task_type='FULL_OPTIMIZATION',
-        )
-        return PreparedApproval(
-            passed=True,
-            frozen_action=frozen_action,
-            approval_action='RUN_FULL_OPTIMIZATION',
-            approval_summary='批准后将创建一个原子 REAL_BASELINE_OPTIMIZATION Job，最长运行 7200 秒。',
-            preflight=preflight,
-            plan=list(FULL_OPTIMIZATION_PLAN),
-            contract_updates={
-                'loadArtifactId': standard_artifact_id,
-                'loadSha256': standard_sha256,
-                'loadKind': 'EARTHQUAKE',
-            },
             extra_run_fields={
                 'solverVersionProfile': solver_version_profile,
                 'inputProvenance': frozen_action['inputProvenance'],
@@ -483,7 +356,7 @@ class DamperOptimizationAgent(EngineeringAgent):
                 run_status=status,
                 evidence_mode=status,
                 checks={'jobStatus': False},
-                message='完整优化任务未正常完成，不构成最终工程方案。',
+                message='优化任务未正常完成，不构成最终工程方案。',
             )
         result = job.get('result') or {}
         artifacts = job.get('artifacts') or []
@@ -566,7 +439,8 @@ class DamperOptimizationAgent(EngineeringAgent):
             for artifact in job.get('artifacts', [])
         ]
         result = job.get('result') or {}
-        task_type = run.get('taskType', 'FULL_OPTIMIZATION')
+        task_type = run.get('taskType', 'DAMPER_OPTIMIZATION')
+        contract = run.get('workflowContract') or {}
         report = {
             'agentRunId': run['runId'],
             'taskType': task_type,
@@ -580,18 +454,17 @@ class DamperOptimizationAgent(EngineeringAgent):
             'conclusion': outcome.message,
             'checks': outcome.checks,
             'artifacts': artifacts,
-            'workflowContract': run.get('workflowContract'),
+            'workflowContract': contract,
+            'optimizationProfile': contract.get('optimizationProfile'),
+            'optimizationPolicy': contract.get('optimizationPolicy'),
             'solverVersionProfile': result.get('solverVersionProfile'),
             'inputProvenance': result.get('inputProvenance') or [],
             'outputManifestArtifactId': result.get('outputManifestArtifactId'),
             'resultCatalogArtifactId': result.get('resultCatalogArtifactId'),
             'limitations': (
                 '本次优化使用审批冻结的标准荷载 Artifact；阻尼器布置仅来自 STbridge 受控候选表。'
-                if task_type == 'DAMPER_OPTIMIZATION'
-                and (run.get('workflowContract') or {}).get('loadArtifactId')
+                if contract.get('loadArtifactId')
                 else '本次优化使用已登记模板荷载；阻尼器布置仅来自 STbridge 受控候选表。'
-                if task_type == 'DAMPER_OPTIMIZATION'
-                else '本次优化未使用上传的自定义荷载文件或页面自定义阻尼器节点。'
             ),
         }
         return {
@@ -616,16 +489,6 @@ class DamperOptimizationAgent(EngineeringAgent):
             'recommendedObjectives': narrative_safe(result.get('recommendedObjectives')),
             'validationRelativeErrors': narrative_safe((result.get('validationStatus') or {}).get('relativeErrors')),
         }
-
-    @staticmethod
-    def is_supported_full_optimization_intent(intent: dict[str, Any]) -> bool:
-        return (
-            intent.get('taskType') == 'FULL_OPTIMIZATION'
-            and intent.get('solver') == 'ANSYS'
-            and intent.get('scenario') == 'EARTHQUAKE'
-            and intent.get('useVerifiedTemplateLoads') is True
-            and intent.get('requiresRealFem') is True
-        )
 
     @staticmethod
     def _payload_sha256(payload: dict[str, Any]) -> str:
