@@ -11,7 +11,7 @@ from app.api.v1.agent_project_schemas import EngineeringWorkspacePatch
 from app.main import app
 from app.services.agent_project_service import EngineeringProjectService
 from app.services.agent_service import agent_service
-from app.services.platform_store import platform_store
+from app.services.platform_store import platform_store, utc_now
 
 
 @pytest.fixture(autouse=True)
@@ -24,7 +24,7 @@ def isolated_project_state(tmp_path: Path):
         platform_store.state_path = original_state_path
 
 
-def test_project_workspace_persists_and_groups_sessions() -> None:
+def test_project_workspace_persists_and_groups_sessions_and_runs() -> None:
     service = EngineeringProjectService()
     project = service.create_project(
         'STbridge 参数优化',
@@ -37,12 +37,27 @@ def test_project_workspace_persists_and_groups_sessions() -> None:
     )
 
     session = service.create_session(project['projectId'], '风致响应优化')
+    now = utc_now()
+    agent_service.repository().save_run({
+        'runId': 'agr_project_history',
+        'sessionId': session['sessionId'],
+        'goal': '执行风致阻尼优化',
+        'taskType': 'DAMPER_OPTIMIZATION',
+        'status': 'SUCCEEDED',
+        'currentStage': 'COMPLETED',
+        'artifactIds': [],
+        'createdAt': now,
+        'updatedAt': now,
+    })
     loaded = service.get_project(project['projectId'])
 
     assert session['projectId'] == project['projectId']
     assert loaded['sessionCount'] == 1
-    assert loaded['runCount'] == 0
+    assert loaded['runCount'] == 1
     assert loaded['sessions'][0]['sessionId'] == session['sessionId']
+    assert loaded['sessions'][0]['runCount'] == 1
+    assert loaded['runs'][0]['runId'] == 'agr_project_history'
+    assert loaded['runs'][0]['taskType'] == 'DAMPER_OPTIMIZATION'
     assert loaded['workspace']['solver'] == 'OPENSEESPY_INPROC'
     assert loaded['workspace']['loadKind'] == 'WIND'
     assert loaded['workspace']['optimizationProfile'] == 'FULL'
@@ -55,6 +70,7 @@ def test_project_workspace_persists_and_groups_sessions() -> None:
     reloaded = EngineeringProjectService().get_project(project['projectId'])
 
     assert updated['workspaceRevision'] == 2
+    assert reloaded['runCount'] == 1
     assert reloaded['workspace']['solver'] == 'OPENSEESPY_INPROC'
     assert reloaded['workspace']['modelFileName'] == 'STbridge.txt'
     assert reloaded['workspace']['selectedLayoutId'] == 'TWO_PER_TOWER'
