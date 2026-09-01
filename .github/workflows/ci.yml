@@ -36,25 +36,9 @@ jobs:
 
       - name: Run backend fast regression suite
         working-directory: momo_agent/backend
-        # Legacy cases below cross local ANSYS/OpenSees version or template-preflight boundaries
-        # but are not consistently marked yet. Hosted CI keeps production evidence gates strict
-        # and excludes only those machine-dependent cases; marker cleanup can follow separately.
         run: >-
           python -m pytest tests
           -m "not requires_ansys and not requires_opensees and not requires_both_solvers and not slow"
-          --deselect tests/test_agent_load_api.py::test_analysis_freezes_real_solver_job_after_load_mapping
-          --deselect tests/test_agent_load_api.py::test_analysis_without_upload_freezes_bundled_earthquake_artifact
-          --deselect tests/test_damper_sweep_wind.py::test_wind_sweep_freezes_registered_wind_template_and_target_set
-          --deselect tests/test_damper_sweep_wind.py::test_earthquake_sweep_keeps_no_target_set_and_earthquake_template
-          --deselect tests/test_traffic_damper_optimization.py::test_traffic_optimization_template_is_registered_and_single_objective
-          --deselect tests/test_traffic_damper_optimization.py::test_traffic_optimization_freezes_registered_traffic_workflow_template
-          --deselect tests/test_traffic_damper_optimization.py::test_traffic_optimization_approval_does_not_gate_missing_point_mapping
-          --deselect "tests/test_traffic_damper_sweep.py::test_traffic_sweep_freezes_registered_template_and_point_mapping[ANSYS-ANSYS-docs/examples/templates/ansys_run_traffic_baseline_template.json]"
-          --deselect tests/test_wind_damper_optimization.py::test_wind_optimization_template_is_registered_and_single_objective
-          --deselect tests/test_wind_damper_optimization.py::test_wind_optimization_freezes_registered_wind_workflow_template
-          --deselect tests/test_wind_damper_optimization.py::test_wind_optimization_freezes_load_target_set
-          --deselect tests/test_wind_damper_optimization.py::test_earthquake_optimization_does_not_freeze_wind_target_set
-          --deselect tests/test_wind_damper_optimization.py::test_earthquake_optimization_still_freezes_joint_template
           -q
 
   frontend-quality:
