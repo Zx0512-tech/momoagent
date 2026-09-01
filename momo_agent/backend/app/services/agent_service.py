@@ -1675,6 +1675,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             report_persisted=True,
         )
         repository.save_run(run)
+        self._materialize_project_memory_once(repository, run)
         return run
 
     def _refresh_agent_run_once(
@@ -1819,6 +1820,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             ),
         )
         repository.save_run(run)
+        self._materialize_project_memory_once(repository, run)
         return run
 
     @staticmethod
@@ -2518,13 +2520,47 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             session['updatedAt'] = utc_now()
             repository.save_session(session)
 
+    def _materialize_project_memory_once(
+        self,
+        repository: AgentRepository,
+        run: dict[str, Any],
+    ) -> None:
+        """成功工程 Run 在终态提交时一次性物化 Project Workspace 记忆。
+
+        这是写路径钩子，不允许从 _decorate_run/get_run/get_session 等读路径触发。
+        Project 更新与 Run 标记分两次 SQLite 提交；若两者之间进程退出，
+        write_back_verified_run 的值级幂等保证重试不会重复推进 workspaceRevision。
+        """
+        if run.get('projectMemoryMaterialization'):
+            return
+        summary = run.get('resultSummary') if isinstance(run.get('resultSummary'), dict) else {}
+        if (
+            run.get('taskType') not in ENGINEERING_TASK_TYPES
+            or run.get('status') != 'SUCCEEDED'
+            or summary.get('evidenceMode') != 'REAL_FEM'
+            or not run.get('reportArtifactId')
+        ):
+            return
+        try:
+            project = engineering_project_context_service.write_back_verified_run(run)
+        except Exception:
+            logger.warning(
+                'Project Workspace 终态记忆写回失败，不影响已完成工程 Run',
+                exc_info=True,
+            )
+            return
+        if project is None:
+            return
+        run['projectMemoryMaterialization'] = {
+            'projectId': project.get('projectId'),
+            'workspaceRevision': int(project.get('workspaceRevision') or 0),
+            'materializedAt': utc_now(),
+        }
+        repository.save_run(run)
+
     def _decorate_run(self, run: dict[str, Any]) -> dict[str, Any]:
         repository = self.repository()
         self._sync_workflow_runtime(repository, run)
-        try:
-            engineering_project_context_service.write_back_verified_run(run)
-        except Exception:
-            logger.warning('Project Workspace 记忆写回失败，不影响运行读取', exc_info=True)
         approval = repository.get_approval(run['pendingApprovalId']) if run.get('pendingApprovalId') else None
         list_tool_calls = getattr(repository, 'list_tool_calls', None)
         tool_calls = list_tool_calls(run['runId']) if callable(list_tool_calls) else []
