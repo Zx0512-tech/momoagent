@@ -70,12 +70,13 @@ replace_exact(
     'llm engineering payload attachment summary',
 )
 
-# 4) Reflection test: the production helper is now canonically named.
+# 4) Reflection tests: both old helper call sites now use the canonical helper name.
 replace_exact(
     'momo_agent/backend/tests/test_agent_load_api.py',
     'agent_service._reflect_full_optimization(',
     'agent_service._reflect_optimization(',
     'canonical optimization reflection helper',
+    count=2,
 )
 
 # One-shot machinery must not remain in the PR tree.
