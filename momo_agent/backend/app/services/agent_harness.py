@@ -1272,6 +1272,7 @@ class WorkflowHarnessMixin:
                     start.engineering_intent,
                     project_context=project_context,
                     user_content=content,
+                    prior_user_content=str(run.get('goal') or ''),
                 )
                 start = start.model_copy(update={'engineering_intent': intent_for_plan})
                 task_spec = engineering_task_spec(str(run.get('taskType')))

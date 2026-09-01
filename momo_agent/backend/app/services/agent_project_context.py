@@ -157,7 +157,11 @@ class EngineeringProjectContextService:
         for related_session_id in session_ids:
             runs.extend(repository.list_runs(related_session_id))
 
-        trusted = [run for run in runs if self._trusted_run(run)]
+        trusted = [
+            run for run in runs
+            if self._trusted_run(run)
+            and str(run.get('ownerId') or owner) == owner
+        ]
         relevant = sorted(
             (self._run_memory(run, workspace, query=query, requested_task=requested_task) for run in trusted),
             key=lambda item: (int(item['relevanceScore']), str(item.get('updatedAt') or '')),
@@ -193,6 +197,7 @@ class EngineeringProjectContextService:
         *,
         project_context: dict[str, Any] | None,
         user_content: str,
+        prior_user_content: str = '',
     ) -> tuple[Any, dict[str, str]]:
         """只继承用户本轮没有明确覆盖的 Workspace 槽位，并返回字段来源。"""
         if not project_context:
@@ -201,14 +206,14 @@ class EngineeringProjectContextService:
         updates: dict[str, Any] = {}
         sources: dict[str, str] = {}
 
-        explicit_solver = _explicit_solver(user_content)
+        explicit_solver = _explicit_solver(user_content) or _explicit_solver(prior_user_content)
         if explicit_solver is None and workspace.get('solver'):
             updates['solver'] = workspace['solver']
             sources['solver'] = 'PROJECT_WORKSPACE'
         elif explicit_solver is not None:
             sources['solver'] = 'USER_SPECIFIED'
 
-        explicit_load = _explicit_load_kind(user_content)
+        explicit_load = _explicit_load_kind(user_content) or _explicit_load_kind(prior_user_content)
         if explicit_load is None and workspace.get('loadKind'):
             updates['load_kind'] = workspace['loadKind']
             sources['loadKind'] = 'PROJECT_WORKSPACE'
@@ -216,7 +221,7 @@ class EngineeringProjectContextService:
             updates['load_kind'] = explicit_load
             sources['loadKind'] = 'USER_SPECIFIED'
 
-        explicit_damper = _explicit_damper_type(user_content)
+        explicit_damper = _explicit_damper_type(user_content) or _explicit_damper_type(prior_user_content)
         if (
             explicit_damper is None
             and workspace.get('damperType')
@@ -228,7 +233,7 @@ class EngineeringProjectContextService:
             updates['damper_type'] = explicit_damper
             sources['damperType'] = 'USER_SPECIFIED'
 
-        explicit_layout = _explicit_layout(user_content)
+        explicit_layout = _explicit_layout(user_content) or _explicit_layout(prior_user_content)
         if explicit_layout is None and workspace.get('selectedLayoutId'):
             updates['selected_layout_id'] = workspace['selectedLayoutId']
             sources['selectedLayoutId'] = 'PROJECT_WORKSPACE'
@@ -236,14 +241,14 @@ class EngineeringProjectContextService:
             updates['selected_layout_id'] = explicit_layout
             sources['selectedLayoutId'] = 'USER_SPECIFIED'
 
-        explicit_responses = _explicit_response_ids(user_content)
+        explicit_responses = _explicit_response_ids(user_content) or _explicit_response_ids(prior_user_content)
         if not explicit_responses and workspace.get('responseIds'):
             updates['response_ids'] = list(workspace['responseIds'])
             sources['responseIds'] = 'PROJECT_WORKSPACE'
         elif explicit_responses:
             sources['responseIds'] = 'USER_SPECIFIED'
 
-        explicit_profile = _explicit_profile(user_content)
+        explicit_profile = _explicit_profile(user_content) or _explicit_profile(prior_user_content)
         if (
             explicit_profile is None
             and workspace.get('optimizationProfile')
@@ -259,7 +264,10 @@ class EngineeringProjectContextService:
         # responseElementIds。只记住 modelArtifactId/SHA 用于历史匹配，不能单独
         # 把模型引用灌入新 ANALYSIS，否则会制造不完整合同。用户本轮显式提供
         # artifactId 时仍由原始 EngineeringIntent 负责传入并标记来源。
-        explicit_artifact = bool(re.search(r'art_[A-Za-z0-9_-]+', user_content))
+        explicit_artifact = bool(
+            re.search(r'art_[A-Za-z0-9_-]+', user_content)
+            or re.search(r'art_[A-Za-z0-9_-]+', prior_user_content)
+        )
         if explicit_artifact:
             sources['modelArtifactId'] = 'USER_SPECIFIED'
 
