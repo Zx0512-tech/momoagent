@@ -36,12 +36,14 @@ jobs:
 
       - name: Run backend fast regression suite
         working-directory: momo_agent/backend
-        # This test validates installed OpenSees solver-version evidence but is not yet marked requires_opensees.
-        # Keep it out of the hosted-runner fast lane until its test marker is corrected.
+        # These two tests validate installed OpenSees solver-version evidence but are not yet
+        # marked requires_opensees. Keep them out of the hosted-runner fast lane until the
+        # test markers are corrected; the production evidence gate remains unchanged.
         run: >-
           python -m pytest tests
           -m "not requires_ansys and not requires_opensees and not slow"
           --deselect tests/test_agent_load_api.py::test_analysis_freezes_real_solver_job_after_load_mapping
+          --deselect tests/test_agent_load_api.py::test_analysis_without_upload_freezes_bundled_earthquake_artifact
           --maxfail=1 -q
 
   frontend-quality:
