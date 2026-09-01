@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "solver": "OPENSEESPY_INPROC_USER300",
   "evidenceClass": "RUNTIME_FORMULA_CONFORMANCE",
-  "generator": "scripts/generate_opensees_user300_calibration.py",
+  "generator": "tools/scripts/generate_opensees_user300_calibration.py",
   "profiles": [
     {
       "damperType": "VISCOUS",

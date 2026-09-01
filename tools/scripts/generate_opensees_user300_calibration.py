@@ -14,7 +14,7 @@ where a separate ANSYS-side comparison already exists and is referenced.
 
 Run from the submission root:
 
-    python scripts/generate_opensees_user300_calibration.py
+    python tools/scripts/generate_opensees_user300_calibration.py
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 
-SUBMISSION_ROOT = Path(__file__).resolve().parents[1]
+SUBMISSION_ROOT = Path(__file__).resolve().parents[2]
 CALIBRATION_DIR = SUBMISSION_ROOT / 'docs/examples/templates/calibration'
 CATALOG_PATH = CALIBRATION_DIR / 'opensees_user300_three_damper_calibration.json'
 SOLVER_LABEL = 'OPENSEESPY_INPROC_USER300'
@@ -200,7 +200,7 @@ def main() -> int:
         'schemaVersion': '1.0',
         'solver': SOLVER_LABEL,
         'evidenceClass': 'RUNTIME_FORMULA_CONFORMANCE',
-        'generator': 'scripts/generate_opensees_user300_calibration.py',
+        'generator': 'tools/scripts/generate_opensees_user300_calibration.py',
         'profiles': profiles,
     })
     print(f'wrote {CATALOG_PATH.name}')

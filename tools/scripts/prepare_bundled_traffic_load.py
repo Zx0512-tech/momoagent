@@ -6,7 +6,7 @@
 无车时刻按 0 填充。
 
 用法：
-    python scripts/prepare_bundled_traffic_load.py \
+    python tools/scripts/prepare_bundled_traffic_load.py \
         --source D:/momo/.../stbridge_traffic_node_load_time_history.csv \
         --output analysis_data/traffic_inputs/traffic_random_base_3600s.csv
 """
