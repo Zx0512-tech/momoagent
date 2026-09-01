@@ -44,7 +44,7 @@ Harness 默认通过 `MOMO_LLM_HARNESS_THINKING=true` 启用模型内部思考�
 
 ## 自然语言演示
 
-配置好大模型后，将 [`demo_prompt.txt`](demo_prompt.txt) 中的指令粘贴到智能体页面。系统会展示：
+配置好大模型后，将 [`docs/demo_prompt.txt`](docs/demo_prompt.txt) 中的指令粘贴到智能体页面。系统会展示：
 
 1. 意图和求解器识别；
 2. 节点布置、目标、预算与来源冻结；
@@ -58,7 +58,7 @@ Harness 默认通过 `MOMO_LLM_HARNESS_THINKING=true` 启用模型内部思考�
 
 本次演示共执行 17 个真实 OpenSees 算例：1 个无阻尼基线、15 个 DOE、1 个推荐点复算。另有 728 个代理候选点，不计入真实求解数。
 
-`evidence/` 内的历史命令流保留原始 `D:\momo` 绝对路径作为不可改写的来源证据，不作为搬迁后的执行入口；从本提交目录发起新任务时，系统会按当前位置重新生成命令流。
+`verification/evidence/` 内的历史命令流保留原始 `D:\momo` 绝对路径作为不可改写的来源证据，不作为搬迁后的执行入口；从本提交目录发起新任务时，系统会按当前位置重新生成命令流。
 
 最终推荐为：单个阻尼器 `c=7600`、`alpha=0.8`，每塔两个阻尼器、每塔总 `c=15200`。
 
@@ -82,7 +82,10 @@ pyansys_bridge/               OpenSees 调用、DOE、代理与优化核心
 bridge_models/                桥梁模型和 USER300 OpenSeesPy 运行时
 analysis_data/                登记地震加速度记录
 docs/examples/templates/      受控工作流配置和校准证据
-evidence/                     本次真实优化的可复核结果
+docs/assets/                  文档与发布素材
+docs/legal/                   第三方合规说明
+tools/                        清单重建、离线运行配置和第三方补丁
+verification/                 离线校验、提交清单和真实优化证据
 ```
 
 ## 结果边界
@@ -91,4 +94,4 @@ evidence/                     本次真实优化的可复核结果
 
 前端依赖在本机完成测试、lint 和生产构建。安装过程曾返回 3 个高危项的在线摘要，但在线审计明细因外发依赖元数据的安全限制未获取；离线缓存审计返回 0。正式提交前应由参赛者明确授权并运行 `npm audit`，根据明细决定升级或记录仅开发依赖的风险接受理由。
 
-第三方与定制 OpenSees 材料说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+第三方与定制 OpenSees 材料说明见 [`docs/legal/THIRD_PARTY_NOTICES.md`](docs/legal/THIRD_PARTY_NOTICES.md)。

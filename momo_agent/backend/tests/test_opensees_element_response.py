@@ -1,7 +1,7 @@
 """OpenSees 点名单元内力输出：solver 层注入与 CSV 列契约。
 
 单元内力列必须与 ANSYS ``ansys-dpf-nodes`` 的 ``element_{id}_force`` 契约一致，
-且未点名单元时命令流必须与该功能引入前字节级一致，否则 evidence/ 里已归档的
+且未点名单元时命令流必须与该功能引入前字节级一致，否则 verification/evidence/ 里已归档的
 command stream sha256 不再匹配。
 """
 

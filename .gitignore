@@ -23,6 +23,13 @@ dist-ssr/
 .playwright-cli/
 *.local
 
+# === 随发布包提供的运行资产（无密钥）===
+!platform-ui/.env.development
+!platform-ui/.env.production
+!platform-ui/dist/
+!platform-ui/dist/**
+!bridge_models/stbridge_opensees/openseespy/opensees.cp313-win_amd64.pyd
+
 # === 运行产物 ===
 output/
 .tmp/

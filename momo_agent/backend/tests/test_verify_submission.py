@@ -4,15 +4,34 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import sys
 
 import pytest
 
 
 SUBMISSION_ROOT = Path(__file__).resolve().parents[3]
-SPEC = importlib.util.spec_from_file_location('verify_submission_module', SUBMISSION_ROOT / 'verify_submission.py')
+VERIFICATION_ROOT = SUBMISSION_ROOT / 'verification'
+SPEC = importlib.util.spec_from_file_location('verify_submission_module', VERIFICATION_ROOT / 'verify_submission.py')
 assert SPEC and SPEC.loader
 verify_submission = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(verify_submission)
+
+
+def test_verification_module_uses_repository_root() -> None:
+    assert verify_submission.REPOSITORY_ROOT == SUBMISSION_ROOT
+    assert verify_submission.MANIFEST == VERIFICATION_ROOT / 'SUBMISSION_MANIFEST.json'
+
+
+def test_root_verify_submission_entrypoint_re_exports_implementation(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.syspath_prepend(str(SUBMISSION_ROOT))
+    spec = importlib.util.spec_from_file_location('root_verify_submission_module', SUBMISSION_ROOT / 'verify_submission.py')
+    assert spec and spec.loader
+    entrypoint = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, spec.name, entrypoint)
+    spec.loader.exec_module(entrypoint)
+
+    assert entrypoint.main.__module__ == 'verification.verify_submission'
+    assert entrypoint.verify_submission_manifest.__module__ == 'verification.verify_submission'
 
 
 def _write_manifest(root: Path, files: list[dict[str, object]], *, file_count: int | None = None) -> Path:

@@ -1,7 +1,7 @@
 """命令流进度注入的证据链保护测试。
 
 时程进度写入必须可开关：不传 ``progress_path`` 时，渲染出的命令流必须与
-注入功能引入之前字节级一致，否则 evidence/ 里已归档的 command stream
+注入功能引入之前字节级一致，否则 verification/evidence/ 里已归档的 command stream
 sha256 将不再匹配新生成的脚本，破坏可复核性。
 """
 

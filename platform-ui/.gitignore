@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# 发布包保留已验证的生产构建，支持根目录 install.ps1 -SkipFrontendBuild。
+!dist/
+!dist/**
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

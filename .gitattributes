@@ -37,3 +37,10 @@
 # sourceSha256、SUBMISSION_MANIFEST.json 三处都是 LF），而校验器一律读磁盘裸字节。
 # 不锁定 eol 时，autocrlf=true 的环境按 CRLF 检出，三条 USER300 标定永久 UNVERIFIED。
 /docs/examples/templates/calibration/** text eol=lf
+
+# 发布包按裸字节校验 SHA256，保留预构建前端和 USER300 二进制的原始字节，
+# 避免 autocrlf 在不同检出环境改变离线清单的校验结果。
+/platform-ui/dist/** -text
+/platform-ui/.env.development text eol=lf
+/platform-ui/.env.production text eol=lf
+/bridge_models/stbridge_opensees/openseespy/opensees.cp313-win_amd64.pyd -text
