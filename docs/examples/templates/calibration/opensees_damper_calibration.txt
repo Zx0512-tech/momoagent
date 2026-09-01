@@ -1,0 +1,10 @@
+OpenSees joint workflow acceptance damper-calibration evidence.
+
+Scope:
+- damper module damper_viscous
+- fixed physical_count_per_tower 2
+- tower-girder placements exported by the OpenSees command stream
+- sampled total damper parameters c and alpha
+
+This artifact is used to make the run-mode workflow evidence explicit and
+hash-checkable. It is not a bridge-specific damper material test report.

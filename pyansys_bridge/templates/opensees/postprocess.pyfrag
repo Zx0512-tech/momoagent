@@ -1,0 +1,894 @@
+# Transient analysis execution and postprocess handoff
+from csv import DictReader, reader, writer
+from pathlib import Path
+
+analysis_dt = {{ load_dt }}
+analysis_duration = {{ load_duration }}
+response_nodes = {{ response_nodes }}
+response_dof = {{ response_dof }}
+tower_base_nodes = {{ tower_base_nodes }}
+tower_base_element_node_map = {{ tower_base_element_node_map }}
+tower_base_shear_inertia_element_mass_densities = {{ tower_base_shear_inertia_element_mass_densities }}
+tower_base_shear_dofs = {{ tower_base_shear_dofs }}
+tower_base_moment_dofs = {{ tower_base_moment_dofs }}
+use_control_volume_shear = {% if load_type == "earthquake" %}True{% else %}False{% endif %}
+{%- if response_elements is defined and response_elements %}
+response_elements = {{ response_elements }}
+response_element_component = {{ response_element_component | default(0) }}
+{% endif %}
+damper_placement_pairs = {{ damper_placement_pairs }}
+diagnostic_nodes = {{ diagnostic_nodes }}
+diagnostic_pairs = {{ diagnostic_pairs }}
+damping_ratio = float({{ damping_ratio }})
+opensees_system = {{ opensees_system }}
+opensees_system_args = {{ opensees_system_args }}
+rayleigh_frequency_a_hz = {{ rayleigh_frequency_a_hz }}
+rayleigh_frequency_b_hz = {{ rayleigh_frequency_b_hz }}
+{% if load_type == "earthquake" %}
+ground_acceleration_scale = float({{ earthquake_scale }}) * float({{ earthquake_uniform_factor }})
+ground_acceleration_path = r"{{ earthquake_path }}"
+{% else %}
+ground_acceleration_scale = 0.0
+ground_acceleration_path = ""
+{% endif %}
+if analysis_dt is None or analysis_duration is None:
+    raise ValueError("OpenSees transient analysis requires load dt and duration")
+
+def _load_ground_acceleration_values():
+    if not ground_acceleration_path or ground_acceleration_path == "None":
+        return []
+    values = []
+    with Path(ground_acceleration_path).open("r", encoding="utf-8-sig") as stream:
+        for line_number, line in enumerate(stream, start=1):
+            text = line.strip()
+            if not text or text.startswith(("#", "!")):
+                continue
+            tokens = text.replace(",", " ").split()
+            try:
+                values.append(float(tokens[-1]) * ground_acceleration_scale)
+            except (IndexError, ValueError) as exc:
+                raise ValueError(f"Cannot parse ground acceleration at line {line_number}: {line.rstrip()}") from exc
+    return values
+
+def _integrate_ground_motion(accelerations):
+    velocities = [0.0] * len(accelerations)
+    displacements = [0.0] * len(accelerations)
+    for index in range(1, len(accelerations)):
+        velocities[index] = velocities[index - 1] + 0.5 * (accelerations[index - 1] + accelerations[index]) * analysis_dt
+        displacements[index] = displacements[index - 1] + 0.5 * (velocities[index - 1] + velocities[index]) * analysis_dt
+    return velocities, displacements
+
+ground_acceleration_values = _load_ground_acceleration_values()
+ground_velocity_values, ground_displacement_values = _integrate_ground_motion(ground_acceleration_values)
+
+def _signed_envelope(values):
+    return max(values, key=lambda value: abs(value), default=0.0)
+
+def _element_envelope(response):
+    return _signed_envelope(
+        [
+            float(value)
+            for element in damper_elements
+            for value in ops.eleResponse(element, response)
+        ]
+    )
+
+def _response_displacements():
+    return [float(ops.nodeDisp(node, response_dof)) for node in response_nodes]
+
+def _node_accel_value(node, dof):
+    try:
+        return float(ops.nodeAccel(node, dof))
+    except Exception:
+        return 0.0
+
+def _relative_to_baseline(values, baseline):
+    return [
+        float(value) - float(baseline[index])
+        for index, value in enumerate(values)
+    ]
+
+def _standard_response_displacements():
+    return _relative_to_baseline(_response_displacements(), baseline_response_displacements)
+
+def _response_displacement_increments():
+    return _relative_to_baseline(_response_displacements(), baseline_response_displacements)
+
+def _response_node_column(node, suffix):
+    # 列名与 ANSYS ansys-dpf-nodes 后处理保持同一契约（node_{id}_{量}），便于跨求解器比对。
+    return 'node_' + str(int(node)) + '_' + suffix
+
+def _write_response_node_header(output):
+    columns = ['time']
+    for node in response_nodes:
+        for suffix in ('displacement', 'displacement_increment', 'absolute_displacement', 'acceleration'):
+            columns.append(_response_node_column(node, suffix))
+    output.writerow(columns)
+
+def _write_response_node_row(output):
+    # 每个候选节点各自的真实时程，不做跨节点包络。timeseries.csv 的四个标准通道
+    # 事后按控制节点从这里回填，控制节点判定也只能在这份逐节点数据上做。
+    row = [float(ops.getTime())]
+    relative = _standard_response_displacements()
+    absolute = _response_displacements()
+    for index, node in enumerate(response_nodes):
+        row.extend([
+            relative[index],
+            relative[index],
+            absolute[index],
+            _node_accel_value(node, response_dof),
+        ])
+    output.writerow(row)
+
+def _placement_strokes(pairs, dof):
+    strokes = []
+    for pair in pairs:
+        if len(pair) == 2:
+            node_i, node_j = pair
+            pair_dof = dof
+        else:
+            node_i, node_j, pair_dof = pair
+        try:
+            strokes.append(float(ops.nodeDisp(int(node_j), int(pair_dof))) - float(ops.nodeDisp(int(node_i), int(pair_dof))))
+        except Exception:
+            strokes.append(0.0)
+    return strokes
+
+def _placement_stroke_envelope(pairs, dof):
+    strokes = _placement_strokes(pairs, dof)
+    if strokes:
+        return _signed_envelope(strokes)
+    return _element_envelope('basicDeformation')
+
+def _pair_relative_disp(pair):
+    node_i, node_j, pair_dof = pair
+    try:
+        return float(ops.nodeDisp(int(node_j), int(pair_dof))) - float(ops.nodeDisp(int(node_i), int(pair_dof)))
+    except Exception:
+        return 0.0
+
+def _pair_relative_velocity(pair):
+    node_i, node_j, pair_dof = pair
+    try:
+        return float(ops.nodeVel(int(node_j), int(pair_dof))) - float(ops.nodeVel(int(node_i), int(pair_dof)))
+    except Exception:
+        return 0.0
+
+def _damper_element_force(index):
+    if index >= len(damper_elements):
+        return 0.0
+    try:
+        return _signed_envelope([float(value) for value in ops.eleResponse(damper_elements[index], 'basicForce')])
+    except Exception:
+        return 0.0
+{% if response_elements is defined and response_elements %}
+def _requested_element_force(element):
+    # 用户点名的单元内力：与塔底截面力、ANSYS element_nodal_forces 对齐，
+    # 统一取全局坐标 (FX, FY, FZ, MX, MY, MZ) 的首端 6 分量。
+    # 不做跨响应回退：basicForce/localForce 的坐标系与分量顺序都不同，
+    # 用同一个下标切片会让同一列在不同单元类型间静默变成别的物理量。
+    values = []
+    for response in ('globalForce', 'force'):
+        try:
+            values = [float(value) for value in ops.eleResponse(int(element), response)]
+        except Exception:
+            values = []
+        if values:
+            break
+    if not values:
+        raise RuntimeError(
+            'OpenSees element ' + str(int(element)) + ' does not expose a globalForce/force response'
+        )
+    if len(values) < 6:
+        raise RuntimeError(
+            'OpenSees element ' + str(int(element)) + ' exposes only ' + str(len(values))
+            + ' force components; element force output requires a 6-DOF end force vector'
+            + ' (use the damper_force channel for damper elements)'
+        )
+    return values[int(response_element_component)]
+
+def _requested_element_columns():
+    # 列名与 ANSYS ansys-dpf-nodes 后处理保持同一契约，便于跨求解器比对。
+    return ['element_' + str(int(element)) + '_force' for element in response_elements]
+{% endif %}
+def _six_values(values):
+    result = [float(value) for value in values]
+    while len(result) < 6:
+        result.append(0.0)
+    return result[:6]
+
+def _absolute_node_values(node):
+    values = _six_values(ops.nodeDisp(int(node)))
+    ground_displacement, _ground_velocity, _current_ground_acceleration = _ground_motion_values()
+    if {{ earthquake_uniform_dof if load_type == "earthquake" else 0 }} in (1, 2, 3):
+        values[{{ earthquake_uniform_dof if load_type == "earthquake" else 1 }} - 1] += ground_displacement
+    return values
+
+def _node_values(node):
+    return _six_values(ops.nodeDisp(int(node))) + _six_values(ops.nodeVel(int(node))) + _six_values(ops.nodeAccel(int(node)))
+
+def _node_reaction_totals(nodes, dofs):
+    node_reactions = {}
+    for node in nodes:
+        try:
+            node_reactions[int(node)] = ops.nodeReaction(int(node))
+        except Exception:
+            node_reactions[int(node)] = []
+    totals = []
+    for dof in dofs:
+        index = dof - 1
+        total = 0.0
+        for values in node_reactions.values():
+            if index < len(values):
+                total += float(values[index])
+        totals.append(total)
+    return totals
+
+def _node_coords(node):
+    try:
+        values = [float(value) for value in ops.nodeCoord(int(node))]
+    except Exception:
+        values = []
+    while len(values) < 3:
+        values.append(0.0)
+    return values[:3]
+
+def _node_absolute_accel(node, dof, ground_acceleration):
+    value = _node_accel_value(int(node), int(dof))
+    if int(dof) == {{ earthquake_uniform_dof if load_type == "earthquake" else 0 }}:
+        value += ground_acceleration
+    return value
+
+def _tower_base_shear_inertia_values(ground_acceleration):
+    # 地震塔底剪力需求采用控制体平衡：下塔柱质量惯性需计入剪力。
+    mass_density_by_element = {
+        int(element): float(mass_density)
+        for element, mass_density in tower_base_shear_inertia_element_mass_densities
+    }
+    inertia_values = []
+    for dof in tower_base_shear_dofs:
+        total = 0.0
+        for element, mass_density in mass_density_by_element.items():
+            try:
+                nodes = [int(value) for value in ops.eleNodes(int(element))]
+                coords = [_node_coords(nodes[0]), _node_coords(nodes[1])]
+            except Exception:
+                continue
+            length = sum((coords[1][index] - coords[0][index]) ** 2 for index in range(3)) ** 0.5
+            accel_i = _node_absolute_accel(nodes[0], int(dof), ground_acceleration)
+            accel_j = _node_absolute_accel(nodes[1], int(dof), ground_acceleration)
+            total += mass_density * length * (accel_i + accel_j) / 2.0
+        inertia_values.append(total)
+    return inertia_values
+
+def _cross_product(left, right):
+    return [
+        left[1] * right[2] - left[2] * right[1],
+        left[2] * right[0] - left[0] * right[2],
+        left[0] * right[1] - left[1] * right[0],
+    ]
+
+def _tower_base_reaction_resultants():
+    node_reactions = {}
+    for node in tower_base_nodes:
+        try:
+            node_reactions[int(node)] = _six_values(ops.nodeReaction(int(node)))
+        except Exception:
+            node_reactions[int(node)] = [0.0] * 6
+    shear_values = []
+    for dof in tower_base_shear_dofs:
+        index = int(dof) - 1
+        shear_values.append(
+            sum(float(values[index]) for values in node_reactions.values() if index < len(values))
+        )
+    total_moment = [0.0, 0.0, 0.0]
+    for node, values in node_reactions.items():
+        moment = _cross_product(_node_coords(node), values[:3])
+        for index in range(3):
+            total_moment[index] += moment[index]
+    moment_values = []
+    for dof in tower_base_moment_dofs:
+        index = int(dof) - 4
+        if 0 <= index < 3:
+            moment_values.append(total_moment[index])
+    if not moment_values:
+        moment_values = total_moment
+    return shear_values, moment_values
+
+def _element_end_offset(element, node):
+    try:
+        nodes = [int(value) for value in ops.eleNodes(int(element))]
+    except Exception:
+        nodes = []
+    if int(node) in nodes:
+        return nodes.index(int(node)) * 6
+    return max(len(nodes) - 1, 1) * 6
+
+def _element_global_force_values(element, node):
+    try:
+        values = [float(value) for value in ops.eleResponse(int(element), 'globalForce')]
+    except Exception:
+        try:
+            values = [float(value) for value in ops.eleResponse(int(element), 'force')]
+        except Exception:
+            values = []
+    offset = _element_end_offset(element, node)
+    result = values[offset:offset + 6]
+    while len(result) < 6:
+        result.append(0.0)
+    return result[:6]
+
+def _foot_column(node, dof):
+    return 'Node' + str(int(node)) + '_DOF' + str(int(dof))
+
+def _tower_base_foot_components():
+    """逐塔脚截面内力分量，符号已按截面内力正号取反。
+
+    每步只调一次 eleResponse，结果同时供跨塔脚求和与峰值塔脚收敛使用。
+    """
+    components = {}
+    for element, node in tower_base_element_node_map:
+        values = _element_global_force_values(element, node)
+        for dof in list(tower_base_shear_dofs) + list(tower_base_moment_dofs):
+            index = int(dof) - 1
+            if 0 <= index < len(values):
+                components[_foot_column(node, dof)] = -values[index]
+    return components
+
+def _tower_base_section_resultants(foot_components=None):
+    if not tower_base_element_node_map:
+        return _tower_base_reaction_resultants()
+    components = _tower_base_foot_components() if foot_components is None else foot_components
+    # 与 ANSYS 截面合力口径一致：同一 DOF 先跨 835-838 塔脚求和，再转成截面内力正号。
+    shear_values = [
+        sum(components.get(_foot_column(node, dof), 0.0) for _element, node in tower_base_element_node_map)
+        for dof in tower_base_shear_dofs
+        if 1 <= int(dof) <= 3
+    ]
+    moment_values = [
+        sum(components.get(_foot_column(node, dof), 0.0) for _element, node in tower_base_element_node_map)
+        for dof in tower_base_moment_dofs
+        if 4 <= int(dof) <= 6
+    ]
+    if not shear_values:
+        shear_values, _fallback_moments = _tower_base_reaction_resultants()
+    if not moment_values:
+        _fallback_shears, moment_values = _tower_base_reaction_resultants()
+    return shear_values, moment_values
+
+def _ground_motion_values():
+    time = float(ops.getTime())
+    if ground_acceleration_values:
+        index = min(max(int(round(time / analysis_dt)), 0), len(ground_acceleration_values) - 1)
+        return (
+            ground_displacement_values[index],
+            ground_velocity_values[index],
+            ground_acceleration_values[index],
+        )
+    return (
+        0.5 * ground_acceleration_scale * time * time,
+        ground_acceleration_scale * time,
+        ground_acceleration_scale,
+    )
+
+def _rayleigh_frequencies():
+    configured = []
+    for value in (rayleigh_frequency_a_hz, rayleigh_frequency_b_hz):
+        if value is not None:
+            configured.append(float(value))
+    if len(configured) >= 2:
+        return configured[0], configured[1]
+    if len(ops.getNodeTags()) <= 20:
+        return 0.055317, 0.100449
+    eigenvalues = []
+    for args in ((2,), ('-fullGenLapack', 2), (1,), ('-fullGenLapack', 1)):
+        try:
+            eigenvalues = list(ops.eigen(*args))
+        except Exception:
+            continue
+        if eigenvalues:
+            break
+    frequencies = [
+        (float(value) ** 0.5) / (2.0 * 3.141592653589793)
+        for value in eigenvalues
+        if float(value) > 1.0e-12
+    ]
+    if len(frequencies) >= 2:
+        return frequencies[0], frequencies[1]
+    if len(frequencies) == 1:
+        return frequencies[0], frequencies[0]
+    return 0.055317, 0.100449
+
+def _apply_rayleigh_damping():
+    if damping_ratio <= 0.0:
+        return None
+    freq_a, freq_b = _rayleigh_frequencies()
+    if freq_a <= 0.0 or freq_b <= 0.0:
+        return None
+    alpha_m = 4.0 * 3.141592653589793 * damping_ratio * freq_a * freq_b / (freq_a + freq_b)
+    beta_k = damping_ratio / (3.141592653589793 * (freq_a + freq_b))
+    ops.rayleigh(alpha_m, beta_k, 0.0, 0.0)
+    return {
+        'freq_a_hz': freq_a,
+        'freq_b_hz': freq_b,
+        'alpha_m': alpha_m,
+        'beta_k': beta_k,
+    }
+
+def _foot_component_columns():
+    columns = []
+    for _element, node in tower_base_element_node_map:
+        for dof in list(tower_base_shear_dofs) + list(tower_base_moment_dofs):
+            columns.append(_foot_column(node, dof))
+    return columns
+
+def _write_shear_component_header(output):
+    columns = ['time']
+    for dof in tower_base_shear_dofs:
+        dof_label = 'DOF' + str(int(dof))
+        columns.extend([
+            'section_raw_' + dof_label,
+            'section_baseline_' + dof_label,
+            'section_relative_' + dof_label,
+            'inertia_raw_' + dof_label,
+            'inertia_baseline_' + dof_label,
+            'inertia_relative_' + dof_label,
+            'dynamic_' + dof_label,
+        ])
+    columns.append('tower_base_shear')
+    # 逐塔脚分量列供跑完后挑绝对峰值最大的塔脚，回填 timeseries.csv 的塔底内力时程。
+    columns.extend(_foot_component_columns())
+    output.writerow(columns)
+
+def _write_shear_component_row(
+    output,
+    tower_base_shears,
+    tower_base_shear_inertia_values,
+    relative_tower_base_shears,
+    relative_tower_base_shear_inertia_values,
+    dynamic_tower_base_shears,
+    tower_base_shear,
+    foot_components,
+):
+    row = [float(ops.getTime())]
+    for index, _dof in enumerate(tower_base_shear_dofs):
+        row.extend([
+            tower_base_shears[index] if index < len(tower_base_shears) else 0.0,
+            baseline_tower_base_shears[index] if index < len(baseline_tower_base_shears) else 0.0,
+            relative_tower_base_shears[index] if index < len(relative_tower_base_shears) else 0.0,
+            tower_base_shear_inertia_values[index] if index < len(tower_base_shear_inertia_values) else 0.0,
+            baseline_tower_base_shear_inertia_values[index] if index < len(baseline_tower_base_shear_inertia_values) else 0.0,
+            relative_tower_base_shear_inertia_values[index] if index < len(relative_tower_base_shear_inertia_values) else 0.0,
+            dynamic_tower_base_shears[index] if index < len(dynamic_tower_base_shears) else 0.0,
+        ])
+    row.append(tower_base_shear)
+    row.extend(foot_components.get(column, 0.0) for column in _foot_component_columns())
+    output.writerow(row)
+
+def _write_response_row(output, shear_components_output=None):
+    ground_displacement, ground_velocity, current_ground_acceleration = _ground_motion_values()
+    ops.reactions('-dynamic', '-rayleigh')
+    foot_components = _tower_base_foot_components() if tower_base_element_node_map else {}
+    tower_base_shears, tower_base_moments = _tower_base_section_resultants(foot_components)
+    tower_base_shear_inertia_values = _tower_base_shear_inertia_values(current_ground_acceleration)
+    relative_tower_base_shears = _relative_to_baseline(tower_base_shears, baseline_tower_base_shears)
+    relative_tower_base_shear_inertia_values = _relative_to_baseline(
+        tower_base_shear_inertia_values,
+        baseline_tower_base_shear_inertia_values,
+    )
+    if use_control_volume_shear:
+        dynamic_tower_base_shears = [
+            # OpenSees 截面力已转为 ANSYS 截面内力正号；地震控制体惯性按平衡方向扣除。
+            relative_tower_base_shears[index] - relative_tower_base_shear_inertia_values[index]
+            for index in range(min(len(relative_tower_base_shears), len(relative_tower_base_shear_inertia_values)))
+        ]
+        if not dynamic_tower_base_shears:
+            dynamic_tower_base_shears = relative_tower_base_shears
+    else:
+        # 风/车运营工况与 ANSYS 对齐为塔底截面内力增量，不套用地震控制体剪力需求。
+        dynamic_tower_base_shears = relative_tower_base_shears
+    tower_base_shear = _signed_envelope(dynamic_tower_base_shears)
+    if shear_components_output is not None:
+        _write_shear_component_row(
+            shear_components_output,
+            tower_base_shears,
+            tower_base_shear_inertia_values,
+            relative_tower_base_shears,
+            relative_tower_base_shear_inertia_values,
+            dynamic_tower_base_shears,
+            tower_base_shear,
+            foot_components,
+        )
+    output.writerow(
+        [
+            float(ops.getTime()),
+            _signed_envelope(_standard_response_displacements()),
+            _signed_envelope(_response_displacement_increments()),
+            _signed_envelope(_response_displacements()),
+            _signed_envelope([_node_accel_value(node, response_dof) for node in response_nodes]),
+            _signed_envelope(_relative_to_baseline(tower_base_moments, baseline_tower_base_moments)),
+            tower_base_shear,
+            _element_envelope('basicForce'),
+            _signed_envelope(_relative_to_baseline(_placement_strokes(damper_placement_pairs, response_dof), baseline_placement_strokes))
+            if damper_placement_pairs
+            else _element_envelope('basicDeformation'),
+            ground_displacement,
+            ground_velocity,
+            current_ground_acceleration,
+        ]
+{%- if response_elements is defined and response_elements %}
+        + [_requested_element_force(element) for element in response_elements]
+{% endif %}
+    )
+
+def _write_diagnostic_node_header(output):
+    columns = ['time']
+    for node in diagnostic_nodes:
+        for prefix in ('UX', 'UY', 'UZ', 'ROTX', 'ROTY', 'ROTZ', 'VX', 'VY', 'VZ', 'VRX', 'VRY', 'VRZ', 'AX', 'AY', 'AZ', 'ARX', 'ARY', 'ARZ'):
+            columns.append('Node' + str(int(node)) + '_' + prefix)
+        for prefix in ('ABS_UX', 'ABS_UY', 'ABS_UZ', 'ABS_ROTX', 'ABS_ROTY', 'ABS_ROTZ'):
+            columns.append('Node' + str(int(node)) + '_' + prefix)
+    output.writerow(columns)
+
+def _write_diagnostic_node_row(output):
+    row = [float(ops.getTime())]
+    for node in diagnostic_nodes:
+        row.extend(_node_values(node))
+        row.extend(_absolute_node_values(node))
+    output.writerow(row)
+
+def _write_diagnostic_pair_header(output):
+    columns = ['time']
+    for index, pair in enumerate(diagnostic_pairs, start=1):
+        node_i, node_j, pair_dof = pair
+        columns.append(
+            'Pair'
+            + str(index)
+            + '_'
+            + str(int(node_i))
+            + '_'
+            + str(int(node_j))
+            + '_DOF'
+            + str(int(pair_dof))
+            + '_rel_disp'
+        )
+    output.writerow(columns)
+
+def _write_diagnostic_pair_row(output, baseline_pair_strokes):
+    row = [float(ops.getTime())]
+    for index, pair in enumerate(diagnostic_pairs):
+        row.append(_pair_relative_disp(pair) - baseline_pair_strokes[index])
+    output.writerow(row)
+
+def _write_tower_girder_relative_header(output):
+    columns = ['time']
+    for index, pair in enumerate(damper_placement_pairs, start=1):
+        node_i, node_j, pair_dof = pair
+        prefix = (
+            'Pair'
+            + str(index)
+            + '_'
+            + str(int(node_i))
+            + '_'
+            + str(int(node_j))
+            + '_DOF'
+            + str(int(pair_dof))
+        )
+        columns.extend([prefix + '_rel_disp', prefix + '_rel_vel', prefix + '_damper_force'])
+    output.writerow(columns)
+
+def _write_tower_girder_relative_row(output, baseline_placement_strokes):
+    row = [float(ops.getTime())]
+    for index, pair in enumerate(damper_placement_pairs):
+        row.append(_pair_relative_disp(pair) - baseline_placement_strokes[index])
+        row.append(_pair_relative_velocity(pair))
+        row.append(_damper_element_force(index))
+    output.writerow(row)
+
+transient_algorithm_fallback_counts = {}
+
+def _configure_default_transient_algorithm():
+    ops.test('NormDispIncr', 1.0e-8, 20)
+    ops.algorithm('Newton')
+
+def _try_transient_algorithm(name, test_args, algorithm_args, dt):
+    ops.test(*test_args)
+    ops.algorithm(*algorithm_args)
+    if ops.analyze(1, dt) == 0:
+        transient_algorithm_fallback_counts[name] = transient_algorithm_fallback_counts.get(name, 0) + 1
+        _configure_default_transient_algorithm()
+        return True
+    return False
+
+def _analyze_transient_step(dt):
+    if ops.analyze(1, dt) == 0:
+        return
+    attempts = (
+        ('newton_60', ('NormDispIncr', 1.0e-8, 60), ('Newton',)),
+        ('newton_line_search', ('NormDispIncr', 1.0e-7, 80), ('NewtonLineSearch',)),
+        ('modified_newton', ('NormDispIncr', 1.0e-7, 100), ('ModifiedNewton',)),
+    )
+    for name, test_args, algorithm_args in attempts:
+        if _try_transient_algorithm(name, test_args, algorithm_args, dt):
+            return
+    _configure_default_transient_algorithm()
+    raise RuntimeError("OpenSees transient analysis failed")
+
+ops.wipeAnalysis()
+ops.constraints('Plain')
+ops.numberer('RCM')
+ops.system(opensees_system, *opensees_system_args)
+_configure_default_transient_algorithm()
+ops.integrator('Newmark', 0.5, 0.25)
+rayleigh_damping = _apply_rayleigh_damping()
+ops.analysis('Transient')
+ops.reactions('-dynamic', '-rayleigh')
+baseline_response_displacements = _response_displacements()
+baseline_placement_strokes = _placement_strokes(damper_placement_pairs, response_dof)
+baseline_diagnostic_pair_strokes = [_pair_relative_disp(pair) for pair in diagnostic_pairs]
+baseline_tower_base_shears, baseline_tower_base_moments = _tower_base_section_resultants()
+baseline_tower_base_shear_inertia_values = _tower_base_shear_inertia_values(_ground_motion_values()[2])
+{%- if response_elements is defined and response_elements %}
+# 点名单元在瞬态循环前先验证一次，坏单元号或分量不足立即失败而不是跑完才报错。
+for _requested_element in response_elements:
+    _requested_element_force(_requested_element)
+{% endif %}
+analysis_steps = int(round(analysis_duration / analysis_dt))
+if analysis_steps <= 0:
+    raise ValueError("OpenSees transient analysis requires at least one time step")
+{%- if progress_path is defined and progress_path %}
+_progress_dir = Path(r"{{ progress_path }}")
+_progress_case_id = r"{{ progress_case_id }}"
+_progress_target = _progress_dir / r"{{ progress_filename }}"
+_progress_temp = _progress_target.with_suffix(_progress_target.suffix + ".tmp")
+_progress_every = max(1, analysis_steps // 50)
+
+def _report_progress(step):
+    from json import dumps
+    from os import replace
+    percent = 0 if analysis_steps <= 0 else int(round(step / analysis_steps * 100))
+    if percent < 0:
+        percent = 0
+    elif percent > 100:
+        percent = 100
+    payload = {
+        "caseId": _progress_case_id,
+        "step": int(step),
+        "totalSteps": int(analysis_steps),
+        "percent": percent,
+        "phase": "transient",
+    }
+    try:
+        _progress_dir.mkdir(parents=True, exist_ok=True)
+        _progress_temp.write_text(dumps(payload), encoding="utf-8")
+        replace(_progress_temp, _progress_target)
+    except OSError:
+        return
+{% endif %}
+timeseries_path = Path(__file__).with_name('timeseries.csv')
+shear_components_path = Path(__file__).with_name('tower_base_shear_components.csv')
+tower_girder_relative_path = Path(__file__).with_name('tower_girder_relative_response.csv')
+response_nodes_path = Path(__file__).with_name('response_nodes_response.csv')
+diagnostics_nodes_handle = None
+diagnostics_pairs_handle = None
+tower_girder_relative_handle = None
+response_nodes_handle = None
+try:
+    diagnostics_nodes_writer = None
+    diagnostics_pairs_writer = None
+    tower_girder_relative_writer = None
+    response_nodes_writer = None
+    if response_nodes:
+        response_nodes_handle = response_nodes_path.open('w', encoding='utf-8', newline='')
+        response_nodes_writer = writer(response_nodes_handle)
+        _write_response_node_header(response_nodes_writer)
+    if diagnostic_nodes:
+        diagnostics_nodes_handle = Path(__file__).with_name('diagnostics_nodes.csv').open('w', encoding='utf-8', newline='')
+        diagnostics_nodes_writer = writer(diagnostics_nodes_handle)
+        _write_diagnostic_node_header(diagnostics_nodes_writer)
+    if diagnostic_pairs:
+        diagnostics_pairs_handle = Path(__file__).with_name('diagnostics_pairs.csv').open('w', encoding='utf-8', newline='')
+        diagnostics_pairs_writer = writer(diagnostics_pairs_handle)
+        _write_diagnostic_pair_header(diagnostics_pairs_writer)
+    if damper_placement_pairs:
+        tower_girder_relative_handle = tower_girder_relative_path.open('w', encoding='utf-8', newline='')
+        tower_girder_relative_writer = writer(tower_girder_relative_handle)
+        _write_tower_girder_relative_header(tower_girder_relative_writer)
+    with timeseries_path.open('w', encoding='utf-8', newline='') as handle:
+        timeseries_writer = writer(handle)
+        timeseries_writer.writerow([
+            'time',
+            'displacement',
+            'displacement_increment',
+            'absolute_displacement',
+            'acceleration',
+            'tower_base_moment',
+            'tower_base_shear',
+            'damper_force',
+            'damper_stroke',
+            'ground_displacement',
+            'ground_velocity',
+            'ground_acceleration',
+        ]{% if response_elements is defined and response_elements %} + _requested_element_columns(){% endif %})
+        with shear_components_path.open('w', encoding='utf-8', newline='') as shear_components_handle:
+            shear_components_writer = writer(shear_components_handle)
+            _write_shear_component_header(shear_components_writer)
+            _write_response_row(timeseries_writer, shear_components_writer)
+            if response_nodes_writer is not None:
+                _write_response_node_row(response_nodes_writer)
+            if diagnostics_nodes_writer is not None:
+                _write_diagnostic_node_row(diagnostics_nodes_writer)
+            if diagnostics_pairs_writer is not None:
+                _write_diagnostic_pair_row(diagnostics_pairs_writer, baseline_diagnostic_pair_strokes)
+            if tower_girder_relative_writer is not None:
+                _write_tower_girder_relative_row(tower_girder_relative_writer, baseline_placement_strokes)
+{%- if progress_path is defined and progress_path %}
+            _progress_step_counter = 0
+            _report_progress(0)
+{% endif %}
+            for _ in range(analysis_steps):
+                _analyze_transient_step(analysis_dt)
+                _write_response_row(timeseries_writer, shear_components_writer)
+                if response_nodes_writer is not None:
+                    _write_response_node_row(response_nodes_writer)
+                if diagnostics_nodes_writer is not None:
+                    _write_diagnostic_node_row(diagnostics_nodes_writer)
+                if diagnostics_pairs_writer is not None:
+                    _write_diagnostic_pair_row(diagnostics_pairs_writer, baseline_diagnostic_pair_strokes)
+                if tower_girder_relative_writer is not None:
+                    _write_tower_girder_relative_row(tower_girder_relative_writer, baseline_placement_strokes)
+{%- if progress_path is defined and progress_path %}
+                _progress_step_counter += 1
+                if _progress_step_counter % _progress_every == 0 or _progress_step_counter == analysis_steps:
+                    _report_progress(_progress_step_counter)
+{% endif %}
+finally:
+    if response_nodes_handle is not None:
+        response_nodes_handle.close()
+    if diagnostics_nodes_handle is not None:
+        diagnostics_nodes_handle.close()
+    if diagnostics_pairs_handle is not None:
+        diagnostics_pairs_handle.close()
+    if tower_girder_relative_handle is not None:
+        tower_girder_relative_handle.close()
+
+def _peak_absolute_column(rows, columns, baseline):
+    if not columns:
+        return None
+    peaks = {
+        column: max(abs(float(row[column]) - float(baseline[column])) for row in rows)
+        for column in columns
+    }
+    largest = max(peaks.values())
+    # 镜像对称双塔的各塔脚峰值只在末位有效数字上不同，直接取 max 会让输出时程的
+    # 正负号由浮点噪声决定。峰值落在相对容差内的按列名取定，保证结果可复现。
+    tolerance = abs(largest) * 1.0e-9
+    return min(column for column, peak in peaks.items() if largest - peak <= tolerance)
+
+def _peak_foot_node_series():
+    """从逐塔脚分量 CSV 里挑绝对峰值最大的塔脚，返回其相对基线的内力时程。"""
+    if not tower_base_element_node_map or not shear_components_path.exists():
+        return None
+    with shear_components_path.open('r', encoding='utf-8', newline='') as handle:
+        rows = list(DictReader(handle))
+    if not rows:
+        return None
+    baseline = rows[0]
+    def _columns(dofs):
+        return sorted(
+            _foot_column(node, dof)
+            for _element, node in tower_base_element_node_map
+            for dof in dofs
+            if _foot_column(node, dof) in rows[0]
+        )
+    shear_column = _peak_absolute_column(rows, _columns(tower_base_shear_dofs), baseline)
+    moment_column = _peak_absolute_column(rows, _columns(tower_base_moment_dofs), baseline)
+    if shear_column is None and moment_column is None:
+        return None
+    return [
+        (
+            float(row[shear_column]) - float(baseline[shear_column]) if shear_column else None,
+            float(row[moment_column]) - float(baseline[moment_column]) if moment_column else None,
+        )
+        for row in rows
+    ]
+
+def _controlling_response_node(rows, suffix):
+    """先各候选节点在自己的时程上求峰值，再比峰值取最大者，返回 (节点号, 峰值)。
+
+    判定只看单个节点的真实曲线，不做逐时间步的跨节点包络：包络曲线在任何一个
+    真实节点上都没发生过，而且路径依赖量（累计位移）在包络列上累加会同时把控制
+    权切换处的跳变计入、把落选节点的行程整段丢掉，两者互相抵消且净方向不定。
+    """
+    if not response_nodes or not rows:
+        return None, 0.0
+    peaks = {}
+    for node in response_nodes:
+        column = 'node_' + str(int(node)) + suffix
+        if column not in rows[0]:
+            continue
+        peaks[int(node)] = max(abs(float(row[column])) for row in rows)
+    if not peaks:
+        return None, 0.0
+    largest = max(peaks.values())
+    # 与塔脚取定同理：镜像对称节点的峰值只在末位有效数字上不同，直接取 max 会让
+    # 选中的节点由浮点噪声决定。落在相对容差内的按节点号取定，保证可复现。
+    tolerance = abs(largest) * 1.0e-9
+    return min(node for node, peak in peaks.items() if largest - peak <= tolerance), largest
+
+def _rewrite_timeseries_controlling_node_columns():
+    """把 timeseries 的位移/加速度四列换成控制节点自身的真实时程。
+
+    原实现对 response_nodes 逐时间步取 max-abs 包络，得到的曲线在任何一个真实
+    节点上都没发生过，且累计位移会把控制节点切换的跳变计入。改为先判定控制节点
+    再整列取该节点曲线，峰值标量不变（max 可交换），累计位移回到物理定义，且
+    max_displacement 与 cumulative_displacement 从此同源于一个节点。
+    """
+    if not response_nodes or not response_nodes_path.exists():
+        return None
+    with response_nodes_path.open('r', encoding='utf-8', newline='') as handle:
+        rows = list(DictReader(handle))
+    if not rows:
+        return None
+    node, _peak = _controlling_response_node(rows, '_displacement_increment')
+    if node is None:
+        return None
+    with timeseries_path.open('r', encoding='utf-8', newline='') as handle:
+        timeseries_rows = list(reader(handle))
+    if len(timeseries_rows) < 2 or len(timeseries_rows) - 1 != len(rows):
+        return None
+    header = timeseries_rows[0]
+    prefix = 'node_' + str(int(node))
+    replacements = [
+        ('displacement', prefix + '_displacement'),
+        ('displacement_increment', prefix + '_displacement_increment'),
+        ('absolute_displacement', prefix + '_absolute_displacement'),
+        ('acceleration', prefix + '_acceleration'),
+    ]
+    indexed = [
+        (header.index(target), source)
+        for target, source in replacements
+        if target in header and source in rows[0]
+    ]
+    for timeseries_row, node_row in zip(timeseries_rows[1:], rows):
+        for index, source in indexed:
+            timeseries_row[index] = node_row[source]
+    with timeseries_path.open('w', encoding='utf-8', newline='') as handle:
+        writer(handle).writerows(timeseries_rows)
+    return node
+
+def _rewrite_timeseries_peak_foot_columns():
+    peak_series = _peak_foot_node_series()
+    if peak_series is None:
+        return
+    with timeseries_path.open('r', encoding='utf-8', newline='') as handle:
+        timeseries_rows = list(reader(handle))
+    if len(timeseries_rows) < 2 or len(timeseries_rows) - 1 != len(peak_series):
+        return
+    header = timeseries_rows[0]
+    moment_index = header.index('tower_base_moment')
+    shear_index = header.index('tower_base_shear')
+    for row, (peak_shear, peak_moment) in zip(timeseries_rows[1:], peak_series):
+        if peak_moment is not None:
+            row[moment_index] = peak_moment
+        # 地震工况的剪力是控制体需求（截面力减跨下塔柱求和的惯性），单塔脚剪力与
+        # 总和惯性不同口径，改成峰值塔脚会得到量纲看不出错的错误值，故只改运营工况。
+        if peak_shear is not None and not use_control_volume_shear:
+            row[shear_index] = peak_shear
+    with timeseries_path.open('w', encoding='utf-8', newline='') as handle:
+        writer(handle).writerows(timeseries_rows)
+
+_controlling_node = _rewrite_timeseries_controlling_node_columns()
+_rewrite_timeseries_peak_foot_columns()
+if _controlling_node is not None:
+    # 下游要知道 timeseries 的位移通道来自哪个节点，否则同名目标无法判断口径。
+    from json import dumps
+    Path(__file__).with_name('controlling_response_node.json').write_text(
+        dumps({
+            'controllingResponseNode': int(_controlling_node),
+            'responseNodes': [int(node) for node in response_nodes],
+            'responseDof': int(response_dof),
+            'selectionCriterion': 'max_peak_abs_per_node',
+        }),
+        encoding='utf-8',
+    )

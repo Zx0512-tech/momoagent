@@ -1,0 +1,178 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "gravity_accel_x": 0.0,
+      "gravity_accel_y": 9.8,
+      "gravity_accel_z": 0.0,
+      "gravity_substeps": "10,20,5",
+      "modal_modes": 50,
+      "wind_load_component": "WIND_DECK",
+      "traffic_load_component": "TRAFFIC_LANES",
+      "template_note": "Calibrate ANSYS load components and DPF CSV exports before engineering use."
+    }
+  },
+  "load_cases": [
+    {
+      "name": "earthquake",
+      "load_type": "earthquake",
+      "path": "../../../analysis_data/earthquake_inputs/earthquake_acceleration_record.txt",
+      "scale": 1.0,
+      "dt": 0.01,
+      "duration": 40.0
+    }
+  ],
+  "active_load_cases": [
+    "earthquake"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "earthquake",
+      "objective": "max_girder_end_displacement",
+      "weight": 1.0
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_moment",
+      "weight": 1.0
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_shear",
+      "weight": 1.0
+    }
+  ],
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "objective_limit_relative_tolerance": 0.001,
+  "bounds": {
+    "c": [
+      1000.0,
+      10000.0
+    ],
+    "alpha": [
+      0.3,
+      1.0
+    ]
+  },
+  "steps": {
+    "c": 100.0,
+    "alpha": 0.1
+  },
+  "n_doe_samples": 15,
+  "n_candidates": 800,
+  "n_validation_points": 2,
+  "run_validation": false,
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "run",
+    "execution_timeout_s": 1200,
+    "include_modal": true,
+    "damper_module": "damper_user300_viscous",
+    "damper_c_scale": 1000.0,
+    "physical_count_per_tower": 2,
+    "mapdl_executable": "D:/Program Files/ANSYS Inc/v242/ansys/bin/winx64/MAPDL.exe",
+    "mapdl_args": [
+      "-smp",
+      "-db",
+      "32"
+    ],
+    "mapdl_memory_mb": 64,
+    "nproc": 1,
+    "postprocessor": {
+      "mode": "ansys-dpf-rst",
+      "response_nodes": [
+        36,
+        107
+      ],
+      "response_component": 0,
+      "damper_c_scale": 1000.0
+    },
+    "damper_calibration": {
+      "status": "verified",
+      "source": "ansys_joint_template_acceptance",
+      "artifact_path": "calibration/ansys_damper_calibration.txt",
+      "sha256": "e67c2903af5a90442ac7e4710ab819865c55fd64b2e058c8f2ac5568d542e722"
+    }
+  },
+  "parallel": {
+    "enabled": true,
+    "max_workers": 4,
+    "license_limit": 4,
+    "mode": "thread"
+  },
+  "seed": 20260705,
+  "output_dir": "../../../output/run_templates/ansys_joint_20260705_eq_doe16_parallel4",
+  "summary_path": "../../../output/run_templates/ansys_joint_20260705_eq_doe16_parallel4/optimization_summary.json",
+  "run_review": false,
+  "review_reuse_doe_results": false,
+  "doe_designs": [
+    {
+      "c": 5500.0,
+      "alpha": 0.65
+    },
+    {
+      "c": 1000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 1000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 10000.0,
+      "alpha": 0.3
+    },
+    {
+      "c": 10000.0,
+      "alpha": 1.0
+    },
+    {
+      "c": 5868.420143145045,
+      "alpha": 0.7952952246779832
+    },
+    {
+      "c": 6560.241493318223,
+      "alpha": 0.9222372631856877
+    },
+    {
+      "c": 9006.54143363571,
+      "alpha": 0.47393105370895927
+    },
+    {
+      "c": 1881.1180969867978,
+      "alpha": 0.3516125925845899
+    },
+    {
+      "c": 9716.404464039475,
+      "alpha": 0.621338967906342
+    },
+    {
+      "c": 5250.845238091691,
+      "alpha": 0.5155051464607184
+    },
+    {
+      "c": 2586.9386056111016,
+      "alpha": 0.9704319835799808
+    },
+    {
+      "c": 7352.098486857547,
+      "alpha": 0.7820875593125074
+    },
+    {
+      "c": 3335.5088900364763,
+      "alpha": 0.41560839818884693
+    },
+    {
+      "c": 4492.6012117619175,
+      "alpha": 0.6772217709952684
+    }
+  ]
+}

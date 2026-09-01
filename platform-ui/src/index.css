@@ -1,0 +1,351 @@
+/* Design System Token Definitions (warm light theme, engineering & scientific) */
+:root {
+  /* ---- 表面：四级阶梯 + 独立浮起层 ---- */
+  --bg-primary: #faf9f5;          /* 基底：暖奶油 */
+  --bg-secondary: #ffffff;        /* 面板 */
+  --bg-tertiary: #f0eee6;         /* hover */
+  --bg-active: #e8e4d8;           /* 选中/激活 */
+  --bg-elevated: #ffffff;         /* 浮起卡片 */
+  --bg-overlay: rgba(31, 30, 28, 0.45); /* 模态遮罩 */
+
+  /* ---- 边框：两级 ---- */
+  --border-color: #e5e2d9;        /* 常规分隔 */
+  --border-strong: #cfcabb;       /* 卡片轮廓/表头 */
+
+  /* ---- 文字：三级 ---- */
+  --text-primary: #1f1e1c;
+  --text-secondary: #4a4844;
+  --text-muted: #6b6862;          /* 比预览的 #7c7972 加深，保证 12px 正文过 AA */
+
+  /* ---- 语义色：均已核对与浅底的对比度 ≥ 4.5:1，可同时用于文字与填充 ---- */
+  --primary-color: #a94f30;       /* 陶土橙 */
+  --primary-hover: #8f4228;
+  --success-color: #197a3d;
+  --warning-color: #8a5c00;       /* 比 #9a6700 加深，让 11px 徽章文字在 warning-soft 上过 AA */
+  --error-color: #b42318;
+  --info-color: #6b4fbb;
+
+  /* ---- 语义浅底：徽章、提示块、行高亮 ---- */
+  --primary-soft: #f6ebe5;
+  --success-soft: #e7f3ea;
+  --warning-soft: #faf1dc;
+  --error-soft: #fdeceb;
+  --info-soft: #efeafa;
+
+  --btn-primary-ink: #ffffff;
+
+  /* ---- 阴影：浅底上必须比深底更轻，否则显脏 ---- */
+  --shadow-sm: 0 1px 2px rgba(31, 30, 28, 0.06);
+  --shadow-md: 0 2px 8px rgba(31, 30, 28, 0.08);
+  --shadow-lg: 0 8px 30px rgba(31, 30, 28, 0.16);
+
+  /* ---- 图表：坐标轴与序列色，供 recharts 读取 ---- */
+  --chart-grid: #e5e2d9;
+  --chart-axis: #6b6862;
+  --chart-1: #c15f3c;
+  --chart-2: #8a5c00;
+  --chart-3: #197a3d;
+  --chart-4: #6b4fbb;
+  --chart-5: #b0446a;
+
+  /* Layout Variables */
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 56px;
+  --topbar-height: 48px;
+
+  /* Font Family & Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace;
+}
+
+/* Reset & Base Elements */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 13px; /* High density baseline */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* AppShell handles page-level scrolls */
+}
+
+/* Scrollbars styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Links & interactive items */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+a:hover {
+  color: var(--primary-hover);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Common Layout Helpers */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.page-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 对话式界面容器：自行控制滚动，不使用 page-container 的内边距与间距 */
+.chat-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Scientific Panels / Cards */
+.panel {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Grid helper */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Forms styling */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: var(--text-secondary);
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.form-control:disabled {
+  background-color: var(--bg-tertiary);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b6862'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  padding-right: 32px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--btn-primary-ink);
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-tertiary);
+  border-color: var(--text-muted);
+}
+
+.btn-danger {
+  background-color: var(--bg-secondary);
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--error-soft);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-success {
+  background-color: var(--success-soft);
+  color: var(--success-color);
+}
+.badge-warning {
+  background-color: var(--warning-soft);
+  color: var(--warning-color);
+}
+.badge-error {
+  background-color: var(--error-soft);
+  color: var(--error-color);
+}
+.badge-info {
+  background-color: var(--info-soft);
+  color: var(--info-color);
+}
+.badge-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+/* Tables styling */
+.table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-strong);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Micro-animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pulse {
+  animation: pulse 1.5s infinite ease-in-out;
+}

@@ -1,0 +1,13 @@
+{
+  "baseline_config": "openseespy_inproc_run_earthquake_baseline_template.json",
+  "optimization_config": "openseespy_inproc_run_joint_optimization_template.json",
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_shear",
+      "max_tower_base_moment"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/openseespy_inproc_joint/workflow_summary.json"
+}

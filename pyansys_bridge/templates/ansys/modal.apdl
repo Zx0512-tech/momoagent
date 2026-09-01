@@ -1,0 +1,15 @@
+! Modal analysis module
+/SOLU
+ANTYPE,MODAL
+MODOPT,LANB,{{ modal_modes }},,,2,off
+MXPAND,{{ modal_modes }},,,YES
+ACEL,{{ gravity_accel_x }},{{ gravity_accel_y }},{{ gravity_accel_z }}
+PSTRES,1
+ALLS
+SOLVE
+FINISH
+/POST1
+SET,LIST
+*GET,M,MODE,1,FREQ
+*GET,N,MODE,2,FREQ
+FINISH

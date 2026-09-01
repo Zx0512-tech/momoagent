@@ -1,0 +1,29 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../STbridge.txt",
+    "metadata": {
+      "wind_load_component": "WIND_DECK",
+      "traffic_load_component": "TRAFFIC_LANES"
+    }
+  },
+  "load_case": {
+    "name": "earthquake",
+    "load_type": "earthquake",
+    "scale": 1.0,
+    "dt": 0.02,
+    "duration": 60.0
+  },
+  "damper_params": {
+    "c": 100000.0,
+    "alpha": 0.5
+  },
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "dry_run",
+    "include_modal": true,
+    "damper_module": "damper_viscous",
+    "physical_count_per_tower": 2
+  },
+  "summary_path": "../../output/baselines/ansys_undamped_earthquake_smoke_summary.json"
+}

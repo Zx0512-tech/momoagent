@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0",
+  "damper_type": "friction",
+  "damper_type_keyopt": 2,
+  "tangent_mode_keyopt": 1,
+  "fc_n": 50000.0,
+  "vs_mps": 0.00002,
+  "max_force_self_error_n": 1.4564199180000514e-7,
+  "max_force_target_error_n": 3.8915674930458835,
+  "max_force_target_relative_error": 0.00007783134986091767,
+  "source": "friction_userelem_run"
+}

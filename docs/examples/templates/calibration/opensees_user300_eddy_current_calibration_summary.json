@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "solver": "OPENSEESPY_INPROC_USER300",
+  "openseespy_version": "3.8.0",
+  "evidence_class": "RUNTIME_FORMULA_CONFORMANCE",
+  "source": "openseespy_inproc_user300_runtime_sampling",
+  "damper_type": "eddy_current",
+  "damper_type_keyopt": 1,
+  "material": "User300EddyCurrent",
+  "force_law": "F = 2*FMAX*VCR*v/(v*v+VCR*VCR)",
+  "fmax_n": 50000.0,
+  "vcr_mps": 0.1,
+  "sample_count": 557,
+  "velocity_range_mps": [
+    -1.0,
+    1.0
+  ],
+  "peak_target_force_n": 49999.99999999999,
+  "max_force_target_error_n": 0.0,
+  "max_force_target_relative_error": 0.0
+}

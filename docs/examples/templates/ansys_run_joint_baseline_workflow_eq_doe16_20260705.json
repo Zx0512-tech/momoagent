@@ -1,0 +1,13 @@
+{
+  "baseline_config": "ansys_run_earthquake_baseline_eq_doe16_20260705.json",
+  "optimization_config": "ansys_run_joint_optimization_eq_doe16_20260705.json",
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/ansys_joint_20260705_eq_doe16_parallel4/workflow_summary.json"
+}

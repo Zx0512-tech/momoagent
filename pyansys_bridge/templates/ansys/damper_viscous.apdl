@@ -1,0 +1,3 @@
+! Viscous damper module
+! damper_type={{ damper_type }}
+{{ damper_commands }}

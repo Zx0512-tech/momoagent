@@ -1,0 +1,196 @@
+# 斜拉桥地震分析配置文件
+
+# ==================== 路径配置 ====================
+paths:
+  # 模型文件路径
+  model_file: "STbridge.txt"
+  # 输出目录
+  output_dir: "output"
+  # 地震波数据目录
+  seismic_data_dir: "seismic_data"
+  # 结果保存路径
+  result_db: "output/bridge_seismic_result.db"
+
+# ==================== MAPDL启动配置 ====================
+mapdl:
+  # 启动方式: 'local' (本地) 或 'grpc' (远程)
+  launch_mode: "local"
+  # ANSYS安装路径 (如使用默认安装则留空)
+  ansys_path: ""
+  # 工作目录
+  working_dir: "output"
+  # 任务名
+  jobname: "bridge_analysis"
+  # 处理器数量
+  nproc: 1
+  # 内存设置 (MB)
+  ram: 4096
+  # 是否显示GUI
+  gui: false
+  # 是否清除已有数据库
+  clear: true
+
+# ==================== 模型参数 ====================
+model:
+  # 模型名称
+  name: "斜拉桥模型"
+  # 单位系统: SI (国际单位), MPA (兆帕单位), etc.
+  unit_system: "SI"
+  # 关键节点定义 (用于添加阻尼器、监测位移等)
+  critical_nodes:
+    # 主梁关键节点
+    main_beam: [36, 107, 72, 1, 141]
+    # 主塔节点 (北塔、南塔)
+    north_tower: [479, 481, 483, 485, 487, 489, 491, 493, 495]
+    south_tower: [496, 498, 500, 502, 504, 506, 508, 510, 512]
+    # 桥墩节点
+    piers: [523, 530, 537, 544]
+
+# ==================== 阻尼器配置 ====================
+damper:
+  # 是否启用阻尼器
+  enabled: true
+  # 阻尼器单元类型: COMBIN14, COMBIN40, etc.
+  element_type: "COMBIN14"
+  # 阻尼器参数
+  properties:
+    # 阻尼系数 C (N*s/m)
+    damping_coeff: 100000
+    # 刚度系数 K (N/m)
+    stiffness: 1000000
+  # 阻尼器位置定义 (节点对: [塔节点, 梁节点])
+  locations:
+    - [481, 36]    # 北塔-主梁
+    - [498, 107]   # 南塔-主梁
+    - [487, 54]    # 北塔中部-主梁
+    - [506, 89]    # 南塔中部-主梁
+
+# ==================== 阻尼配置 ====================
+damping:
+  # 阻尼类型: RAYLEIGH (瑞利阻尼), MODAL (模态阻尼), COMPOSITE (复合阻尼)
+  type: "RAYLEIGH"
+  # 瑞利阻尼参数
+  rayleigh:
+    # 质量阻尼系数 Alpha
+    alpha: 0.01
+    # 刚度阻尼系数 Beta
+    beta: 0.001
+  # 模态阻尼参数 (如使用模态阻尼)
+  modal:
+    # 各阶模态阻尼比
+    ratios: [0.02, 0.02, 0.03, 0.03, 0.04]
+
+# ==================== 地震分析配置 ====================
+seismic:
+  # 分析类型: TRANSIENT (瞬态), SPECTRUM (反应谱), PSD (功率谱密度)
+  analysis_type: "TRANSIENT"
+
+  # 瞬态分析参数
+  transient:
+    # 总分析时间 (秒)
+    total_time: 10.0
+    # 时间步长 (秒)
+    time_step: 0.01
+    # 是否使用自动时间步长
+    auto_time_step: true
+    # 最小时间步长
+    min_time_step: 0.001
+    # 最大时间步长
+    max_time_step: 0.05
+    # 子步数
+    substeps: 100
+
+  # 反应谱分析参数
+  spectrum:
+    # 响应谱类型: ACCEL (加速度), VELO (速度), DISP (位移)
+    spectrum_type: "ACCEL"
+    # 阻尼比
+    damping_ratio: 0.05
+    # 作用方向: X, Y, Z, or combinations
+    direction: [1.0, 1.0, 0.0]  # X, Y, Z 方向系数
+
+  # 地震波配置
+  wave:
+    # 地震波文件 (支持txt, csv格式)
+    # 格式: 时间(秒), X加速度(g), Y加速度(g), Z加速度(g)
+    file: "EL_Centro.txt"
+    # 缩放系数
+    scale_factor: 1.0
+    # 时间步长调整
+    time_step_factor: 1.0
+    # 是否进行基线校正
+    baseline_correction: true
+
+  # 基础激励方向 (X, Y, Z)
+  direction:
+    X: 0.0
+    Y: 1.0  # 主要地震方向
+    Z: 0.0
+
+# ==================== 求解器配置 ====================
+solver:
+  # 求解器类型: FRONT (波前法), SPARSE (稀疏矩阵法), PCG (预条件共轭梯度法), JCG (雅可比共轭梯度法)
+  type: "SPARSE"
+  # 是否开启大变形
+  large_deformation: false
+  # 是否考虑应力刚化
+  stress_stiffening: true
+  # 牛顿-拉普森选项: FULL (完全法), MODI (修正法), INIT (初始刚度法)
+  newton_raphson: "FULL"
+
+# ==================== 后处理配置 ====================
+postprocessing:
+  # 是否生成动画
+  generate_animation: false
+  # 动画帧率
+  animation_fps: 10
+  # 输出结果类型
+  output_types:
+    - "displacement"    # 位移
+    - "velocity"        # 速度
+    - "acceleration"    # 加速度
+    - "stress"          # 应力
+    - "strain"          # 应变
+    - "reaction_force"  # 反力
+  # 关键节点监测
+  monitor_nodes: [36, 107, 72, 481, 498]
+  # 结果输出格式: VTK, CSV, PNG
+  export_formats: ["CSV", "PNG"]
+  # 是否保存所有时间步结果
+  save_all_steps: true
+
+# ==================== 模态分析配置 (用于预分析) ====================
+modal:
+  # 是否执行模态分析
+  enabled: true
+  # 提取模态数量
+  n_modes: 20
+  # 模态提取方法: LANB (分块Lanczos), SUBSP (子空间), PCG (PCG Lanczos)
+  method: "LANB"
+  # 频率范围 (Hz) [起始, 结束], 为空则计算所有
+  freq_range: []
+  # 是否扩展模态 (用于后续分析)
+  expand_modes: true
+  # 是否计算单元结果
+  element_results: true
+
+# ==================== 优化配置 (可选) ====================
+optimization:
+  # 是否启用优化
+  enabled: false
+  # 优化目标: MIN_DISPLACEMENT, MIN_STRESS, MIN_COST
+  objective: "MIN_DISPLACEMENT"
+  # 优化变量
+  variables:
+    damper_damping:
+      min: 50000
+      max: 200000
+      step: 10000
+    damper_stiffness:
+      min: 500000
+      max: 2000000
+      step: 100000
+  # 约束条件
+  constraints:
+    max_displacement: 0.5  # 最大位移限制 (m)
+    max_stress: 200e6      # 最大应力限制 (Pa)

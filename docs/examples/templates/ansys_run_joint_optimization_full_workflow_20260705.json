@@ -1,0 +1,165 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "gravity_accel_x": 0.0,
+      "gravity_accel_y": 9.8,
+      "gravity_accel_z": 0.0,
+      "gravity_substeps": "10,20,5",
+      "modal_modes": 50,
+      "wind_load_component": "WIND_DECK",
+      "traffic_load_component": "TRAFFIC_LANES",
+      "template_note": "Calibrate ANSYS load components and DPF CSV exports before engineering use."
+    }
+  },
+  "load_cases": [
+    {
+      "name": "earthquake",
+      "load_type": "earthquake",
+      "path": "../../../analysis_data/earthquake_inputs/earthquake_acceleration_record.txt",
+      "scale": 1.0,
+      "dt": 0.01,
+      "duration": 40.0
+    },
+    {
+      "name": "wind",
+      "load_type": "wind",
+      "scale": 0.4,
+      "dt": 0.02,
+      "duration": 60.0,
+      "direction": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "name": "traffic",
+      "load_type": "traffic",
+      "scale": 0.6,
+      "dt": 0.02,
+      "duration": 60.0,
+      "direction": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      }
+    }
+  ],
+  "load_combinations": [
+    {
+      "name": "operation",
+      "components": [
+        "wind",
+        "traffic"
+      ],
+      "scale": 1.0,
+      "metadata": {
+        "load_calibration": {
+          "status": "verified",
+          "source": "ansys_joint_template_acceptance",
+          "artifact_path": "calibration/ansys_operation_load_calibration.txt",
+          "sha256": "f45adf8ed7b3ef14281998a5eb8ee8763ca06b601762ec412c5605bc343f5333"
+        }
+      }
+    }
+  ],
+  "active_load_cases": [
+    "earthquake",
+    "operation"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "earthquake",
+      "objective": "max_girder_end_displacement",
+      "weight": 0.65
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_moment",
+      "weight": 0.65
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_shear",
+      "weight": 0.65
+    },
+    {
+      "scenario": "operation",
+      "objective": "cumulative_displacement",
+      "weight": 0.35
+    }
+  ],
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "objective_limit_relative_tolerance": 0.001,
+  "bounds": {
+    "c": [
+      1000.0,
+      20000.0
+    ],
+    "alpha": [
+      0.3,
+      0.55
+    ]
+  },
+  "steps": {
+    "c": 1000.0,
+    "alpha": 0.05
+  },
+  "n_doe_samples": 4,
+  "n_candidates": 20,
+  "n_validation_points": 2,
+  "run_validation": true,
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "run",
+    "execution_timeout_s": 1200,
+    "include_modal": true,
+    "damper_module": "damper_user300_viscous",
+    "damper_c_scale": 1000.0,
+    "physical_count_per_tower": 2,
+    "mapdl_executable": "D:/Program Files/ANSYS Inc/v242/ansys/bin/winx64/MAPDL.exe",
+    "mapdl_args": [
+      "-smp",
+      "-db",
+      "32"
+    ],
+    "mapdl_memory_mb": 64,
+    "nproc": 1,
+    "postprocessor": {
+      "mode": "ansys-dpf-rst",
+      "response_nodes": [
+        36,
+        107
+      ],
+      "response_component": 0,
+      "damper_c_scale": 1000.0
+    },
+    "damper_calibration": {
+      "status": "verified",
+      "source": "ansys_joint_template_acceptance",
+      "artifact_path": "calibration/ansys_damper_calibration.txt",
+      "sha256": "e67c2903af5a90442ac7e4710ab819865c55fd64b2e058c8f2ac5568d542e722"
+    }
+  },
+  "parallel": {
+    "enabled": true,
+    "max_workers": 8,
+    "license_limit": 8
+  },
+  "seed": 311,
+  "output_dir": "../../../output/run_templates/ansys_joint_20260705_full_workflow_parallel8_db32_m64",
+  "summary_path": "../../../output/run_templates/ansys_joint_20260705_full_workflow_parallel8_db32_m64/optimization_summary.json",
+  "max_validation_designs": 2,
+  "max_validation_peak_relative_error": 0.002,
+  "run_review": true,
+  "review_reuse_doe_results": true
+}

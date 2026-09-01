@@ -1,0 +1,131 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../../bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+    "metadata": {
+      "gravity_accel_x": 0.0,
+      "gravity_accel_y": 9.8,
+      "gravity_accel_z": 0.0,
+      "gravity_substeps": "20,40,10",
+      "modal_modes": 50,
+      "wind_load_mappings_path": "../../../output/operation_load_inputs/wind_main_girder_mappings.json",
+      "traffic_load_mappings_path": "../../../output/operation_load_inputs/traffic_main_girder_mappings.json",
+      "template_note": "ANSYS operation-only test optimization template. Generate 300 s inputs with scripts/prepare_operation_load_inputs.py before running."
+    }
+  },
+  "load_cases": [
+    {
+      "name": "wind",
+      "load_type": "wind",
+      "scale": 1.0,
+      "path": "../../../output/operation_load_inputs/wind_vertical_10mps_300s.csv",
+      "dt": 1.0,
+      "duration": 300.0,
+      "direction": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0
+      },
+      "metadata": {
+        "wind_speed_mps": 10.0,
+        "loaded_component": "vertical_force_only"
+      }
+    },
+    {
+      "name": "traffic",
+      "load_type": "traffic",
+      "scale": 1.0,
+      "path": "../../../output/operation_load_inputs/traffic_wim_2021_01_300s.csv",
+      "dt": 1.0,
+      "duration": 300.0,
+      "direction": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      },
+      "metadata": {
+        "source": "2021.1.txt",
+        "source_day_policy": "auto closest to 100000 vehicles/day",
+        "lane_mode": "single-road bidirectional main-girder loading"
+      }
+    }
+  ],
+  "load_combinations": [
+    {
+      "name": "operation",
+      "components": [
+        "wind",
+        "traffic"
+      ],
+      "scale": 1.0
+    }
+  ],
+  "active_load_cases": [
+    "operation"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "operation",
+      "objective": "cumulative_displacement",
+      "weight": 1.0
+    },
+    {
+      "scenario": "operation",
+      "objective": "max_damper_stroke",
+      "weight": 1.0
+    }
+  ],
+  "bounds": {
+    "c": [
+      1000.0,
+      20000.0
+    ],
+    "alpha": [
+      0.3,
+      0.55
+    ]
+  },
+  "steps": {
+    "c": 1000.0,
+    "alpha": 0.05
+  },
+  "n_doe_samples": 4,
+  "n_candidates": 20,
+  "n_validation_points": 2,
+  "max_validation_designs": 2,
+  "run_validation": true,
+  "max_validation_peak_relative_error": 0.1,
+  "run_review": true,
+  "review_reuse_doe_results": true,
+  "solver": "ansys",
+  "solver_kwargs": {
+    "execution_mode": "run",
+    "interpolate_time_history_tables": true,
+    "execution_timeout_s": 1200,
+    "include_modal": false,
+    "damper_module": "damper_user300_viscous",
+    "damper_c_scale": 1000.0,
+    "physical_count_per_tower": 2,
+    "mapdl_executable": "D:/Program Files/ANSYS Inc/v242/ansys/bin/winx64/MAPDL.exe",
+    "mapdl_args": [
+      "-smp"
+    ],
+    "mapdl_memory_mb": 512,
+    "nproc": 1,
+      "postprocessor": {
+        "mode": "ansys-dpf-rst",
+        "response_nodes": [
+          1
+        ],
+        "response_component": 0,
+        "damper_c_scale": 1000.0
+      }
+  },
+  "parallel": {
+    "enabled": false,
+    "max_workers": 1
+  },
+  "seed": 707,
+  "output_dir": "../../../output/run_templates/ansys_operation",
+  "summary_path": "../../../output/run_templates/ansys_operation/optimization_summary.json"
+}

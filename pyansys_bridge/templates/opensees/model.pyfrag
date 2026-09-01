@@ -1,0 +1,35 @@
+import importlib.util
+import openseespy.opensees as ops
+
+model_spec = importlib.util.spec_from_file_location("stbridge_opensees_model", r"{{ model_path }}")
+if model_spec is None or model_spec.loader is None:
+    raise RuntimeError(r"Cannot import OpenSees model module: {{ model_path }}")
+model_module = importlib.util.module_from_spec(model_spec)
+model_spec.loader.exec_module(model_module)
+model_globals = model_module.__dict__
+configured_load_nodes = {{ opensees_load_nodes }}
+model_globals['opensees_system'] = {{ opensees_system }}
+model_globals['opensees_system_args'] = {{ opensees_system_args }}
+setattr(model_module, 'opensees_system', model_globals['opensees_system'])
+setattr(model_module, 'opensees_system_args', model_globals['opensees_system_args'])
+for node_name, configured_nodes in configured_load_nodes.items():
+    if configured_nodes is not None:
+        model_globals[node_name] = configured_nodes
+        setattr(model_module, node_name, configured_nodes)
+model_builder = getattr(model_module, 'build_command_stream_model', None) or getattr(model_module, 'build_model', None)
+model_context = {}
+if callable(model_builder):
+    model_context = model_builder()
+    builder_result = model_context
+    if isinstance(builder_result, dict):
+        model_globals.update(builder_result)
+        model_context = builder_result
+if not isinstance(model_context, dict):
+    model_context = {}
+model_context.setdefault('model_module', model_module)
+model_context.setdefault('model_globals', model_globals)
+for node_name, configured_nodes in configured_load_nodes.items():
+    if configured_nodes is not None:
+        model_context[node_name] = configured_nodes
+if not ops.getNodeTags():
+    raise RuntimeError("OpenSees model module did not build any nodes")

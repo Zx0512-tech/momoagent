@@ -1,0 +1,13 @@
+! Gravity static preload module
+! This establishes the stress-stiffened initial state shared by modal and transient analyses.
+/SOLU
+ANTYPE,STATIC
+ACEL,{{ gravity_accel_x }},{{ gravity_accel_y }},{{ gravity_accel_z }}
+TIME,{{ gravity_time }}
+NSUBST,{{ gravity_substeps }}
+OUTRES,ALL,ALL
+SSTIF,ON
+PSTRES,ON
+ALLS
+SOLVE
+FINISH

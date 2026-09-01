@@ -1,0 +1,9 @@
+{
+  "reference_config": "ansys_run_earthquake_baseline_template.json",
+  "candidate_config": "openseespy_inproc_run_earthquake_baseline_template.json",
+  "parity": {
+    "relative_tolerance": 0.1,
+    "absolute_tolerance": 0.0
+  },
+  "summary_path": "../../../output/run_templates/solver_parity/baseline_parity_report.json"
+}

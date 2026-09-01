@@ -1,0 +1,11 @@
+{
+  "baseline_config": "ansys_run_wind_baseline_template.json",
+  "optimization_config": "ansys_run_wind_optimization_template.json",
+  "baseline_objective_limits": {
+    "scenario": "wind",
+    "objectives": [
+      "cumulative_displacement"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/ansys_wind/workflow_summary.json"
+}

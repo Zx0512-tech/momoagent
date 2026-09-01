@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0",
+  "solver": "OPENSEESPY_INPROC_USER300",
+  "evidenceClass": "RUNTIME_FORMULA_CONFORMANCE",
+  "generator": "scripts/generate_opensees_user300_calibration.py",
+  "profiles": [
+    {
+      "damperType": "VISCOUS",
+      "user300Type": 3,
+      "sourcePath": "opensees_user300_viscous_calibration_summary.json",
+      "sourceSha256": "c3ea224e92d87de59cc1d23045a9957327bba0fb8fae3687d907d205e4f712b7",
+      "maxTargetRelativeError": 0.0
+    },
+    {
+      "damperType": "EDDY_CURRENT",
+      "user300Type": 1,
+      "sourcePath": "opensees_user300_eddy_current_calibration_summary.json",
+      "sourceSha256": "8b4097ee23795700c5e09034217db85f432585c168c028a765db518b6078e81c",
+      "maxTargetRelativeError": 0.0
+    },
+    {
+      "damperType": "FRICTION",
+      "user300Type": 2,
+      "sourcePath": "opensees_user300_friction_calibration_summary.json",
+      "sourceSha256": "5f8f5506a0b65d04bcd032c163aa9cca201f13260491a982cf6036a19e8870a7",
+      "maxTargetRelativeError": 0.0
+    }
+  ]
+}

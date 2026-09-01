@@ -1,0 +1,105 @@
+{
+  "bridge_model": {
+    "name": "STbridge",
+    "source_path": "../../STbridge.txt"
+  },
+  "load_cases": [
+    {
+      "name": "earthquake",
+      "load_type": "earthquake",
+      "scale": 1.0,
+      "dt": 0.02,
+      "duration": 60.0
+    },
+    {
+      "name": "wind",
+      "load_type": "wind",
+      "scale": 0.4,
+      "dt": 0.02,
+      "duration": 60.0,
+      "direction": {
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "name": "traffic",
+      "load_type": "traffic",
+      "scale": 0.6,
+      "dt": 0.02,
+      "duration": 60.0,
+      "direction": {
+        "x": 0.0,
+        "y": -1.0,
+        "z": 0.0
+      }
+    }
+  ],
+  "load_combinations": [
+    {
+      "name": "operation",
+      "components": [
+        "wind",
+        "traffic"
+      ],
+      "scale": 1.0
+    }
+  ],
+  "active_load_cases": [
+    "earthquake",
+    "operation"
+  ],
+  "objective_specs": [
+    {
+      "scenario": "earthquake",
+      "objective": "max_girder_end_displacement",
+      "weight": 0.65
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_moment",
+      "weight": 0.65
+    },
+    {
+      "scenario": "earthquake",
+      "objective": "max_tower_base_shear",
+      "weight": 0.65
+    },
+    {
+      "scenario": "operation",
+      "objective": "cumulative_displacement",
+      "weight": 0.35
+    }
+  ],
+  "baseline_objective_limits": {
+    "scenario": "earthquake",
+    "source": "baselines/undamped_earthquake_smoke_summary.json",
+    "objectives": [
+      "max_girder_end_displacement",
+      "max_tower_base_moment",
+      "max_tower_base_shear"
+    ]
+  },
+  "bounds": {
+    "c": [
+      80000.0,
+      180000.0
+    ],
+    "alpha": [
+      0.3,
+      0.55
+    ]
+  },
+  "steps": {
+    "c": 20000.0,
+    "alpha": 0.05
+  },
+  "n_doe_samples": 6,
+  "n_candidates": 30,
+  "n_validation_points": 2,
+  "solver": "mock",
+  "seed": 203,
+  "output_dir": "../../output/optimization_smoke/joint_earthquake_operation",
+  "summary_path": "../../output/optimization_smoke/joint_earthquake_operation/optimization_summary.json"
+}

@@ -1,0 +1,2934 @@
+wipe
+model BasicBuilder -ndm 3 -ndf 6
+set g 9.80665
+set massScale 1
+set stiffnessScale 1
+set cableStrainScale 1
+node 1 -1044 0 0
+node 2 -1036 0.12 0
+node 3 -1024 0.3 0
+node 4 -1012 0.48 0
+node 5 -1000 0.66 0
+node 6 -988 0.84 0
+node 7 -976 1.02 0
+node 8 -964 1.2 0
+node 9 -952 1.38 0
+node 10 -940 1.56 0
+node 11 -928 1.74 0
+node 12 -916 1.92 0
+node 13 -904 2.1 0
+node 14 -888 2.34 0
+node 15 -872 2.58 0
+node 16 -856 2.82 0
+node 17 -840 3.06 0
+node 18 -824 3.3 0
+node 19 -808 3.54 0
+node 20 -792 3.78 0
+node 21 -776 4.02 0
+node 22 -760 4.26 0
+node 23 -744 4.5 0
+node 24 -728 4.74 0
+node 25 -712 4.98 0
+node 26 -696 5.22 0
+node 27 -680 5.46 0
+node 28 -664 5.7 0
+node 29 -648 5.94 0
+node 30 -632 6.18 0
+node 31 -616 6.42 0
+node 32 -600 6.66 0
+node 33 -584 6.9 0
+node 34 -568 7.14 0
+node 35 -552 7.38 0
+node 36 -544 7.5 0
+node 37 -536 7.62 0
+node 38 -520 7.855 0
+node 39 -504 8.0826 0
+node 40 -488 8.30305 0
+node 41 -472 8.51639 0
+node 42 -456 8.72262 0
+node 43 -440 8.92174 0
+node 44 -424 9.11374 0
+node 45 -408 9.29863 0
+node 46 -392 9.47641 0
+node 47 -376 9.647077 0
+node 48 -360 9.810632 0
+node 49 -344 9.967075 0
+node 50 -328 10.116406 0
+node 51 -312 10.258626 0
+node 52 -296 10.393734 0
+node 53 -280 10.521731 0
+node 54 -264 10.642616 0
+node 55 -248 10.75639 0
+node 56 -232 10.863053 0
+node 57 -216 10.962605 0
+node 58 -200 11.055046 0
+node 59 -184 11.140376 0
+node 60 -168 11.218595 0
+node 61 -152 11.289703 0
+node 62 -136 11.3537 0
+node 63 -120 11.410586 0
+node 64 -104 11.460361 0
+node 65 -88 11.503026 0
+node 66 -72 11.538566 0
+node 67 -56 11.567009 0
+node 68 -40 11.588341 0
+node 69 -24 11.602563 0
+node 70 -8 11.609674 0
+node 71 0 11.609674 0
+node 72 1044 0 0
+node 73 1036 0.12 0
+node 74 1024 0.3 0
+node 75 1012 0.48 0
+node 76 1000 0.66 0
+node 77 988 0.84 0
+node 78 976 1.02 0
+node 79 964 1.2 0
+node 80 952 1.38 0
+node 81 940 1.56 0
+node 82 928 1.74 0
+node 83 916 1.92 0
+node 84 904 2.1 0
+node 85 888 2.34 0
+node 86 872 2.58 0
+node 87 856 2.82 0
+node 88 840 3.06 0
+node 89 824 3.3 0
+node 90 808 3.54 0
+node 91 792 3.78 0
+node 92 776 4.02 0
+node 93 760 4.26 0
+node 94 744 4.5 0
+node 95 728 4.74 0
+node 96 712 4.98 0
+node 97 696 5.22 0
+node 98 680 5.46 0
+node 99 664 5.7 0
+node 100 648 5.94 0
+node 101 632 6.18 0
+node 102 616 6.42 0
+node 103 600 6.66 0
+node 104 584 6.9 0
+node 105 568 7.14 0
+node 106 552 7.38 0
+node 107 544 7.5 0
+node 108 536 7.62 0
+node 109 520 7.855 0
+node 110 504 8.0826 0
+node 111 488 8.30305 0
+node 112 472 8.51639 0
+node 113 456 8.72262 0
+node 114 440 8.92174 0
+node 115 424 9.11374 0
+node 116 408 9.29863 0
+node 117 392 9.47641 0
+node 118 376 9.647077 0
+node 119 360 9.810632 0
+node 120 344 9.967075 0
+node 121 328 10.116406 0
+node 122 312 10.258626 0
+node 123 296 10.393734 0
+node 124 280 10.521731 0
+node 125 264 10.642616 0
+node 126 248 10.75639 0
+node 127 232 10.863053 0
+node 128 216 10.962605 0
+node 129 200 11.055046 0
+node 130 184 11.140376 0
+node 131 168 11.218595 0
+node 132 152 11.289703 0
+node 133 136 11.3537 0
+node 134 120 11.410586 0
+node 135 104 11.460361 0
+node 136 88 11.503026 0
+node 137 72 11.538566 0
+node 138 56 11.567009 0
+node 139 40 11.588341 0
+node 140 24 11.602563 0
+node 141 8 11.609674 0
+node 142 -1036 0.12 -35.76
+node 143 -1024 0.3 -35.76
+node 144 -1012 0.48 -35.76
+node 145 -1000 0.66 -35.76
+node 146 -988 0.84 -35.76
+node 147 -976 1.02 -35.76
+node 148 -964 1.2 -35.76
+node 149 -952 1.38 -35.76
+node 150 -940 1.56 -35.76
+node 151 -928 1.74 -35.76
+node 152 -916 1.92 -35.76
+node 153 -904 2.1 -35.76
+node 154 -888 2.34 -35.76
+node 155 -872 2.58 -35.76
+node 156 -856 2.82 -35.76
+node 157 -840 3.06 -35.76
+node 158 -824 3.3 -35.76
+node 159 -808 3.54 -35.76
+node 160 -792 3.78 -35.76
+node 161 -776 4.02 -35.76
+node 162 -760 4.26 -35.76
+node 163 -744 4.5 -35.76
+node 164 -728 4.74 -35.76
+node 165 -712 4.98 -35.76
+node 166 -696 5.22 -35.76
+node 167 -680 5.46 -35.76
+node 168 -664 5.7 -35.76
+node 169 -648 5.94 -35.76
+node 170 -632 6.18 -35.76
+node 171 -616 6.42 -35.76
+node 172 -600 6.66 -35.76
+node 173 -584 6.9 -35.76
+node 174 -568 7.14 -35.76
+node 175 -552 7.38 -35.76
+node 176 -536 7.62 -35.76
+node 177 -520 7.855 -35.76
+node 178 -504 8.0826 -35.76
+node 179 -488 8.30305 -35.76
+node 180 -472 8.51639 -35.76
+node 181 -456 8.72262 -35.76
+node 182 -440 8.92174 -35.76
+node 183 -424 9.11374 -35.76
+node 184 -408 9.29863 -35.76
+node 185 -392 9.47641 -35.76
+node 186 -376 9.647077 -35.76
+node 187 -360 9.810632 -35.76
+node 188 -344 9.967075 -35.76
+node 189 -328 10.116406 -35.76
+node 190 -312 10.258626 -35.76
+node 191 -296 10.393734 -35.76
+node 192 -280 10.521731 -35.76
+node 193 -264 10.642616 -35.76
+node 194 -248 10.75639 -35.76
+node 195 -232 10.863053 -35.76
+node 196 -216 10.962605 -35.76
+node 197 -200 11.055046 -35.76
+node 198 -184 11.140376 -35.76
+node 199 -168 11.218595 -35.76
+node 200 -152 11.289703 -35.76
+node 201 -136 11.3537 -35.76
+node 202 -120 11.410586 -35.76
+node 203 -104 11.460361 -35.76
+node 204 -88 11.503026 -35.76
+node 205 -72 11.538566 -35.76
+node 206 -56 11.567009 -35.76
+node 207 -40 11.588341 -35.76
+node 208 -24 11.602563 -35.76
+node 209 -8 11.609674 -35.76
+node 210 1036 0.12 -35.76
+node 211 1024 0.3 -35.76
+node 212 1012 0.48 -35.76
+node 213 1000 0.66 -35.76
+node 214 988 0.84 -35.76
+node 215 976 1.02 -35.76
+node 216 964 1.2 -35.76
+node 217 952 1.38 -35.76
+node 218 940 1.56 -35.76
+node 219 928 1.74 -35.76
+node 220 916 1.92 -35.76
+node 221 904 2.1 -35.76
+node 222 888 2.34 -35.76
+node 223 872 2.58 -35.76
+node 224 856 2.82 -35.76
+node 225 840 3.06 -35.76
+node 226 824 3.3 -35.76
+node 227 808 3.54 -35.76
+node 228 792 3.78 -35.76
+node 229 776 4.02 -35.76
+node 230 760 4.26 -35.76
+node 231 744 4.5 -35.76
+node 232 728 4.74 -35.76
+node 233 712 4.98 -35.76
+node 234 696 5.22 -35.76
+node 235 680 5.46 -35.76
+node 236 664 5.7 -35.76
+node 237 648 5.94 -35.76
+node 238 632 6.18 -35.76
+node 239 616 6.42 -35.76
+node 240 600 6.66 -35.76
+node 241 584 6.9 -35.76
+node 242 568 7.14 -35.76
+node 243 552 7.38 -35.76
+node 244 536 7.62 -35.76
+node 245 520 7.855 -35.76
+node 246 504 8.0826 -35.76
+node 247 488 8.30305 -35.76
+node 248 472 8.51639 -35.76
+node 249 456 8.72262 -35.76
+node 250 440 8.92174 -35.76
+node 251 424 9.11374 -35.76
+node 252 408 9.29863 -35.76
+node 253 392 9.47641 -35.76
+node 254 376 9.647077 -35.76
+node 255 360 9.810632 -35.76
+node 256 344 9.967075 -35.76
+node 257 328 10.116406 -35.76
+node 258 312 10.258626 -35.76
+node 259 296 10.393734 -35.76
+node 260 280 10.521731 -35.76
+node 261 264 10.642616 -35.76
+node 262 248 10.75639 -35.76
+node 263 232 10.863053 -35.76
+node 264 216 10.962605 -35.76
+node 265 200 11.055046 -35.76
+node 266 184 11.140376 -35.76
+node 267 168 11.218595 -35.76
+node 268 152 11.289703 -35.76
+node 269 136 11.3537 -35.76
+node 270 120 11.410586 -35.76
+node 271 104 11.460361 -35.76
+node 272 88 11.503026 -35.76
+node 273 72 11.538566 -35.76
+node 274 56 11.567009 -35.76
+node 275 40 11.588341 -35.76
+node 276 24 11.602563 -35.76
+node 277 8 11.609674 -35.76
+node 278 -1036 0.12 35.76
+node 279 -1024 0.3 35.76
+node 280 -1012 0.48 35.76
+node 281 -1000 0.66 35.76
+node 282 -988 0.84 35.76
+node 283 -976 1.02 35.76
+node 284 -964 1.2 35.76
+node 285 -952 1.38 35.76
+node 286 -940 1.56 35.76
+node 287 -928 1.74 35.76
+node 288 -916 1.92 35.76
+node 289 -904 2.1 35.76
+node 290 -888 2.34 35.76
+node 291 -872 2.58 35.76
+node 292 -856 2.82 35.76
+node 293 -840 3.06 35.76
+node 294 -824 3.3 35.76
+node 295 -808 3.54 35.76
+node 296 -792 3.78 35.76
+node 297 -776 4.02 35.76
+node 298 -760 4.26 35.76
+node 299 -744 4.5 35.76
+node 300 -728 4.74 35.76
+node 301 -712 4.98 35.76
+node 302 -696 5.22 35.76
+node 303 -680 5.46 35.76
+node 304 -664 5.7 35.76
+node 305 -648 5.94 35.76
+node 306 -632 6.18 35.76
+node 307 -616 6.42 35.76
+node 308 -600 6.66 35.76
+node 309 -584 6.9 35.76
+node 310 -568 7.14 35.76
+node 311 -552 7.38 35.76
+node 312 -536 7.62 35.76
+node 313 -520 7.855 35.76
+node 314 -504 8.0826 35.76
+node 315 -488 8.30305 35.76
+node 316 -472 8.51639 35.76
+node 317 -456 8.72262 35.76
+node 318 -440 8.92174 35.76
+node 319 -424 9.11374 35.76
+node 320 -408 9.29863 35.76
+node 321 -392 9.47641 35.76
+node 322 -376 9.647077 35.76
+node 323 -360 9.810632 35.76
+node 324 -344 9.967075 35.76
+node 325 -328 10.116406 35.76
+node 326 -312 10.258626 35.76
+node 327 -296 10.393734 35.76
+node 328 -280 10.521731 35.76
+node 329 -264 10.642616 35.76
+node 330 -248 10.75639 35.76
+node 331 -232 10.863053 35.76
+node 332 -216 10.962605 35.76
+node 333 -200 11.055046 35.76
+node 334 -184 11.140376 35.76
+node 335 -168 11.218595 35.76
+node 336 -152 11.289703 35.76
+node 337 -136 11.3537 35.76
+node 338 -120 11.410586 35.76
+node 339 -104 11.460361 35.76
+node 340 -88 11.503026 35.76
+node 341 -72 11.538566 35.76
+node 342 -56 11.567009 35.76
+node 343 -40 11.588341 35.76
+node 344 -24 11.602563 35.76
+node 345 -8 11.609674 35.76
+node 346 1036 0.12 35.76
+node 347 1024 0.3 35.76
+node 348 1012 0.48 35.76
+node 349 1000 0.66 35.76
+node 350 988 0.84 35.76
+node 351 976 1.02 35.76
+node 352 964 1.2 35.76
+node 353 952 1.38 35.76
+node 354 940 1.56 35.76
+node 355 928 1.74 35.76
+node 356 916 1.92 35.76
+node 357 904 2.1 35.76
+node 358 888 2.34 35.76
+node 359 872 2.58 35.76
+node 360 856 2.82 35.76
+node 361 840 3.06 35.76
+node 362 824 3.3 35.76
+node 363 808 3.54 35.76
+node 364 792 3.78 35.76
+node 365 776 4.02 35.76
+node 366 760 4.26 35.76
+node 367 744 4.5 35.76
+node 368 728 4.74 35.76
+node 369 712 4.98 35.76
+node 370 696 5.22 35.76
+node 371 680 5.46 35.76
+node 372 664 5.7 35.76
+node 373 648 5.94 35.76
+node 374 632 6.18 35.76
+node 375 616 6.42 35.76
+node 376 600 6.66 35.76
+node 377 584 6.9 35.76
+node 378 568 7.14 35.76
+node 379 552 7.38 35.76
+node 380 536 7.62 35.76
+node 381 520 7.855 35.76
+node 382 504 8.0826 35.76
+node 383 488 8.30305 35.76
+node 384 472 8.51639 35.76
+node 385 456 8.72262 35.76
+node 386 440 8.92174 35.76
+node 387 424 9.11374 35.76
+node 388 408 9.29863 35.76
+node 389 392 9.47641 35.76
+node 390 376 9.647077 35.76
+node 391 360 9.810632 35.76
+node 392 344 9.967075 35.76
+node 393 328 10.116406 35.76
+node 394 312 10.258626 35.76
+node 395 296 10.393734 35.76
+node 396 280 10.521731 35.76
+node 397 264 10.642616 35.76
+node 398 248 10.75639 35.76
+node 399 232 10.863053 35.76
+node 400 216 10.962605 35.76
+node 401 200 11.055046 35.76
+node 402 184 11.140376 35.76
+node 403 168 11.218595 35.76
+node 404 152 11.289703 35.76
+node 405 136 11.3537 35.76
+node 406 120 11.410586 35.76
+node 407 104 11.460361 35.76
+node 408 88 11.503026 35.76
+node 409 72 11.538566 35.76
+node 410 56 11.567009 35.76
+node 411 40 11.588341 35.76
+node 412 24 11.602563 35.76
+node 413 8 11.609674 35.76
+node 415 -544 230.2465 0
+node 416 -544 228.2125 0
+node 417 -544 226.1771 0
+node 418 -544 224.1401 0
+node 419 -544 222.1011 0
+node 420 -544 220.0601 0
+node 421 -544 218.0171 0
+node 422 -544 215.9717 0
+node 423 -544 213.9238 0
+node 424 -544 211.8731 0
+node 425 -544 209.8194 0
+node 426 -544 207.7623 0
+node 427 -544 205.6772 0
+node 428 -544 203.584 0
+node 429 -544 201.4815 0
+node 430 -544 199.3681 0
+node 431 -544 197.242 0
+node 432 -544 195.101 0
+node 433 -544 192.942 0
+node 434 -544 190.761 0
+node 435 -544 188.554 0
+node 436 -544 186.314 0
+node 437 -544 184.032 0
+node 438 -544 181.696 0
+node 439 -544 179.289 0
+node 440 -544 176.786 0
+node 441 -544 173.759 0
+node 442 -544 171.27 0
+node 443 -544 168.168 0
+node 444 -544 164.505 0
+node 445 -544 159.867 0
+node 446 -544 158.3 0
+node 447 544 230.2465 0
+node 448 544 228.2125 0
+node 449 544 226.1771 0
+node 450 544 224.1401 0
+node 451 544 222.1011 0
+node 452 544 220.0601 0
+node 453 544 218.0171 0
+node 454 544 215.9717 0
+node 455 544 213.9238 0
+node 456 544 211.8731 0
+node 457 544 209.8194 0
+node 458 544 207.7623 0
+node 459 544 205.6772 0
+node 460 544 203.584 0
+node 461 544 201.4815 0
+node 462 544 199.3681 0
+node 463 544 197.242 0
+node 464 544 195.101 0
+node 465 544 192.942 0
+node 466 544 190.761 0
+node 467 544 188.554 0
+node 468 544 186.314 0
+node 469 544 184.032 0
+node 470 544 181.696 0
+node 471 544 179.289 0
+node 472 544 176.786 0
+node 473 544 173.759 0
+node 474 544 171.27 0
+node 475 544 168.168 0
+node 476 544 164.505 0
+node 477 544 159.867 0
+node 478 544 158.3 0
+node 479 -544 238.6 0
+node 480 -544 152.869 0
+node 481 -544 147.239 0
+node 482 -544 77.6 -13.6
+node 483 -544 77.6 13.6
+node 484 -544 7.5 -22.4
+node 485 -544 7.5 22.4
+node 486 -544 2.512 -22.5
+node 487 -544 2.512 22.5
+node 488 -544 -6.574 -24.1
+node 489 -544 -6.574 24.1
+node 490 -544 -31.4 -27.2
+node 491 -544 -31.4 27.2
+node 492 -544 -51.8 -29.8
+node 493 -544 -51.8 29.8
+node 494 -544 -61.8 -31
+node 495 -544 -61.8 31
+node 496 544 238.6 0
+node 497 544 152.869 0
+node 498 544 147.239 0
+node 499 544 77.6 -13.6
+node 500 544 77.6 13.6
+node 501 544 7.5 -22.4
+node 502 544 7.5 22.4
+node 503 544 2.512 -22.5
+node 504 544 2.512 22.5
+node 505 544 -6.574 -24.1
+node 506 544 -6.574 24.1
+node 507 544 -31.4 -27.2
+node 508 544 -31.4 27.2
+node 509 544 -51.8 -29.8
+node 510 544 -51.8 29.8
+node 511 544 -61.8 -31
+node 512 544 -61.8 31
+node 513 -544 147.239 -4.9
+node 514 -544 147.239 4.9
+node 515 544 147.239 -4.9
+node 516 544 147.239 4.9
+node 517 -544 2.512 -9.2
+node 518 -544 2.512 0
+node 519 -544 2.512 9.2
+node 520 544 2.512 -9.2
+node 521 544 2.512 0
+node 522 544 2.512 9.2
+node 523 -1044 -4.52 -9.2
+node 524 -1044 -8.02 -9.2
+node 525 -1044 -61.32 -9.2
+node 526 -1044 -4.52 9.2
+node 527 -1044 -8.02 9.2
+node 528 -1044 -61.32 9.2
+node 529 -944 -3.04 -9.2
+node 530 -944 -61.56 -9.2
+node 531 -944 -3.04 9.2
+node 532 -944 -61.56 9.2
+node 533 -844 -1.78 -9.2
+node 534 -844 -61.73 -9.2
+node 535 -844 -1.78 9.2
+node 536 -844 -61.73 9.2
+node 537 844 -1.78 -9.2
+node 538 844 -61.73 -9.2
+node 539 844 -1.78 9.2
+node 540 844 -61.73 9.2
+node 541 944 -3.04 -9.2
+node 542 944 -61.56 -9.2
+node 543 944 -3.04 9.2
+node 544 944 -61.56 9.2
+node 545 1044 -4.52 -9.2
+node 546 1044 -8.02 -9.2
+node 547 1044 -61.32 -9.2
+node 548 1044 -4.52 9.2
+node 549 1044 -8.02 9.2
+node 550 1044 -61.32 9.2
+node 551 -944 1.5 0
+node 552 944 1.5 0
+node 553 -844 3 0
+node 554 844 3 0
+node 555 -1044 0 -9.2
+node 556 -1044 0 9.2
+node 557 -944 1.5 -9.2
+node 558 -944 1.5 9.2
+node 559 -844 3 -9.2
+node 560 -844 3 9.2
+node 561 1044 0 -9.2
+node 562 1044 0 9.2
+node 563 944 1.5 -9.2
+node 564 944 1.5 9.2
+node 565 844 3 -9.2
+node 566 844 3 9.2
+node 567 -1008 0.54 0
+node 568 -896 2.22 0
+node 569 -784 3.9 0
+node 570 -672 5.58 0
+node 571 -560 7.26 0
+node 572 -448 8.8217 0
+node 573 -336 10.0413 0
+node 574 -224 10.9123 0
+node 575 -112 11.435 0
+node 576 1008 0.54 0
+node 577 896 2.22 0
+node 578 784 3.9 0
+node 579 672 5.58 0
+node 580 560 7.26 0
+node 581 448 8.8217 0
+node 582 336 10.0413 0
+node 583 224 10.9123 0
+node 584 112 11.435 0
+node 585 -544 128.3 -7.266
+node 586 -544 98.3 -11.014
+node 587 -544 68.3 -14.767
+node 588 -544 38.3 -18.534
+node 589 -544 128.3 7.266
+node 590 -544 98.3 11.014
+node 591 -544 68.3 14.767
+node 592 -544 38.3 18.534
+node 593 544 128.3 -7.266
+node 594 544 98.3 -11.014
+node 595 544 68.3 -14.767
+node 596 544 38.3 -18.534
+node 597 544 128.3 7.266
+node 598 544 98.3 11.014
+node 599 544 68.3 14.767
+node 600 544 38.3 18.534
+fix 494 1 1 1 1 1 1
+fix 495 1 1 1 1 1 1
+fix 511 1 1 1 1 1 1
+fix 512 1 1 1 1 1 1
+fix 525 1 1 1 1 1 1
+fix 528 1 1 1 1 1 1
+fix 530 1 1 1 1 1 1
+fix 532 1 1 1 1 1 1
+fix 534 1 1 1 1 1 1
+fix 536 1 1 1 1 1 1
+fix 538 1 1 1 1 1 1
+fix 540 1 1 1 1 1 1
+fix 542 1 1 1 1 1 1
+fix 544 1 1 1 1 1 1
+fix 547 1 1 1 1 1 1
+fix 550 1 1 1 1 1 1
+equalDOF 36 518 2
+equalDOF 36 518 3
+equalDOF 36 518 4
+equalDOF 107 521 2
+equalDOF 107 521 3
+equalDOF 107 521 4
+equalDOF 481 513 1 2 3 4 5 6
+equalDOF 481 514 1 2 3 4 5 6
+equalDOF 498 515 1 2 3 4 5 6
+equalDOF 498 516 1 2 3 4 5 6
+equalDOF 555 523 2
+equalDOF 555 523 3
+equalDOF 556 526 2
+equalDOF 556 526 3
+equalDOF 557 529 2
+equalDOF 557 529 3
+equalDOF 558 531 2
+equalDOF 558 531 3
+equalDOF 559 533 2
+equalDOF 559 533 3
+equalDOF 560 535 2
+equalDOF 560 535 3
+equalDOF 561 545 2
+equalDOF 561 545 3
+equalDOF 562 548 2
+equalDOF 562 548 3
+equalDOF 563 541 2
+equalDOF 563 541 3
+equalDOF 564 543 2
+equalDOF 564 543 3
+equalDOF 565 537 2
+equalDOF 565 537 3
+equalDOF 566 539 2
+equalDOF 566 539 3
+uniaxialMaterial Elastic 10000 205000000000
+uniaxialMaterial InitStrainMaterial 10001 10000 0.00177
+uniaxialMaterial Elastic 10002 205000000000
+uniaxialMaterial InitStrainMaterial 10003 10002 0.00177
+uniaxialMaterial Elastic 10004 205000000000
+uniaxialMaterial InitStrainMaterial 10005 10004 0.00164
+uniaxialMaterial Elastic 10006 205000000000
+uniaxialMaterial InitStrainMaterial 10007 10006 0.00166
+uniaxialMaterial Elastic 10008 205000000000
+uniaxialMaterial InitStrainMaterial 10009 10008 0.00166
+uniaxialMaterial Elastic 10010 205000000000
+uniaxialMaterial InitStrainMaterial 10011 10010 0.00174
+uniaxialMaterial Elastic 10012 205000000000
+uniaxialMaterial InitStrainMaterial 10013 10012 0.00167
+uniaxialMaterial Elastic 10014 205000000000
+uniaxialMaterial InitStrainMaterial 10015 10014 0.00177
+uniaxialMaterial Elastic 10016 205000000000
+uniaxialMaterial InitStrainMaterial 10017 10016 0.00175
+uniaxialMaterial Elastic 10018 205000000000
+uniaxialMaterial InitStrainMaterial 10019 10018 0.00161
+uniaxialMaterial Elastic 10020 205000000000
+uniaxialMaterial InitStrainMaterial 10021 10020 0.00157
+uniaxialMaterial Elastic 10022 205000000000
+uniaxialMaterial InitStrainMaterial 10023 10022 0.00154
+uniaxialMaterial Elastic 10024 205000000000
+uniaxialMaterial InitStrainMaterial 10025 10024 0.00154
+uniaxialMaterial Elastic 10026 205000000000
+uniaxialMaterial InitStrainMaterial 10027 10026 0.00146
+uniaxialMaterial Elastic 10028 205000000000
+uniaxialMaterial InitStrainMaterial 10029 10028 0.00147
+uniaxialMaterial Elastic 10030 205000000000
+uniaxialMaterial InitStrainMaterial 10031 10030 0.00138
+uniaxialMaterial Elastic 10032 205000000000
+uniaxialMaterial InitStrainMaterial 10033 10032 0.00153
+uniaxialMaterial Elastic 10034 205000000000
+uniaxialMaterial InitStrainMaterial 10035 10034 0.00148
+uniaxialMaterial Elastic 10036 205000000000
+uniaxialMaterial InitStrainMaterial 10037 10036 0.00158
+uniaxialMaterial Elastic 10038 205000000000
+uniaxialMaterial InitStrainMaterial 10039 10038 0.00144
+uniaxialMaterial Elastic 10040 205000000000
+uniaxialMaterial InitStrainMaterial 10041 10040 0.00157
+uniaxialMaterial Elastic 10042 205000000000
+uniaxialMaterial InitStrainMaterial 10043 10042 0.00159
+uniaxialMaterial Elastic 10044 205000000000
+uniaxialMaterial InitStrainMaterial 10045 10044 0.00159
+uniaxialMaterial Elastic 10046 205000000000
+uniaxialMaterial InitStrainMaterial 10047 10046 0.00135
+uniaxialMaterial Elastic 10048 205000000000
+uniaxialMaterial InitStrainMaterial 10049 10048 0.00134
+uniaxialMaterial Elastic 10050 205000000000
+uniaxialMaterial InitStrainMaterial 10051 10050 0.00141
+uniaxialMaterial Elastic 10052 205000000000
+uniaxialMaterial InitStrainMaterial 10053 10052 0.00151
+uniaxialMaterial Elastic 10054 205000000000
+uniaxialMaterial InitStrainMaterial 10055 10054 0.00151
+uniaxialMaterial Elastic 10056 205000000000
+uniaxialMaterial InitStrainMaterial 10057 10056 0.00141
+uniaxialMaterial Elastic 10058 205000000000
+uniaxialMaterial InitStrainMaterial 10059 10058 0.00146
+uniaxialMaterial Elastic 10060 205000000000
+uniaxialMaterial InitStrainMaterial 10061 10060 0.00146
+uniaxialMaterial Elastic 10062 205000000000
+uniaxialMaterial InitStrainMaterial 10063 10062 0.0016
+uniaxialMaterial Elastic 10064 205000000000
+uniaxialMaterial InitStrainMaterial 10065 10064 0.00221
+uniaxialMaterial Elastic 10066 205000000000
+uniaxialMaterial InitStrainMaterial 10067 10066 0.00271
+uniaxialMaterial Elastic 10068 205000000000
+uniaxialMaterial InitStrainMaterial 10069 10068 0.00289
+uniaxialMaterial Elastic 10070 205000000000
+uniaxialMaterial InitStrainMaterial 10071 10070 0.00326
+uniaxialMaterial Elastic 10072 205000000000
+uniaxialMaterial InitStrainMaterial 10073 10072 0.00336
+uniaxialMaterial Elastic 10074 205000000000
+uniaxialMaterial InitStrainMaterial 10075 10074 0.00346
+uniaxialMaterial Elastic 10076 205000000000
+uniaxialMaterial InitStrainMaterial 10077 10076 0.00336
+uniaxialMaterial Elastic 10078 205000000000
+uniaxialMaterial InitStrainMaterial 10079 10078 0.00333
+uniaxialMaterial Elastic 10080 205000000000
+uniaxialMaterial InitStrainMaterial 10081 10080 0.00344
+uniaxialMaterial Elastic 10082 205000000000
+uniaxialMaterial InitStrainMaterial 10083 10082 0.00355
+uniaxialMaterial Elastic 10084 205000000000
+uniaxialMaterial InitStrainMaterial 10085 10084 0.00364
+uniaxialMaterial Elastic 10086 205000000000
+uniaxialMaterial InitStrainMaterial 10087 10086 0.00365
+uniaxialMaterial Elastic 10088 205000000000
+uniaxialMaterial InitStrainMaterial 10089 10088 0.00372
+uniaxialMaterial Elastic 10090 205000000000
+uniaxialMaterial InitStrainMaterial 10091 10090 0.00377
+uniaxialMaterial Elastic 10092 205000000000
+uniaxialMaterial InitStrainMaterial 10093 10092 0.00339
+uniaxialMaterial Elastic 10094 205000000000
+uniaxialMaterial InitStrainMaterial 10095 10094 0.00358
+uniaxialMaterial Elastic 10096 205000000000
+uniaxialMaterial InitStrainMaterial 10097 10096 0.00377
+uniaxialMaterial Elastic 10098 205000000000
+uniaxialMaterial InitStrainMaterial 10099 10098 0.00388
+uniaxialMaterial Elastic 10100 205000000000
+uniaxialMaterial InitStrainMaterial 10101 10100 0.00392
+uniaxialMaterial Elastic 10102 205000000000
+uniaxialMaterial InitStrainMaterial 10103 10102 0.00417
+uniaxialMaterial Elastic 10104 205000000000
+uniaxialMaterial InitStrainMaterial 10105 10104 0.00424
+uniaxialMaterial Elastic 10106 205000000000
+uniaxialMaterial InitStrainMaterial 10107 10106 0.00424
+uniaxialMaterial Elastic 10108 205000000000
+uniaxialMaterial InitStrainMaterial 10109 10108 0.00425
+uniaxialMaterial Elastic 10110 205000000000
+uniaxialMaterial InitStrainMaterial 10111 10110 0.00423
+uniaxialMaterial Elastic 10112 205000000000
+uniaxialMaterial InitStrainMaterial 10113 10112 0.00424
+uniaxialMaterial Elastic 10114 205000000000
+uniaxialMaterial InitStrainMaterial 10115 10114 0.00435
+uniaxialMaterial Elastic 10116 205000000000
+uniaxialMaterial InitStrainMaterial 10117 10116 0.00435
+uniaxialMaterial Elastic 10118 205000000000
+uniaxialMaterial InitStrainMaterial 10119 10118 0.0042
+uniaxialMaterial Elastic 10120 205000000000
+uniaxialMaterial InitStrainMaterial 10121 10120 0.00421
+uniaxialMaterial Elastic 10122 205000000000
+uniaxialMaterial InitStrainMaterial 10123 10122 0.00421
+uniaxialMaterial Elastic 10124 205000000000
+uniaxialMaterial InitStrainMaterial 10125 10124 0.00425
+uniaxialMaterial Elastic 10126 205000000000
+uniaxialMaterial InitStrainMaterial 10127 10126 0.0043
+uniaxialMaterial Elastic 10128 205000000000
+uniaxialMaterial InitStrainMaterial 10129 10128 0.00188
+uniaxialMaterial Elastic 10130 205000000000
+uniaxialMaterial InitStrainMaterial 10131 10130 0.00161
+uniaxialMaterial Elastic 10132 205000000000
+uniaxialMaterial InitStrainMaterial 10133 10132 0.00146
+uniaxialMaterial Elastic 10134 205000000000
+uniaxialMaterial InitStrainMaterial 10135 10134 0.00182
+geomTransf PDelta 20001 0 0 1
+element elasticBeamColumn 1 1 2 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20001 -mass 158967.39 -cMass
+geomTransf PDelta 20002 0 0 1
+element elasticBeamColumn 2 2 3 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20002 -mass 158967.39 -cMass
+geomTransf PDelta 20003 0 0 1
+element elasticBeamColumn 3 72 73 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20003 -mass 158967.39 -cMass
+geomTransf PDelta 20004 0 0 1
+element elasticBeamColumn 4 73 74 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20004 -mass 158967.39 -cMass
+geomTransf PDelta 20005 0 0 1
+element elasticBeamColumn 5 3 4 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20005 -mass 43481.15 -cMass
+geomTransf PDelta 20006 0 0 1
+element elasticBeamColumn 6 74 75 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20006 -mass 43481.15 -cMass
+geomTransf PDelta 20007 0 0 1
+element elasticBeamColumn 7 4 567 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20007 -mass 43481.15 -cMass
+geomTransf PDelta 20008 0 0 1
+element elasticBeamColumn 8 567 5 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20008 -mass 43481.15 -cMass
+geomTransf PDelta 20009 0 0 1
+element elasticBeamColumn 9 75 576 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20009 -mass 43481.15 -cMass
+geomTransf PDelta 20010 0 0 1
+element elasticBeamColumn 10 576 76 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20010 -mass 43481.15 -cMass
+geomTransf PDelta 20011 0 0 1
+element elasticBeamColumn 11 5 6 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20011 -mass 43481.15 -cMass
+geomTransf PDelta 20012 0 0 1
+element elasticBeamColumn 12 76 77 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20012 -mass 43481.15 -cMass
+geomTransf PDelta 20013 0 0 1
+element elasticBeamColumn 13 6 7 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20013 -mass 43481.15 -cMass
+geomTransf PDelta 20014 0 0 1
+element elasticBeamColumn 14 77 78 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20014 -mass 43481.15 -cMass
+geomTransf PDelta 20015 0 0 1
+element elasticBeamColumn 15 7 8 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20015 -mass 43481.15 -cMass
+geomTransf PDelta 20016 0 0 1
+element elasticBeamColumn 16 78 79 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20016 -mass 43481.15 -cMass
+geomTransf PDelta 20017 0 0 1
+element elasticBeamColumn 17 8 9 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20017 -mass 128708.406 -cMass
+geomTransf PDelta 20018 0 0 1
+element elasticBeamColumn 18 79 80 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20018 -mass 128708.406 -cMass
+geomTransf PDelta 20019 0 0 1
+element elasticBeamColumn 19 9 551 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20019 -mass 128708.406 -cMass
+geomTransf PDelta 20020 0 0 1
+element elasticBeamColumn 20 551 10 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20020 -mass 128708.406 -cMass
+geomTransf PDelta 20021 0 0 1
+element elasticBeamColumn 21 80 552 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20021 -mass 128708.406 -cMass
+geomTransf PDelta 20022 0 0 1
+element elasticBeamColumn 22 552 81 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20022 -mass 128708.406 -cMass
+geomTransf PDelta 20023 0 0 1
+element elasticBeamColumn 23 10 11 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20023 -mass 128708.406 -cMass
+geomTransf PDelta 20024 0 0 1
+element elasticBeamColumn 24 81 82 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20024 -mass 128708.406 -cMass
+geomTransf PDelta 20025 0 0 1
+element elasticBeamColumn 25 11 12 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20025 -mass 43481.15 -cMass
+geomTransf PDelta 20026 0 0 1
+element elasticBeamColumn 26 82 83 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20026 -mass 43481.15 -cMass
+geomTransf PDelta 20027 0 0 1
+element elasticBeamColumn 27 12 13 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20027 -mass 43481.15 -cMass
+geomTransf PDelta 20028 0 0 1
+element elasticBeamColumn 28 83 84 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20028 -mass 43481.15 -cMass
+geomTransf PDelta 20029 0 0 1
+element elasticBeamColumn 29 13 568 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20029 -mass 43481.15 -cMass
+geomTransf PDelta 20030 0 0 1
+element elasticBeamColumn 30 568 14 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20030 -mass 43481.15 -cMass
+geomTransf PDelta 20031 0 0 1
+element elasticBeamColumn 31 84 577 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20031 -mass 43481.15 -cMass
+geomTransf PDelta 20032 0 0 1
+element elasticBeamColumn 32 577 85 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20032 -mass 43481.15 -cMass
+geomTransf PDelta 20033 0 0 1
+element elasticBeamColumn 33 14 15 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20033 -mass 43481.15 -cMass
+geomTransf PDelta 20034 0 0 1
+element elasticBeamColumn 34 85 86 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20034 -mass 43481.15 -cMass
+geomTransf PDelta 20035 0 0 1
+element elasticBeamColumn 35 15 16 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20035 -mass 43481.15 -cMass
+geomTransf PDelta 20036 0 0 1
+element elasticBeamColumn 36 86 87 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20036 -mass 43481.15 -cMass
+geomTransf PDelta 20037 0 0 1
+element elasticBeamColumn 37 16 553 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20037 -mass 129079.71 -cMass
+geomTransf PDelta 20038 0 0 1
+element elasticBeamColumn 38 553 17 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20038 -mass 129079.71 -cMass
+geomTransf PDelta 20039 0 0 1
+element elasticBeamColumn 39 87 554 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20039 -mass 129079.71 -cMass
+geomTransf PDelta 20040 0 0 1
+element elasticBeamColumn 40 554 88 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20040 -mass 129079.71 -cMass
+geomTransf PDelta 20041 0 0 1
+element elasticBeamColumn 41 17 18 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20041 -mass 129079.71 -cMass
+geomTransf PDelta 20042 0 0 1
+element elasticBeamColumn 42 88 89 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20042 -mass 129079.71 -cMass
+geomTransf PDelta 20043 0 0 1
+element elasticBeamColumn 43 18 19 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20043 -mass 43481.15 -cMass
+geomTransf PDelta 20044 0 0 1
+element elasticBeamColumn 44 89 90 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20044 -mass 43481.15 -cMass
+geomTransf PDelta 20045 0 0 1
+element elasticBeamColumn 45 19 20 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20045 -mass 43481.15 -cMass
+geomTransf PDelta 20046 0 0 1
+element elasticBeamColumn 46 90 91 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20046 -mass 43481.15 -cMass
+geomTransf PDelta 20047 0 0 1
+element elasticBeamColumn 47 20 569 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20047 -mass 43481.15 -cMass
+geomTransf PDelta 20048 0 0 1
+element elasticBeamColumn 48 569 21 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20048 -mass 43481.15 -cMass
+geomTransf PDelta 20049 0 0 1
+element elasticBeamColumn 49 91 578 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20049 -mass 43481.15 -cMass
+geomTransf PDelta 20050 0 0 1
+element elasticBeamColumn 50 578 92 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20050 -mass 43481.15 -cMass
+geomTransf PDelta 20051 0 0 1
+element elasticBeamColumn 51 21 22 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20051 -mass 43481.15 -cMass
+geomTransf PDelta 20052 0 0 1
+element elasticBeamColumn 52 92 93 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20052 -mass 43481.15 -cMass
+geomTransf PDelta 20053 0 0 1
+element elasticBeamColumn 53 22 23 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20053 -mass 43481.15 -cMass
+geomTransf PDelta 20054 0 0 1
+element elasticBeamColumn 54 93 94 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20054 -mass 43481.15 -cMass
+geomTransf PDelta 20055 0 0 1
+element elasticBeamColumn 55 23 24 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20055 -mass 43481.15 -cMass
+geomTransf PDelta 20056 0 0 1
+element elasticBeamColumn 56 94 95 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20056 -mass 43481.15 -cMass
+geomTransf PDelta 20057 0 0 1
+element elasticBeamColumn 57 24 25 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20057 -mass 43481.15 -cMass
+geomTransf PDelta 20058 0 0 1
+element elasticBeamColumn 58 95 96 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20058 -mass 43481.15 -cMass
+geomTransf PDelta 20059 0 0 1
+element elasticBeamColumn 59 25 26 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20059 -mass 43481.15 -cMass
+geomTransf PDelta 20060 0 0 1
+element elasticBeamColumn 60 96 97 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20060 -mass 43481.15 -cMass
+geomTransf PDelta 20061 0 0 1
+element elasticBeamColumn 61 26 27 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20061 -mass 43481.15 -cMass
+geomTransf PDelta 20062 0 0 1
+element elasticBeamColumn 62 97 98 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20062 -mass 43481.15 -cMass
+geomTransf PDelta 20063 0 0 1
+element elasticBeamColumn 63 27 570 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20063 -mass 43481.15 -cMass
+geomTransf PDelta 20064 0 0 1
+element elasticBeamColumn 64 570 28 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20064 -mass 43481.15 -cMass
+geomTransf PDelta 20065 0 0 1
+element elasticBeamColumn 65 98 579 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20065 -mass 43481.15 -cMass
+geomTransf PDelta 20066 0 0 1
+element elasticBeamColumn 66 579 99 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20066 -mass 43481.15 -cMass
+geomTransf PDelta 20067 0 0 1
+element elasticBeamColumn 67 28 29 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20067 -mass 43481.15 -cMass
+geomTransf PDelta 20068 0 0 1
+element elasticBeamColumn 68 99 100 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20068 -mass 43481.15 -cMass
+geomTransf PDelta 20069 0 0 1
+element elasticBeamColumn 69 29 30 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20069 -mass 43481.15 -cMass
+geomTransf PDelta 20070 0 0 1
+element elasticBeamColumn 70 100 101 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20070 -mass 43481.15 -cMass
+geomTransf PDelta 20071 0 0 1
+element elasticBeamColumn 71 30 31 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20071 -mass 43481.15 -cMass
+geomTransf PDelta 20072 0 0 1
+element elasticBeamColumn 72 101 102 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20072 -mass 43481.15 -cMass
+geomTransf PDelta 20073 0 0 1
+element elasticBeamColumn 73 31 32 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20073 -mass 43481.15 -cMass
+geomTransf PDelta 20074 0 0 1
+element elasticBeamColumn 74 102 103 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20074 -mass 43481.15 -cMass
+geomTransf PDelta 20075 0 0 1
+element elasticBeamColumn 75 32 33 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20075 -mass 43481.15 -cMass
+geomTransf PDelta 20076 0 0 1
+element elasticBeamColumn 76 103 104 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20076 -mass 43481.15 -cMass
+geomTransf PDelta 20077 0 0 1
+element elasticBeamColumn 77 33 34 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20077 -mass 43481.15 -cMass
+geomTransf PDelta 20078 0 0 1
+element elasticBeamColumn 78 104 105 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20078 -mass 43481.15 -cMass
+geomTransf PDelta 20079 0 0 1
+element elasticBeamColumn 79 34 571 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20079 -mass 43481.15 -cMass
+geomTransf PDelta 20080 0 0 1
+element elasticBeamColumn 80 571 35 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20080 -mass 43481.15 -cMass
+geomTransf PDelta 20081 0 0 1
+element elasticBeamColumn 81 105 580 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20081 -mass 43481.15 -cMass
+geomTransf PDelta 20082 0 0 1
+element elasticBeamColumn 82 580 106 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20082 -mass 43481.15 -cMass
+geomTransf PDelta 20083 0 0 1
+element elasticBeamColumn 83 35 36 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20083 -mass 43481.15 -cMass
+geomTransf PDelta 20084 0 0 1
+element elasticBeamColumn 84 106 107 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20084 -mass 43481.15 -cMass
+geomTransf PDelta 20085 0 0 1
+element elasticBeamColumn 85 36 37 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20085 -mass 43481.15 -cMass
+geomTransf PDelta 20086 0 0 1
+element elasticBeamColumn 86 107 108 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20086 -mass 43481.15 -cMass
+geomTransf PDelta 20087 0 0 1
+element elasticBeamColumn 87 37 38 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20087 -mass 43481.15 -cMass
+geomTransf PDelta 20088 0 0 1
+element elasticBeamColumn 88 108 109 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20088 -mass 43481.15 -cMass
+geomTransf PDelta 20089 0 0 1
+element elasticBeamColumn 89 38 39 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20089 -mass 43481.15 -cMass
+geomTransf PDelta 20090 0 0 1
+element elasticBeamColumn 90 109 110 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20090 -mass 43481.15 -cMass
+geomTransf PDelta 20091 0 0 1
+element elasticBeamColumn 91 39 40 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20091 -mass 43481.15 -cMass
+geomTransf PDelta 20092 0 0 1
+element elasticBeamColumn 92 110 111 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20092 -mass 43481.15 -cMass
+geomTransf PDelta 20093 0 0 1
+element elasticBeamColumn 93 40 41 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20093 -mass 43481.15 -cMass
+geomTransf PDelta 20094 0 0 1
+element elasticBeamColumn 94 111 112 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20094 -mass 43481.15 -cMass
+geomTransf PDelta 20095 0 0 1
+element elasticBeamColumn 95 41 42 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20095 -mass 43481.15 -cMass
+geomTransf PDelta 20096 0 0 1
+element elasticBeamColumn 96 112 113 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20096 -mass 43481.15 -cMass
+geomTransf PDelta 20097 0 0 1
+element elasticBeamColumn 97 42 572 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20097 -mass 43481.15 -cMass
+geomTransf PDelta 20098 0 0 1
+element elasticBeamColumn 98 572 43 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20098 -mass 43481.15 -cMass
+geomTransf PDelta 20099 0 0 1
+element elasticBeamColumn 99 113 581 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20099 -mass 43481.15 -cMass
+geomTransf PDelta 20100 0 0 1
+element elasticBeamColumn 100 581 114 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20100 -mass 43481.15 -cMass
+geomTransf PDelta 20101 0 0 1
+element elasticBeamColumn 101 43 44 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20101 -mass 43481.15 -cMass
+geomTransf PDelta 20102 0 0 1
+element elasticBeamColumn 102 114 115 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20102 -mass 43481.15 -cMass
+geomTransf PDelta 20103 0 0 1
+element elasticBeamColumn 103 44 45 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20103 -mass 43481.15 -cMass
+geomTransf PDelta 20104 0 0 1
+element elasticBeamColumn 104 115 116 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20104 -mass 43481.15 -cMass
+geomTransf PDelta 20105 0 0 1
+element elasticBeamColumn 105 45 46 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20105 -mass 43481.15 -cMass
+geomTransf PDelta 20106 0 0 1
+element elasticBeamColumn 106 116 117 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20106 -mass 43481.15 -cMass
+geomTransf PDelta 20107 0 0 1
+element elasticBeamColumn 107 46 47 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20107 -mass 43481.15 -cMass
+geomTransf PDelta 20108 0 0 1
+element elasticBeamColumn 108 117 118 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20108 -mass 43481.15 -cMass
+geomTransf PDelta 20109 0 0 1
+element elasticBeamColumn 109 47 48 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20109 -mass 43481.15 -cMass
+geomTransf PDelta 20110 0 0 1
+element elasticBeamColumn 110 118 119 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20110 -mass 43481.15 -cMass
+geomTransf PDelta 20111 0 0 1
+element elasticBeamColumn 111 48 49 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20111 -mass 43481.15 -cMass
+geomTransf PDelta 20112 0 0 1
+element elasticBeamColumn 112 119 120 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20112 -mass 43481.15 -cMass
+geomTransf PDelta 20113 0 0 1
+element elasticBeamColumn 113 49 573 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20113 -mass 43481.15 -cMass
+geomTransf PDelta 20114 0 0 1
+element elasticBeamColumn 114 573 50 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20114 -mass 43481.15 -cMass
+geomTransf PDelta 20115 0 0 1
+element elasticBeamColumn 115 120 582 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20115 -mass 43481.15 -cMass
+geomTransf PDelta 20116 0 0 1
+element elasticBeamColumn 116 582 121 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20116 -mass 43481.15 -cMass
+geomTransf PDelta 20117 0 0 1
+element elasticBeamColumn 117 50 51 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20117 -mass 43481.15 -cMass
+geomTransf PDelta 20118 0 0 1
+element elasticBeamColumn 118 121 122 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20118 -mass 43481.15 -cMass
+geomTransf PDelta 20119 0 0 1
+element elasticBeamColumn 119 51 52 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20119 -mass 43481.15 -cMass
+geomTransf PDelta 20120 0 0 1
+element elasticBeamColumn 120 122 123 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20120 -mass 43481.15 -cMass
+geomTransf PDelta 20121 0 0 1
+element elasticBeamColumn 121 52 53 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20121 -mass 43481.15 -cMass
+geomTransf PDelta 20122 0 0 1
+element elasticBeamColumn 122 123 124 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20122 -mass 43481.15 -cMass
+geomTransf PDelta 20123 0 0 1
+element elasticBeamColumn 123 53 54 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20123 -mass 43481.15 -cMass
+geomTransf PDelta 20124 0 0 1
+element elasticBeamColumn 124 124 125 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20124 -mass 43481.15 -cMass
+geomTransf PDelta 20125 0 0 1
+element elasticBeamColumn 125 54 55 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20125 -mass 43481.15 -cMass
+geomTransf PDelta 20126 0 0 1
+element elasticBeamColumn 126 125 126 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20126 -mass 43481.15 -cMass
+geomTransf PDelta 20127 0 0 1
+element elasticBeamColumn 127 55 56 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20127 -mass 43481.15 -cMass
+geomTransf PDelta 20128 0 0 1
+element elasticBeamColumn 128 126 127 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20128 -mass 43481.15 -cMass
+geomTransf PDelta 20129 0 0 1
+element elasticBeamColumn 129 56 574 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20129 -mass 43481.15 -cMass
+geomTransf PDelta 20130 0 0 1
+element elasticBeamColumn 130 574 57 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20130 -mass 43481.15 -cMass
+geomTransf PDelta 20131 0 0 1
+element elasticBeamColumn 131 127 583 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20131 -mass 43481.15 -cMass
+geomTransf PDelta 20132 0 0 1
+element elasticBeamColumn 132 583 128 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20132 -mass 43481.15 -cMass
+geomTransf PDelta 20133 0 0 1
+element elasticBeamColumn 133 57 58 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20133 -mass 43481.15 -cMass
+geomTransf PDelta 20134 0 0 1
+element elasticBeamColumn 134 128 129 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20134 -mass 43481.15 -cMass
+geomTransf PDelta 20135 0 0 1
+element elasticBeamColumn 135 58 59 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20135 -mass 43481.15 -cMass
+geomTransf PDelta 20136 0 0 1
+element elasticBeamColumn 136 129 130 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20136 -mass 43481.15 -cMass
+geomTransf PDelta 20137 0 0 1
+element elasticBeamColumn 137 59 60 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20137 -mass 43481.15 -cMass
+geomTransf PDelta 20138 0 0 1
+element elasticBeamColumn 138 130 131 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20138 -mass 43481.15 -cMass
+geomTransf PDelta 20139 0 0 1
+element elasticBeamColumn 139 60 61 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20139 -mass 43481.15 -cMass
+geomTransf PDelta 20140 0 0 1
+element elasticBeamColumn 140 131 132 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20140 -mass 43481.15 -cMass
+geomTransf PDelta 20141 0 0 1
+element elasticBeamColumn 141 61 62 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20141 -mass 43481.15 -cMass
+geomTransf PDelta 20142 0 0 1
+element elasticBeamColumn 142 132 133 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20142 -mass 43481.15 -cMass
+geomTransf PDelta 20143 0 0 1
+element elasticBeamColumn 143 62 63 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20143 -mass 43481.15 -cMass
+geomTransf PDelta 20144 0 0 1
+element elasticBeamColumn 144 133 134 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20144 -mass 43481.15 -cMass
+geomTransf PDelta 20145 0 0 1
+element elasticBeamColumn 145 63 575 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20145 -mass 43481.15 -cMass
+geomTransf PDelta 20146 0 0 1
+element elasticBeamColumn 146 575 64 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20146 -mass 43481.15 -cMass
+geomTransf PDelta 20147 0 0 1
+element elasticBeamColumn 147 134 584 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20147 -mass 43481.15 -cMass
+geomTransf PDelta 20148 0 0 1
+element elasticBeamColumn 148 584 135 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20148 -mass 43481.15 -cMass
+geomTransf PDelta 20149 0 0 1
+element elasticBeamColumn 149 64 65 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20149 -mass 43481.15 -cMass
+geomTransf PDelta 20150 0 0 1
+element elasticBeamColumn 150 135 136 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20150 -mass 43481.15 -cMass
+geomTransf PDelta 20151 0 0 1
+element elasticBeamColumn 151 65 66 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20151 -mass 43481.15 -cMass
+geomTransf PDelta 20152 0 0 1
+element elasticBeamColumn 152 136 137 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20152 -mass 43481.15 -cMass
+geomTransf PDelta 20153 0 0 1
+element elasticBeamColumn 153 66 67 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20153 -mass 43481.15 -cMass
+geomTransf PDelta 20154 0 0 1
+element elasticBeamColumn 154 137 138 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20154 -mass 43481.15 -cMass
+geomTransf PDelta 20155 0 0 1
+element elasticBeamColumn 155 67 68 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20155 -mass 43481.15 -cMass
+geomTransf PDelta 20156 0 0 1
+element elasticBeamColumn 156 138 139 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20156 -mass 43481.15 -cMass
+geomTransf PDelta 20157 0 0 1
+element elasticBeamColumn 157 68 69 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20157 -mass 43481.15 -cMass
+geomTransf PDelta 20158 0 0 1
+element elasticBeamColumn 158 139 140 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20158 -mass 43481.15 -cMass
+geomTransf PDelta 20159 0 0 1
+element elasticBeamColumn 159 69 70 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20159 -mass 43481.15 -cMass
+geomTransf PDelta 20160 0 0 1
+element elasticBeamColumn 160 140 141 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20160 -mass 43481.15 -cMass
+geomTransf PDelta 20161 0 0 1
+element elasticBeamColumn 161 70 71 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20161 -mass 43481.15 -cMass
+geomTransf PDelta 20162 0 0 1
+element elasticBeamColumn 162 141 71 1.91 205000000000 78846153846.2 387.8 387.8 5.04 20162 -mass 43481.15 -cMass
+geomTransf PDelta 20163 1 0 0
+element elasticBeamColumn 163 2 142 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20163 -mass 2e-10 -cMass
+geomTransf PDelta 20164 1 0 0
+element elasticBeamColumn 164 2 278 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20164 -mass 2e-10 -cMass
+geomTransf PDelta 20165 1 0 0
+element elasticBeamColumn 165 73 210 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20165 -mass 2e-10 -cMass
+geomTransf PDelta 20166 1 0 0
+element elasticBeamColumn 166 73 346 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20166 -mass 2e-10 -cMass
+geomTransf PDelta 20167 1 0 0
+element elasticBeamColumn 167 3 143 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20167 -mass 2e-10 -cMass
+geomTransf PDelta 20168 1 0 0
+element elasticBeamColumn 168 3 279 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20168 -mass 2e-10 -cMass
+geomTransf PDelta 20169 1 0 0
+element elasticBeamColumn 169 74 211 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20169 -mass 2e-10 -cMass
+geomTransf PDelta 20170 1 0 0
+element elasticBeamColumn 170 74 347 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20170 -mass 2e-10 -cMass
+geomTransf PDelta 20171 1 0 0
+element elasticBeamColumn 171 4 144 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20171 -mass 2e-10 -cMass
+geomTransf PDelta 20172 1 0 0
+element elasticBeamColumn 172 4 280 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20172 -mass 2e-10 -cMass
+geomTransf PDelta 20173 1 0 0
+element elasticBeamColumn 173 75 212 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20173 -mass 2e-10 -cMass
+geomTransf PDelta 20174 1 0 0
+element elasticBeamColumn 174 75 348 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20174 -mass 2e-10 -cMass
+geomTransf PDelta 20175 1 0 0
+element elasticBeamColumn 175 5 145 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20175 -mass 2e-10 -cMass
+geomTransf PDelta 20176 1 0 0
+element elasticBeamColumn 176 5 281 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20176 -mass 2e-10 -cMass
+geomTransf PDelta 20177 1 0 0
+element elasticBeamColumn 177 76 213 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20177 -mass 2e-10 -cMass
+geomTransf PDelta 20178 1 0 0
+element elasticBeamColumn 178 76 349 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20178 -mass 2e-10 -cMass
+geomTransf PDelta 20179 1 0 0
+element elasticBeamColumn 179 6 146 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20179 -mass 2e-10 -cMass
+geomTransf PDelta 20180 1 0 0
+element elasticBeamColumn 180 6 282 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20180 -mass 2e-10 -cMass
+geomTransf PDelta 20181 1 0 0
+element elasticBeamColumn 181 77 214 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20181 -mass 2e-10 -cMass
+geomTransf PDelta 20182 1 0 0
+element elasticBeamColumn 182 77 350 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20182 -mass 2e-10 -cMass
+geomTransf PDelta 20183 1 0 0
+element elasticBeamColumn 183 7 147 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20183 -mass 2e-10 -cMass
+geomTransf PDelta 20184 1 0 0
+element elasticBeamColumn 184 7 283 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20184 -mass 2e-10 -cMass
+geomTransf PDelta 20185 1 0 0
+element elasticBeamColumn 185 78 215 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20185 -mass 2e-10 -cMass
+geomTransf PDelta 20186 1 0 0
+element elasticBeamColumn 186 78 351 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20186 -mass 2e-10 -cMass
+geomTransf PDelta 20187 1 0 0
+element elasticBeamColumn 187 8 148 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20187 -mass 2e-10 -cMass
+geomTransf PDelta 20188 1 0 0
+element elasticBeamColumn 188 8 284 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20188 -mass 2e-10 -cMass
+geomTransf PDelta 20189 1 0 0
+element elasticBeamColumn 189 79 216 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20189 -mass 2e-10 -cMass
+geomTransf PDelta 20190 1 0 0
+element elasticBeamColumn 190 79 352 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20190 -mass 2e-10 -cMass
+geomTransf PDelta 20191 1 0 0
+element elasticBeamColumn 191 9 149 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20191 -mass 2e-10 -cMass
+geomTransf PDelta 20192 1 0 0
+element elasticBeamColumn 192 9 285 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20192 -mass 2e-10 -cMass
+geomTransf PDelta 20193 1 0 0
+element elasticBeamColumn 193 80 217 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20193 -mass 2e-10 -cMass
+geomTransf PDelta 20194 1 0 0
+element elasticBeamColumn 194 80 353 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20194 -mass 2e-10 -cMass
+geomTransf PDelta 20195 1 0 0
+element elasticBeamColumn 195 10 150 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20195 -mass 2e-10 -cMass
+geomTransf PDelta 20196 1 0 0
+element elasticBeamColumn 196 10 286 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20196 -mass 2e-10 -cMass
+geomTransf PDelta 20197 1 0 0
+element elasticBeamColumn 197 81 218 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20197 -mass 2e-10 -cMass
+geomTransf PDelta 20198 1 0 0
+element elasticBeamColumn 198 81 354 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20198 -mass 2e-10 -cMass
+geomTransf PDelta 20199 1 0 0
+element elasticBeamColumn 199 11 151 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20199 -mass 2e-10 -cMass
+geomTransf PDelta 20200 1 0 0
+element elasticBeamColumn 200 11 287 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20200 -mass 2e-10 -cMass
+geomTransf PDelta 20201 1 0 0
+element elasticBeamColumn 201 82 219 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20201 -mass 2e-10 -cMass
+geomTransf PDelta 20202 1 0 0
+element elasticBeamColumn 202 82 355 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20202 -mass 2e-10 -cMass
+geomTransf PDelta 20203 1 0 0
+element elasticBeamColumn 203 12 152 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20203 -mass 2e-10 -cMass
+geomTransf PDelta 20204 1 0 0
+element elasticBeamColumn 204 12 288 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20204 -mass 2e-10 -cMass
+geomTransf PDelta 20205 1 0 0
+element elasticBeamColumn 205 83 220 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20205 -mass 2e-10 -cMass
+geomTransf PDelta 20206 1 0 0
+element elasticBeamColumn 206 83 356 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20206 -mass 2e-10 -cMass
+geomTransf PDelta 20207 1 0 0
+element elasticBeamColumn 207 13 153 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20207 -mass 2e-10 -cMass
+geomTransf PDelta 20208 1 0 0
+element elasticBeamColumn 208 13 289 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20208 -mass 2e-10 -cMass
+geomTransf PDelta 20209 1 0 0
+element elasticBeamColumn 209 84 221 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20209 -mass 2e-10 -cMass
+geomTransf PDelta 20210 1 0 0
+element elasticBeamColumn 210 84 357 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20210 -mass 2e-10 -cMass
+geomTransf PDelta 20211 1 0 0
+element elasticBeamColumn 211 14 154 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20211 -mass 2e-10 -cMass
+geomTransf PDelta 20212 1 0 0
+element elasticBeamColumn 212 14 290 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20212 -mass 2e-10 -cMass
+geomTransf PDelta 20213 1 0 0
+element elasticBeamColumn 213 85 222 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20213 -mass 2e-10 -cMass
+geomTransf PDelta 20214 1 0 0
+element elasticBeamColumn 214 85 358 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20214 -mass 2e-10 -cMass
+geomTransf PDelta 20215 1 0 0
+element elasticBeamColumn 215 15 155 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20215 -mass 2e-10 -cMass
+geomTransf PDelta 20216 1 0 0
+element elasticBeamColumn 216 15 291 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20216 -mass 2e-10 -cMass
+geomTransf PDelta 20217 1 0 0
+element elasticBeamColumn 217 86 223 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20217 -mass 2e-10 -cMass
+geomTransf PDelta 20218 1 0 0
+element elasticBeamColumn 218 86 359 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20218 -mass 2e-10 -cMass
+geomTransf PDelta 20219 1 0 0
+element elasticBeamColumn 219 16 156 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20219 -mass 2e-10 -cMass
+geomTransf PDelta 20220 1 0 0
+element elasticBeamColumn 220 16 292 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20220 -mass 2e-10 -cMass
+geomTransf PDelta 20221 1 0 0
+element elasticBeamColumn 221 87 224 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20221 -mass 2e-10 -cMass
+geomTransf PDelta 20222 1 0 0
+element elasticBeamColumn 222 87 360 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20222 -mass 2e-10 -cMass
+geomTransf PDelta 20223 1 0 0
+element elasticBeamColumn 223 17 157 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20223 -mass 2e-10 -cMass
+geomTransf PDelta 20224 1 0 0
+element elasticBeamColumn 224 17 293 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20224 -mass 2e-10 -cMass
+geomTransf PDelta 20225 1 0 0
+element elasticBeamColumn 225 88 225 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20225 -mass 2e-10 -cMass
+geomTransf PDelta 20226 1 0 0
+element elasticBeamColumn 226 88 361 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20226 -mass 2e-10 -cMass
+geomTransf PDelta 20227 1 0 0
+element elasticBeamColumn 227 18 158 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20227 -mass 2e-10 -cMass
+geomTransf PDelta 20228 1 0 0
+element elasticBeamColumn 228 18 294 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20228 -mass 2e-10 -cMass
+geomTransf PDelta 20229 1 0 0
+element elasticBeamColumn 229 89 226 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20229 -mass 2e-10 -cMass
+geomTransf PDelta 20230 1 0 0
+element elasticBeamColumn 230 89 362 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20230 -mass 2e-10 -cMass
+geomTransf PDelta 20231 1 0 0
+element elasticBeamColumn 231 19 159 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20231 -mass 2e-10 -cMass
+geomTransf PDelta 20232 1 0 0
+element elasticBeamColumn 232 19 295 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20232 -mass 2e-10 -cMass
+geomTransf PDelta 20233 1 0 0
+element elasticBeamColumn 233 90 227 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20233 -mass 2e-10 -cMass
+geomTransf PDelta 20234 1 0 0
+element elasticBeamColumn 234 90 363 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20234 -mass 2e-10 -cMass
+geomTransf PDelta 20235 1 0 0
+element elasticBeamColumn 235 20 160 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20235 -mass 2e-10 -cMass
+geomTransf PDelta 20236 1 0 0
+element elasticBeamColumn 236 20 296 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20236 -mass 2e-10 -cMass
+geomTransf PDelta 20237 1 0 0
+element elasticBeamColumn 237 91 228 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20237 -mass 2e-10 -cMass
+geomTransf PDelta 20238 1 0 0
+element elasticBeamColumn 238 91 364 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20238 -mass 2e-10 -cMass
+geomTransf PDelta 20239 1 0 0
+element elasticBeamColumn 239 21 161 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20239 -mass 2e-10 -cMass
+geomTransf PDelta 20240 1 0 0
+element elasticBeamColumn 240 21 297 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20240 -mass 2e-10 -cMass
+geomTransf PDelta 20241 1 0 0
+element elasticBeamColumn 241 92 229 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20241 -mass 2e-10 -cMass
+geomTransf PDelta 20242 1 0 0
+element elasticBeamColumn 242 92 365 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20242 -mass 2e-10 -cMass
+geomTransf PDelta 20243 1 0 0
+element elasticBeamColumn 243 22 162 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20243 -mass 2e-10 -cMass
+geomTransf PDelta 20244 1 0 0
+element elasticBeamColumn 244 22 298 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20244 -mass 2e-10 -cMass
+geomTransf PDelta 20245 1 0 0
+element elasticBeamColumn 245 93 230 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20245 -mass 2e-10 -cMass
+geomTransf PDelta 20246 1 0 0
+element elasticBeamColumn 246 93 366 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20246 -mass 2e-10 -cMass
+geomTransf PDelta 20247 1 0 0
+element elasticBeamColumn 247 23 163 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20247 -mass 2e-10 -cMass
+geomTransf PDelta 20248 1 0 0
+element elasticBeamColumn 248 23 299 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20248 -mass 2e-10 -cMass
+geomTransf PDelta 20249 1 0 0
+element elasticBeamColumn 249 94 231 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20249 -mass 2e-10 -cMass
+geomTransf PDelta 20250 1 0 0
+element elasticBeamColumn 250 94 367 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20250 -mass 2e-10 -cMass
+geomTransf PDelta 20251 1 0 0
+element elasticBeamColumn 251 24 164 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20251 -mass 2e-10 -cMass
+geomTransf PDelta 20252 1 0 0
+element elasticBeamColumn 252 24 300 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20252 -mass 2e-10 -cMass
+geomTransf PDelta 20253 1 0 0
+element elasticBeamColumn 253 95 232 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20253 -mass 2e-10 -cMass
+geomTransf PDelta 20254 1 0 0
+element elasticBeamColumn 254 95 368 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20254 -mass 2e-10 -cMass
+geomTransf PDelta 20255 1 0 0
+element elasticBeamColumn 255 25 165 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20255 -mass 2e-10 -cMass
+geomTransf PDelta 20256 1 0 0
+element elasticBeamColumn 256 25 301 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20256 -mass 2e-10 -cMass
+geomTransf PDelta 20257 1 0 0
+element elasticBeamColumn 257 96 233 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20257 -mass 2e-10 -cMass
+geomTransf PDelta 20258 1 0 0
+element elasticBeamColumn 258 96 369 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20258 -mass 2e-10 -cMass
+geomTransf PDelta 20259 1 0 0
+element elasticBeamColumn 259 26 166 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20259 -mass 2e-10 -cMass
+geomTransf PDelta 20260 1 0 0
+element elasticBeamColumn 260 26 302 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20260 -mass 2e-10 -cMass
+geomTransf PDelta 20261 1 0 0
+element elasticBeamColumn 261 97 234 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20261 -mass 2e-10 -cMass
+geomTransf PDelta 20262 1 0 0
+element elasticBeamColumn 262 97 370 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20262 -mass 2e-10 -cMass
+geomTransf PDelta 20263 1 0 0
+element elasticBeamColumn 263 27 167 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20263 -mass 2e-10 -cMass
+geomTransf PDelta 20264 1 0 0
+element elasticBeamColumn 264 27 303 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20264 -mass 2e-10 -cMass
+geomTransf PDelta 20265 1 0 0
+element elasticBeamColumn 265 98 235 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20265 -mass 2e-10 -cMass
+geomTransf PDelta 20266 1 0 0
+element elasticBeamColumn 266 98 371 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20266 -mass 2e-10 -cMass
+geomTransf PDelta 20267 1 0 0
+element elasticBeamColumn 267 28 168 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20267 -mass 2e-10 -cMass
+geomTransf PDelta 20268 1 0 0
+element elasticBeamColumn 268 28 304 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20268 -mass 2e-10 -cMass
+geomTransf PDelta 20269 1 0 0
+element elasticBeamColumn 269 99 236 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20269 -mass 2e-10 -cMass
+geomTransf PDelta 20270 1 0 0
+element elasticBeamColumn 270 99 372 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20270 -mass 2e-10 -cMass
+geomTransf PDelta 20271 1 0 0
+element elasticBeamColumn 271 29 169 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20271 -mass 2e-10 -cMass
+geomTransf PDelta 20272 1 0 0
+element elasticBeamColumn 272 29 305 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20272 -mass 2e-10 -cMass
+geomTransf PDelta 20273 1 0 0
+element elasticBeamColumn 273 100 237 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20273 -mass 2e-10 -cMass
+geomTransf PDelta 20274 1 0 0
+element elasticBeamColumn 274 100 373 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20274 -mass 2e-10 -cMass
+geomTransf PDelta 20275 1 0 0
+element elasticBeamColumn 275 30 170 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20275 -mass 2e-10 -cMass
+geomTransf PDelta 20276 1 0 0
+element elasticBeamColumn 276 30 306 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20276 -mass 2e-10 -cMass
+geomTransf PDelta 20277 1 0 0
+element elasticBeamColumn 277 101 238 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20277 -mass 2e-10 -cMass
+geomTransf PDelta 20278 1 0 0
+element elasticBeamColumn 278 101 374 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20278 -mass 2e-10 -cMass
+geomTransf PDelta 20279 1 0 0
+element elasticBeamColumn 279 31 171 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20279 -mass 2e-10 -cMass
+geomTransf PDelta 20280 1 0 0
+element elasticBeamColumn 280 31 307 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20280 -mass 2e-10 -cMass
+geomTransf PDelta 20281 1 0 0
+element elasticBeamColumn 281 102 239 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20281 -mass 2e-10 -cMass
+geomTransf PDelta 20282 1 0 0
+element elasticBeamColumn 282 102 375 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20282 -mass 2e-10 -cMass
+geomTransf PDelta 20283 1 0 0
+element elasticBeamColumn 283 32 172 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20283 -mass 2e-10 -cMass
+geomTransf PDelta 20284 1 0 0
+element elasticBeamColumn 284 32 308 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20284 -mass 2e-10 -cMass
+geomTransf PDelta 20285 1 0 0
+element elasticBeamColumn 285 103 240 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20285 -mass 2e-10 -cMass
+geomTransf PDelta 20286 1 0 0
+element elasticBeamColumn 286 103 376 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20286 -mass 2e-10 -cMass
+geomTransf PDelta 20287 1 0 0
+element elasticBeamColumn 287 33 173 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20287 -mass 2e-10 -cMass
+geomTransf PDelta 20288 1 0 0
+element elasticBeamColumn 288 33 309 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20288 -mass 2e-10 -cMass
+geomTransf PDelta 20289 1 0 0
+element elasticBeamColumn 289 104 241 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20289 -mass 2e-10 -cMass
+geomTransf PDelta 20290 1 0 0
+element elasticBeamColumn 290 104 377 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20290 -mass 2e-10 -cMass
+geomTransf PDelta 20291 1 0 0
+element elasticBeamColumn 291 34 174 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20291 -mass 2e-10 -cMass
+geomTransf PDelta 20292 1 0 0
+element elasticBeamColumn 292 34 310 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20292 -mass 2e-10 -cMass
+geomTransf PDelta 20293 1 0 0
+element elasticBeamColumn 293 105 242 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20293 -mass 2e-10 -cMass
+geomTransf PDelta 20294 1 0 0
+element elasticBeamColumn 294 105 378 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20294 -mass 2e-10 -cMass
+geomTransf PDelta 20295 1 0 0
+element elasticBeamColumn 295 35 175 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20295 -mass 2e-10 -cMass
+geomTransf PDelta 20296 1 0 0
+element elasticBeamColumn 296 35 311 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20296 -mass 2e-10 -cMass
+geomTransf PDelta 20297 1 0 0
+element elasticBeamColumn 297 106 243 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20297 -mass 2e-10 -cMass
+geomTransf PDelta 20298 1 0 0
+element elasticBeamColumn 298 106 379 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20298 -mass 2e-10 -cMass
+geomTransf PDelta 20299 1 0 0
+element elasticBeamColumn 299 37 176 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20299 -mass 2e-10 -cMass
+geomTransf PDelta 20300 1 0 0
+element elasticBeamColumn 300 37 312 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20300 -mass 2e-10 -cMass
+geomTransf PDelta 20301 1 0 0
+element elasticBeamColumn 301 108 244 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20301 -mass 2e-10 -cMass
+geomTransf PDelta 20302 1 0 0
+element elasticBeamColumn 302 108 380 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20302 -mass 2e-10 -cMass
+geomTransf PDelta 20303 1 0 0
+element elasticBeamColumn 303 38 177 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20303 -mass 2e-10 -cMass
+geomTransf PDelta 20304 1 0 0
+element elasticBeamColumn 304 38 313 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20304 -mass 2e-10 -cMass
+geomTransf PDelta 20305 1 0 0
+element elasticBeamColumn 305 109 245 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20305 -mass 2e-10 -cMass
+geomTransf PDelta 20306 1 0 0
+element elasticBeamColumn 306 109 381 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20306 -mass 2e-10 -cMass
+geomTransf PDelta 20307 1 0 0
+element elasticBeamColumn 307 39 178 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20307 -mass 2e-10 -cMass
+geomTransf PDelta 20308 1 0 0
+element elasticBeamColumn 308 39 314 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20308 -mass 2e-10 -cMass
+geomTransf PDelta 20309 1 0 0
+element elasticBeamColumn 309 110 246 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20309 -mass 2e-10 -cMass
+geomTransf PDelta 20310 1 0 0
+element elasticBeamColumn 310 110 382 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20310 -mass 2e-10 -cMass
+geomTransf PDelta 20311 1 0 0
+element elasticBeamColumn 311 40 179 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20311 -mass 2e-10 -cMass
+geomTransf PDelta 20312 1 0 0
+element elasticBeamColumn 312 40 315 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20312 -mass 2e-10 -cMass
+geomTransf PDelta 20313 1 0 0
+element elasticBeamColumn 313 111 247 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20313 -mass 2e-10 -cMass
+geomTransf PDelta 20314 1 0 0
+element elasticBeamColumn 314 111 383 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20314 -mass 2e-10 -cMass
+geomTransf PDelta 20315 1 0 0
+element elasticBeamColumn 315 41 180 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20315 -mass 2e-10 -cMass
+geomTransf PDelta 20316 1 0 0
+element elasticBeamColumn 316 41 316 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20316 -mass 2e-10 -cMass
+geomTransf PDelta 20317 1 0 0
+element elasticBeamColumn 317 112 248 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20317 -mass 2e-10 -cMass
+geomTransf PDelta 20318 1 0 0
+element elasticBeamColumn 318 112 384 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20318 -mass 2e-10 -cMass
+geomTransf PDelta 20319 1 0 0
+element elasticBeamColumn 319 42 181 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20319 -mass 2e-10 -cMass
+geomTransf PDelta 20320 1 0 0
+element elasticBeamColumn 320 42 317 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20320 -mass 2e-10 -cMass
+geomTransf PDelta 20321 1 0 0
+element elasticBeamColumn 321 113 249 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20321 -mass 2e-10 -cMass
+geomTransf PDelta 20322 1 0 0
+element elasticBeamColumn 322 113 385 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20322 -mass 2e-10 -cMass
+geomTransf PDelta 20323 1 0 0
+element elasticBeamColumn 323 43 182 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20323 -mass 2e-10 -cMass
+geomTransf PDelta 20324 1 0 0
+element elasticBeamColumn 324 43 318 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20324 -mass 2e-10 -cMass
+geomTransf PDelta 20325 1 0 0
+element elasticBeamColumn 325 114 250 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20325 -mass 2e-10 -cMass
+geomTransf PDelta 20326 1 0 0
+element elasticBeamColumn 326 114 386 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20326 -mass 2e-10 -cMass
+geomTransf PDelta 20327 1 0 0
+element elasticBeamColumn 327 44 183 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20327 -mass 2e-10 -cMass
+geomTransf PDelta 20328 1 0 0
+element elasticBeamColumn 328 44 319 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20328 -mass 2e-10 -cMass
+geomTransf PDelta 20329 1 0 0
+element elasticBeamColumn 329 115 251 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20329 -mass 2e-10 -cMass
+geomTransf PDelta 20330 1 0 0
+element elasticBeamColumn 330 115 387 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20330 -mass 2e-10 -cMass
+geomTransf PDelta 20331 1 0 0
+element elasticBeamColumn 331 45 184 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20331 -mass 2e-10 -cMass
+geomTransf PDelta 20332 1 0 0
+element elasticBeamColumn 332 45 320 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20332 -mass 2e-10 -cMass
+geomTransf PDelta 20333 1 0 0
+element elasticBeamColumn 333 116 252 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20333 -mass 2e-10 -cMass
+geomTransf PDelta 20334 1 0 0
+element elasticBeamColumn 334 116 388 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20334 -mass 2e-10 -cMass
+geomTransf PDelta 20335 1 0 0
+element elasticBeamColumn 335 46 185 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20335 -mass 2e-10 -cMass
+geomTransf PDelta 20336 1 0 0
+element elasticBeamColumn 336 46 321 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20336 -mass 2e-10 -cMass
+geomTransf PDelta 20337 1 0 0
+element elasticBeamColumn 337 117 253 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20337 -mass 2e-10 -cMass
+geomTransf PDelta 20338 1 0 0
+element elasticBeamColumn 338 117 389 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20338 -mass 2e-10 -cMass
+geomTransf PDelta 20339 1 0 0
+element elasticBeamColumn 339 47 186 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20339 -mass 2e-10 -cMass
+geomTransf PDelta 20340 1 0 0
+element elasticBeamColumn 340 47 322 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20340 -mass 2e-10 -cMass
+geomTransf PDelta 20341 1 0 0
+element elasticBeamColumn 341 118 254 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20341 -mass 2e-10 -cMass
+geomTransf PDelta 20342 1 0 0
+element elasticBeamColumn 342 118 390 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20342 -mass 2e-10 -cMass
+geomTransf PDelta 20343 1 0 0
+element elasticBeamColumn 343 48 187 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20343 -mass 2e-10 -cMass
+geomTransf PDelta 20344 1 0 0
+element elasticBeamColumn 344 48 323 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20344 -mass 2e-10 -cMass
+geomTransf PDelta 20345 1 0 0
+element elasticBeamColumn 345 119 255 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20345 -mass 2e-10 -cMass
+geomTransf PDelta 20346 1 0 0
+element elasticBeamColumn 346 119 391 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20346 -mass 2e-10 -cMass
+geomTransf PDelta 20347 1 0 0
+element elasticBeamColumn 347 49 188 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20347 -mass 2e-10 -cMass
+geomTransf PDelta 20348 1 0 0
+element elasticBeamColumn 348 49 324 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20348 -mass 2e-10 -cMass
+geomTransf PDelta 20349 1 0 0
+element elasticBeamColumn 349 120 256 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20349 -mass 2e-10 -cMass
+geomTransf PDelta 20350 1 0 0
+element elasticBeamColumn 350 120 392 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20350 -mass 2e-10 -cMass
+geomTransf PDelta 20351 1 0 0
+element elasticBeamColumn 351 50 189 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20351 -mass 2e-10 -cMass
+geomTransf PDelta 20352 1 0 0
+element elasticBeamColumn 352 50 325 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20352 -mass 2e-10 -cMass
+geomTransf PDelta 20353 1 0 0
+element elasticBeamColumn 353 121 257 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20353 -mass 2e-10 -cMass
+geomTransf PDelta 20354 1 0 0
+element elasticBeamColumn 354 121 393 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20354 -mass 2e-10 -cMass
+geomTransf PDelta 20355 1 0 0
+element elasticBeamColumn 355 51 190 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20355 -mass 2e-10 -cMass
+geomTransf PDelta 20356 1 0 0
+element elasticBeamColumn 356 51 326 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20356 -mass 2e-10 -cMass
+geomTransf PDelta 20357 1 0 0
+element elasticBeamColumn 357 122 258 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20357 -mass 2e-10 -cMass
+geomTransf PDelta 20358 1 0 0
+element elasticBeamColumn 358 122 394 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20358 -mass 2e-10 -cMass
+geomTransf PDelta 20359 1 0 0
+element elasticBeamColumn 359 52 191 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20359 -mass 2e-10 -cMass
+geomTransf PDelta 20360 1 0 0
+element elasticBeamColumn 360 52 327 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20360 -mass 2e-10 -cMass
+geomTransf PDelta 20361 1 0 0
+element elasticBeamColumn 361 123 259 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20361 -mass 2e-10 -cMass
+geomTransf PDelta 20362 1 0 0
+element elasticBeamColumn 362 123 395 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20362 -mass 2e-10 -cMass
+geomTransf PDelta 20363 1 0 0
+element elasticBeamColumn 363 53 192 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20363 -mass 2e-10 -cMass
+geomTransf PDelta 20364 1 0 0
+element elasticBeamColumn 364 53 328 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20364 -mass 2e-10 -cMass
+geomTransf PDelta 20365 1 0 0
+element elasticBeamColumn 365 124 260 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20365 -mass 2e-10 -cMass
+geomTransf PDelta 20366 1 0 0
+element elasticBeamColumn 366 124 396 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20366 -mass 2e-10 -cMass
+geomTransf PDelta 20367 1 0 0
+element elasticBeamColumn 367 54 193 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20367 -mass 2e-10 -cMass
+geomTransf PDelta 20368 1 0 0
+element elasticBeamColumn 368 54 329 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20368 -mass 2e-10 -cMass
+geomTransf PDelta 20369 1 0 0
+element elasticBeamColumn 369 125 261 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20369 -mass 2e-10 -cMass
+geomTransf PDelta 20370 1 0 0
+element elasticBeamColumn 370 125 397 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20370 -mass 2e-10 -cMass
+geomTransf PDelta 20371 1 0 0
+element elasticBeamColumn 371 55 194 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20371 -mass 2e-10 -cMass
+geomTransf PDelta 20372 1 0 0
+element elasticBeamColumn 372 55 330 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20372 -mass 2e-10 -cMass
+geomTransf PDelta 20373 1 0 0
+element elasticBeamColumn 373 126 262 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20373 -mass 2e-10 -cMass
+geomTransf PDelta 20374 1 0 0
+element elasticBeamColumn 374 126 398 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20374 -mass 2e-10 -cMass
+geomTransf PDelta 20375 1 0 0
+element elasticBeamColumn 375 56 195 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20375 -mass 2e-10 -cMass
+geomTransf PDelta 20376 1 0 0
+element elasticBeamColumn 376 56 331 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20376 -mass 2e-10 -cMass
+geomTransf PDelta 20377 1 0 0
+element elasticBeamColumn 377 127 263 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20377 -mass 2e-10 -cMass
+geomTransf PDelta 20378 1 0 0
+element elasticBeamColumn 378 127 399 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20378 -mass 2e-10 -cMass
+geomTransf PDelta 20379 1 0 0
+element elasticBeamColumn 379 57 196 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20379 -mass 2e-10 -cMass
+geomTransf PDelta 20380 1 0 0
+element elasticBeamColumn 380 57 332 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20380 -mass 2e-10 -cMass
+geomTransf PDelta 20381 1 0 0
+element elasticBeamColumn 381 128 264 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20381 -mass 2e-10 -cMass
+geomTransf PDelta 20382 1 0 0
+element elasticBeamColumn 382 128 400 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20382 -mass 2e-10 -cMass
+geomTransf PDelta 20383 1 0 0
+element elasticBeamColumn 383 58 197 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20383 -mass 2e-10 -cMass
+geomTransf PDelta 20384 1 0 0
+element elasticBeamColumn 384 58 333 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20384 -mass 2e-10 -cMass
+geomTransf PDelta 20385 1 0 0
+element elasticBeamColumn 385 129 265 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20385 -mass 2e-10 -cMass
+geomTransf PDelta 20386 1 0 0
+element elasticBeamColumn 386 129 401 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20386 -mass 2e-10 -cMass
+geomTransf PDelta 20387 1 0 0
+element elasticBeamColumn 387 59 198 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20387 -mass 2e-10 -cMass
+geomTransf PDelta 20388 1 0 0
+element elasticBeamColumn 388 59 334 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20388 -mass 2e-10 -cMass
+geomTransf PDelta 20389 1 0 0
+element elasticBeamColumn 389 130 266 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20389 -mass 2e-10 -cMass
+geomTransf PDelta 20390 1 0 0
+element elasticBeamColumn 390 130 402 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20390 -mass 2e-10 -cMass
+geomTransf PDelta 20391 1 0 0
+element elasticBeamColumn 391 60 199 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20391 -mass 2e-10 -cMass
+geomTransf PDelta 20392 1 0 0
+element elasticBeamColumn 392 60 335 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20392 -mass 2e-10 -cMass
+geomTransf PDelta 20393 1 0 0
+element elasticBeamColumn 393 131 267 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20393 -mass 2e-10 -cMass
+geomTransf PDelta 20394 1 0 0
+element elasticBeamColumn 394 131 403 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20394 -mass 2e-10 -cMass
+geomTransf PDelta 20395 1 0 0
+element elasticBeamColumn 395 61 200 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20395 -mass 2e-10 -cMass
+geomTransf PDelta 20396 1 0 0
+element elasticBeamColumn 396 61 336 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20396 -mass 2e-10 -cMass
+geomTransf PDelta 20397 1 0 0
+element elasticBeamColumn 397 132 268 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20397 -mass 2e-10 -cMass
+geomTransf PDelta 20398 1 0 0
+element elasticBeamColumn 398 132 404 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20398 -mass 2e-10 -cMass
+geomTransf PDelta 20399 1 0 0
+element elasticBeamColumn 399 62 201 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20399 -mass 2e-10 -cMass
+geomTransf PDelta 20400 1 0 0
+element elasticBeamColumn 400 62 337 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20400 -mass 2e-10 -cMass
+geomTransf PDelta 20401 1 0 0
+element elasticBeamColumn 401 133 269 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20401 -mass 2e-10 -cMass
+geomTransf PDelta 20402 1 0 0
+element elasticBeamColumn 402 133 405 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20402 -mass 2e-10 -cMass
+geomTransf PDelta 20403 1 0 0
+element elasticBeamColumn 403 63 202 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20403 -mass 2e-10 -cMass
+geomTransf PDelta 20404 1 0 0
+element elasticBeamColumn 404 63 338 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20404 -mass 2e-10 -cMass
+geomTransf PDelta 20405 1 0 0
+element elasticBeamColumn 405 134 270 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20405 -mass 2e-10 -cMass
+geomTransf PDelta 20406 1 0 0
+element elasticBeamColumn 406 134 406 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20406 -mass 2e-10 -cMass
+geomTransf PDelta 20407 1 0 0
+element elasticBeamColumn 407 64 203 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20407 -mass 2e-10 -cMass
+geomTransf PDelta 20408 1 0 0
+element elasticBeamColumn 408 64 339 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20408 -mass 2e-10 -cMass
+geomTransf PDelta 20409 1 0 0
+element elasticBeamColumn 409 135 271 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20409 -mass 2e-10 -cMass
+geomTransf PDelta 20410 1 0 0
+element elasticBeamColumn 410 135 407 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20410 -mass 2e-10 -cMass
+geomTransf PDelta 20411 1 0 0
+element elasticBeamColumn 411 65 204 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20411 -mass 2e-10 -cMass
+geomTransf PDelta 20412 1 0 0
+element elasticBeamColumn 412 65 340 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20412 -mass 2e-10 -cMass
+geomTransf PDelta 20413 1 0 0
+element elasticBeamColumn 413 136 272 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20413 -mass 2e-10 -cMass
+geomTransf PDelta 20414 1 0 0
+element elasticBeamColumn 414 136 408 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20414 -mass 2e-10 -cMass
+geomTransf PDelta 20415 1 0 0
+element elasticBeamColumn 415 66 205 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20415 -mass 2e-10 -cMass
+geomTransf PDelta 20416 1 0 0
+element elasticBeamColumn 416 66 341 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20416 -mass 2e-10 -cMass
+geomTransf PDelta 20417 1 0 0
+element elasticBeamColumn 417 137 273 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20417 -mass 2e-10 -cMass
+geomTransf PDelta 20418 1 0 0
+element elasticBeamColumn 418 137 409 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20418 -mass 2e-10 -cMass
+geomTransf PDelta 20419 1 0 0
+element elasticBeamColumn 419 67 206 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20419 -mass 2e-10 -cMass
+geomTransf PDelta 20420 1 0 0
+element elasticBeamColumn 420 67 342 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20420 -mass 2e-10 -cMass
+geomTransf PDelta 20421 1 0 0
+element elasticBeamColumn 421 138 274 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20421 -mass 2e-10 -cMass
+geomTransf PDelta 20422 1 0 0
+element elasticBeamColumn 422 138 410 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20422 -mass 2e-10 -cMass
+geomTransf PDelta 20423 1 0 0
+element elasticBeamColumn 423 68 207 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20423 -mass 2e-10 -cMass
+geomTransf PDelta 20424 1 0 0
+element elasticBeamColumn 424 68 343 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20424 -mass 2e-10 -cMass
+geomTransf PDelta 20425 1 0 0
+element elasticBeamColumn 425 139 275 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20425 -mass 2e-10 -cMass
+geomTransf PDelta 20426 1 0 0
+element elasticBeamColumn 426 139 411 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20426 -mass 2e-10 -cMass
+geomTransf PDelta 20427 1 0 0
+element elasticBeamColumn 427 69 208 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20427 -mass 2e-10 -cMass
+geomTransf PDelta 20428 1 0 0
+element elasticBeamColumn 428 69 344 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20428 -mass 2e-10 -cMass
+geomTransf PDelta 20429 1 0 0
+element elasticBeamColumn 429 140 276 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20429 -mass 2e-10 -cMass
+geomTransf PDelta 20430 1 0 0
+element elasticBeamColumn 430 140 412 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20430 -mass 2e-10 -cMass
+geomTransf PDelta 20431 1 0 0
+element elasticBeamColumn 431 70 209 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20431 -mass 2e-10 -cMass
+geomTransf PDelta 20432 1 0 0
+element elasticBeamColumn 432 70 345 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20432 -mass 2e-10 -cMass
+geomTransf PDelta 20433 1 0 0
+element elasticBeamColumn 433 141 277 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20433 -mass 2e-10 -cMass
+geomTransf PDelta 20434 1 0 0
+element elasticBeamColumn 434 141 413 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20434 -mass 2e-10 -cMass
+geomTransf PDelta 20435 1 0 0
+element elasticBeamColumn 435 1 555 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20435 -mass 2e-10 -cMass
+geomTransf PDelta 20436 1 0 0
+element elasticBeamColumn 436 1 556 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20436 -mass 2e-10 -cMass
+geomTransf PDelta 20437 1 0 0
+element elasticBeamColumn 437 551 557 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20437 -mass 2e-10 -cMass
+geomTransf PDelta 20438 1 0 0
+element elasticBeamColumn 438 551 558 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20438 -mass 2e-10 -cMass
+geomTransf PDelta 20439 1 0 0
+element elasticBeamColumn 439 553 559 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20439 -mass 2e-10 -cMass
+geomTransf PDelta 20440 1 0 0
+element elasticBeamColumn 440 553 560 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20440 -mass 2e-10 -cMass
+geomTransf PDelta 20441 1 0 0
+element elasticBeamColumn 441 554 565 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20441 -mass 2e-10 -cMass
+geomTransf PDelta 20442 1 0 0
+element elasticBeamColumn 442 554 566 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20442 -mass 2e-10 -cMass
+geomTransf PDelta 20443 1 0 0
+element elasticBeamColumn 443 552 563 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20443 -mass 2e-10 -cMass
+geomTransf PDelta 20444 1 0 0
+element elasticBeamColumn 444 552 564 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20444 -mass 2e-10 -cMass
+geomTransf PDelta 20445 1 0 0
+element elasticBeamColumn 445 72 561 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20445 -mass 2e-10 -cMass
+geomTransf PDelta 20446 1 0 0
+element elasticBeamColumn 446 72 562 0.0002 2.1e+15 8.07692307692e+14 0.13279 0.00967 0.13279 20446 -mass 2e-10 -cMass
+element corotTruss 447 142 415 0.01959674 10001 -rho 96.1195085289 -cMass 1
+element corotTruss 448 278 415 0.01959674 10001 -rho 96.1195085289 -cMass 1
+element corotTruss 449 210 447 0.01959674 10001 -rho 96.1195085289 -cMass 1
+element corotTruss 450 346 447 0.01959674 10001 -rho 96.1195085289 -cMass 1
+element corotTruss 451 143 416 0.017898785 10003 -rho 95.9969261644 -cMass 1
+element corotTruss 452 279 416 0.017898785 10003 -rho 95.9969261644 -cMass 1
+element corotTruss 453 211 448 0.017898785 10003 -rho 95.9969261644 -cMass 1
+element corotTruss 454 347 448 0.017898785 10003 -rho 95.9969261644 -cMass 1
+element corotTruss 455 144 417 0.017898785 10005 -rho 95.8643634169 -cMass 1
+element corotTruss 456 280 417 0.017898785 10005 -rho 95.8643634169 -cMass 1
+element corotTruss 457 212 449 0.017898785 10005 -rho 95.8643634169 -cMass 1
+element corotTruss 458 348 449 0.017898785 10005 -rho 95.8643634169 -cMass 1
+element corotTruss 459 145 418 0.016052465 10007 -rho 95.7225312282 -cMass 1
+element corotTruss 460 281 418 0.016052465 10007 -rho 95.7225312282 -cMass 1
+element corotTruss 461 213 450 0.016052465 10007 -rho 95.7225312282 -cMass 1
+element corotTruss 462 349 450 0.016052465 10007 -rho 95.7225312282 -cMass 1
+element corotTruss 463 146 419 0.016052465 10009 -rho 95.5696579278 -cMass 1
+element corotTruss 464 282 419 0.016052465 10009 -rho 95.5696579278 -cMass 1
+element corotTruss 465 214 451 0.016052465 10009 -rho 95.5696579278 -cMass 1
+element corotTruss 466 350 451 0.016052465 10009 -rho 95.5696579278 -cMass 1
+element corotTruss 467 147 420 0.015166985 10011 -rho 95.4046362971 -cMass 1
+element corotTruss 468 283 420 0.015166985 10011 -rho 95.4046362971 -cMass 1
+element corotTruss 469 215 452 0.015166985 10011 -rho 95.4046362971 -cMass 1
+element corotTruss 470 351 452 0.015166985 10011 -rho 95.4046362971 -cMass 1
+element corotTruss 471 148 421 0.015166985 10013 -rho 95.2262223023 -cMass 1
+element corotTruss 472 284 421 0.015166985 10013 -rho 95.2262223023 -cMass 1
+element corotTruss 473 216 453 0.015166985 10013 -rho 95.2262223023 -cMass 1
+element corotTruss 474 352 453 0.015166985 10013 -rho 95.2262223023 -cMass 1
+element corotTruss 475 149 422 0.015166985 10015 -rho 95.0330150733 -cMass 1
+element corotTruss 476 285 422 0.015166985 10015 -rho 95.0330150733 -cMass 1
+element corotTruss 477 217 454 0.015166985 10015 -rho 95.0330150733 -cMass 1
+element corotTruss 478 353 454 0.015166985 10015 -rho 95.0330150733 -cMass 1
+element corotTruss 479 150 423 0.015166985 10017 -rho 95.0772025068 -cMass 1
+element corotTruss 480 286 423 0.015166985 10017 -rho 95.0772025068 -cMass 1
+element corotTruss 481 218 455 0.015166985 10017 -rho 95.0772025068 -cMass 1
+element corotTruss 482 354 455 0.015166985 10017 -rho 95.0772025068 -cMass 1
+element corotTruss 483 151 424 0.015166985 10019 -rho 95.1223398545 -cMass 1
+element corotTruss 484 287 424 0.015166985 10019 -rho 95.1223398545 -cMass 1
+element corotTruss 485 219 456 0.015166985 10019 -rho 95.1223398545 -cMass 1
+element corotTruss 486 355 456 0.015166985 10019 -rho 95.1223398545 -cMass 1
+element corotTruss 487 152 425 0.015166985 10021 -rho 95.1661770216 -cMass 1
+element corotTruss 488 288 425 0.015166985 10021 -rho 95.1661770216 -cMass 1
+element corotTruss 489 220 457 0.015166985 10021 -rho 95.1661770216 -cMass 1
+element corotTruss 490 356 457 0.015166985 10021 -rho 95.1661770216 -cMass 1
+element corotTruss 491 153 426 0.015166985 10023 -rho 95.1940053875 -cMass 1
+element corotTruss 492 289 426 0.015166985 10023 -rho 95.1940053875 -cMass 1
+element corotTruss 493 221 458 0.015166985 10023 -rho 95.1940053875 -cMass 1
+element corotTruss 494 357 458 0.015166985 10023 -rho 95.1940053875 -cMass 1
+element corotTruss 495 154 427 0.015166985 10025 -rho 95.2528352284 -cMass 1
+element corotTruss 496 290 427 0.015166985 10025 -rho 95.2528352284 -cMass 1
+element corotTruss 497 222 459 0.015166985 10025 -rho 95.2528352284 -cMass 1
+element corotTruss 498 358 459 0.015166985 10025 -rho 95.2528352284 -cMass 1
+element corotTruss 499 155 428 0.016052465 10027 -rho 100.237929602 -cMass 1
+element corotTruss 500 291 428 0.016052465 10027 -rho 100.237929602 -cMass 1
+element corotTruss 501 223 460 0.016052465 10027 -rho 100.237929602 -cMass 1
+element corotTruss 502 359 460 0.016052465 10027 -rho 100.237929602 -cMass 1
+element corotTruss 503 156 429 0.015166985 10029 -rho 95.388877278 -cMass 1
+element corotTruss 504 292 429 0.015166985 10029 -rho 95.388877278 -cMass 1
+element corotTruss 505 224 461 0.015166985 10029 -rho 95.388877278 -cMass 1
+element corotTruss 506 360 461 0.015166985 10029 -rho 95.388877278 -cMass 1
+element corotTruss 507 157 430 0.015166985 10031 -rho 95.4670774579 -cMass 1
+element corotTruss 508 293 430 0.015166985 10031 -rho 95.4670774579 -cMass 1
+element corotTruss 509 225 462 0.015166985 10031 -rho 95.4670774579 -cMass 1
+element corotTruss 510 361 462 0.015166985 10031 -rho 95.4670774579 -cMass 1
+element corotTruss 511 158 431 0.015166985 10033 -rho 95.5342539212 -cMass 1
+element corotTruss 512 294 431 0.015166985 10033 -rho 95.5342539212 -cMass 1
+element corotTruss 513 226 463 0.015166985 10033 -rho 95.5342539212 -cMass 1
+element corotTruss 514 362 463 0.015166985 10033 -rho 95.5342539212 -cMass 1
+element corotTruss 515 159 432 0.015166985 10035 -rho 95.6294096134 -cMass 1
+element corotTruss 516 295 432 0.015166985 10035 -rho 95.6294096134 -cMass 1
+element corotTruss 517 227 464 0.015166985 10035 -rho 95.6294096134 -cMass 1
+element corotTruss 518 363 464 0.015166985 10035 -rho 95.6294096134 -cMass 1
+element corotTruss 519 160 433 0.013885865 10037 -rho 84.3872389427 -cMass 1
+element corotTruss 520 296 433 0.013885865 10037 -rho 84.3872389427 -cMass 1
+element corotTruss 521 228 465 0.013885865 10037 -rho 84.3872389427 -cMass 1
+element corotTruss 522 364 465 0.013885865 10037 -rho 84.3872389427 -cMass 1
+element corotTruss 523 161 434 0.013885865 10039 -rho 84.2318199045 -cMass 1
+element corotTruss 524 297 434 0.013885865 10039 -rho 84.2318199045 -cMass 1
+element corotTruss 525 229 466 0.013885865 10039 -rho 84.2318199045 -cMass 1
+element corotTruss 526 365 466 0.013885865 10039 -rho 84.2318199045 -cMass 1
+element corotTruss 527 162 435 0.012265625 10041 -rho 74.726253486 -cMass 1
+element corotTruss 528 298 435 0.012265625 10041 -rho 74.726253486 -cMass 1
+element corotTruss 529 230 467 0.012265625 10041 -rho 74.726253486 -cMass 1
+element corotTruss 530 366 467 0.012265625 10041 -rho 74.726253486 -cMass 1
+element corotTruss 531 163 436 0.012265625 10043 -rho 74.7921570571 -cMass 1
+element corotTruss 532 299 436 0.012265625 10043 -rho 74.7921570571 -cMass 1
+element corotTruss 533 231 468 0.012265625 10043 -rho 74.7921570571 -cMass 1
+element corotTruss 534 367 468 0.012265625 10043 -rho 74.7921570571 -cMass 1
+element corotTruss 535 164 437 0.01093034 10045 -rho 65.4248090528 -cMass 1
+element corotTruss 536 300 437 0.01093034 10045 -rho 65.4248090528 -cMass 1
+element corotTruss 537 232 469 0.01093034 10045 -rho 65.4248090528 -cMass 1
+element corotTruss 538 368 469 0.01093034 10045 -rho 65.4248090528 -cMass 1
+element corotTruss 539 165 438 0.012265625 10047 -rho 74.8988364965 -cMass 1
+element corotTruss 540 301 438 0.012265625 10047 -rho 74.8988364965 -cMass 1
+element corotTruss 541 233 470 0.012265625 10047 -rho 74.8988364965 -cMass 1
+element corotTruss 542 369 470 0.012265625 10047 -rho 74.8988364965 -cMass 1
+element corotTruss 543 166 439 0.012265625 10049 -rho 74.9592264238 -cMass 1
+element corotTruss 544 302 439 0.012265625 10049 -rho 74.9592264238 -cMass 1
+element corotTruss 545 234 471 0.012265625 10049 -rho 74.9592264238 -cMass 1
+element corotTruss 546 370 471 0.012265625 10049 -rho 74.9592264238 -cMass 1
+element corotTruss 547 167 440 0.01093034 10051 -rho 65.5493955821 -cMass 1
+element corotTruss 548 303 440 0.01093034 10051 -rho 65.5493955821 -cMass 1
+element corotTruss 549 235 472 0.01093034 10051 -rho 65.5493955821 -cMass 1
+element corotTruss 550 371 472 0.01093034 10051 -rho 65.5493955821 -cMass 1
+element corotTruss 551 168 441 0.010023665 10053 -rho 60.7490896374 -cMass 1
+element corotTruss 552 304 441 0.010023665 10053 -rho 60.7490896374 -cMass 1
+element corotTruss 553 236 473 0.010023665 10053 -rho 60.7490896374 -cMass 1
+element corotTruss 554 372 473 0.010023665 10053 -rho 60.7490896374 -cMass 1
+element corotTruss 555 169 442 0.009671985 10055 -rho 56.267300855 -cMass 1
+element corotTruss 556 305 442 0.009671985 10055 -rho 56.267300855 -cMass 1
+element corotTruss 557 237 474 0.009671985 10055 -rho 56.267300855 -cMass 1
+element corotTruss 558 373 474 0.009671985 10055 -rho 56.267300855 -cMass 1
+element corotTruss 559 170 443 0.009671985 10057 -rho 56.3432600406 -cMass 1
+element corotTruss 560 306 443 0.009671985 10057 -rho 56.3432600406 -cMass 1
+element corotTruss 561 238 475 0.009671985 10057 -rho 56.3432600406 -cMass 1
+element corotTruss 562 374 475 0.009671985 10057 -rho 56.3432600406 -cMass 1
+element corotTruss 563 171 444 0.009326585 10059 -rho 52.1043124288 -cMass 1
+element corotTruss 564 307 444 0.009326585 10059 -rho 52.1043124288 -cMass 1
+element corotTruss 565 239 476 0.009326585 10059 -rho 52.1043124288 -cMass 1
+element corotTruss 566 375 476 0.009326585 10059 -rho 52.1043124288 -cMass 1
+element corotTruss 567 172 445 0.009326585 10061 -rho 52.421808692 -cMass 1
+element corotTruss 568 308 445 0.009326585 10061 -rho 52.421808692 -cMass 1
+element corotTruss 569 240 477 0.009326585 10061 -rho 52.421808692 -cMass 1
+element corotTruss 570 376 477 0.009326585 10061 -rho 52.421808692 -cMass 1
+element corotTruss 571 173 446 0.009326585 10063 -rho 53.7823801712 -cMass 1
+element corotTruss 572 309 446 0.009326585 10063 -rho 53.7823801712 -cMass 1
+element corotTruss 573 241 478 0.009326585 10063 -rho 53.7823801712 -cMass 1
+element corotTruss 574 377 478 0.009326585 10063 -rho 53.7823801712 -cMass 1
+element corotTruss 575 446 178 0.009326585 10065 -rho 53.7816078852 -cMass 1
+element corotTruss 576 446 314 0.009326585 10065 -rho 53.7816078852 -cMass 1
+element corotTruss 577 478 246 0.009326585 10065 -rho 53.7816078852 -cMass 1
+element corotTruss 578 478 382 0.009326585 10065 -rho 53.7816078852 -cMass 1
+element corotTruss 579 445 179 0.009326585 10067 -rho 52.4506568266 -cMass 1
+element corotTruss 580 445 315 0.009326585 10067 -rho 52.4506568266 -cMass 1
+element corotTruss 581 477 247 0.009326585 10067 -rho 52.4506568266 -cMass 1
+element corotTruss 582 477 383 0.009326585 10067 -rho 52.4506568266 -cMass 1
+element corotTruss 583 444 180 0.009326585 10069 -rho 52.1247805373 -cMass 1
+element corotTruss 584 444 316 0.009326585 10069 -rho 52.1247805373 -cMass 1
+element corotTruss 585 476 248 0.009326585 10069 -rho 52.1247805373 -cMass 1
+element corotTruss 586 476 384 0.009326585 10069 -rho 52.1247805373 -cMass 1
+element corotTruss 587 443 181 0.009671985 10071 -rho 56.3731547845 -cMass 1
+element corotTruss 588 443 317 0.009671985 10071 -rho 56.3731547845 -cMass 1
+element corotTruss 589 475 249 0.009671985 10071 -rho 56.3731547845 -cMass 1
+element corotTruss 590 475 385 0.009671985 10071 -rho 56.3731547845 -cMass 1
+element corotTruss 591 442 182 0.009671985 10073 -rho 56.28384624 -cMass 1
+element corotTruss 592 442 318 0.009671985 10073 -rho 56.28384624 -cMass 1
+element corotTruss 593 474 250 0.009671985 10073 -rho 56.28384624 -cMass 1
+element corotTruss 594 474 386 0.009671985 10073 -rho 56.28384624 -cMass 1
+element corotTruss 595 441 183 0.010023665 10075 -rho 56.3445897728 -cMass 1
+element corotTruss 596 441 319 0.010023665 10075 -rho 56.3445897728 -cMass 1
+element corotTruss 597 473 251 0.010023665 10075 -rho 56.3445897728 -cMass 1
+element corotTruss 598 473 387 0.010023665 10075 -rho 56.3445897728 -cMass 1
+element corotTruss 599 440 184 0.01093034 10077 -rho 60.6513744558 -cMass 1
+element corotTruss 600 440 320 0.01093034 10077 -rho 60.6513744558 -cMass 1
+element corotTruss 601 472 252 0.01093034 10077 -rho 60.6513744558 -cMass 1
+element corotTruss 602 472 388 0.01093034 10077 -rho 60.6513744558 -cMass 1
+element corotTruss 603 439 185 0.012265625 10079 -rho 70.1428197965 -cMass 1
+element corotTruss 604 439 321 0.012265625 10079 -rho 70.1428197965 -cMass 1
+element corotTruss 605 471 253 0.012265625 10079 -rho 70.1428197965 -cMass 1
+element corotTruss 606 471 389 0.012265625 10079 -rho 70.1428197965 -cMass 1
+element corotTruss 607 438 186 0.012265625 10081 -rho 70.7092521238 -cMass 1
+element corotTruss 608 438 322 0.012265625 10081 -rho 70.7092521238 -cMass 1
+element corotTruss 609 470 254 0.012265625 10081 -rho 70.7092521238 -cMass 1
+element corotTruss 610 470 390 0.012265625 10081 -rho 70.7092521238 -cMass 1
+element corotTruss 611 437 187 0.01093034 10083 -rho 61.0147027611 -cMass 1
+element corotTruss 612 437 323 0.01093034 10083 -rho 61.0147027611 -cMass 1
+element corotTruss 613 469 255 0.01093034 10083 -rho 61.0147027611 -cMass 1
+element corotTruss 614 469 391 0.01093034 10083 -rho 61.0147027611 -cMass 1
+element corotTruss 615 436 188 0.012265625 10085 -rho 71.7472048178 -cMass 1
+element corotTruss 616 436 324 0.012265625 10085 -rho 71.7472048178 -cMass 1
+element corotTruss 617 468 256 0.012265625 10085 -rho 71.7472048178 -cMass 1
+element corotTruss 618 468 392 0.012265625 10085 -rho 71.7472048178 -cMass 1
+element corotTruss 619 435 189 0.012265625 10087 -rho 71.3722829156 -cMass 1
+element corotTruss 620 435 325 0.012265625 10087 -rho 71.3722829156 -cMass 1
+element corotTruss 621 467 257 0.012265625 10087 -rho 71.3722829156 -cMass 1
+element corotTruss 622 467 393 0.012265625 10087 -rho 71.3722829156 -cMass 1
+element corotTruss 623 434 190 0.013885865 10089 -rho 80.7065007875 -cMass 1
+element corotTruss 624 434 326 0.013885865 10089 -rho 80.7065007875 -cMass 1
+element corotTruss 625 466 258 0.013885865 10089 -rho 80.7065007875 -cMass 1
+element corotTruss 626 466 394 0.013885865 10089 -rho 80.7065007875 -cMass 1
+element corotTruss 627 433 191 0.013885865 10091 -rho 81.3786031255 -cMass 1
+element corotTruss 628 433 327 0.013885865 10091 -rho 81.3786031255 -cMass 1
+element corotTruss 629 465 259 0.013885865 10091 -rho 81.3786031255 -cMass 1
+element corotTruss 630 465 395 0.013885865 10091 -rho 81.3786031255 -cMass 1
+element corotTruss 631 432 192 0.015166985 10093 -rho 93.5174209786 -cMass 1
+element corotTruss 632 432 328 0.015166985 10093 -rho 93.5174209786 -cMass 1
+element corotTruss 633 464 260 0.015166985 10093 -rho 93.5174209786 -cMass 1
+element corotTruss 634 464 396 0.015166985 10093 -rho 93.5174209786 -cMass 1
+element corotTruss 635 431 193 0.015166985 10095 -rho 84.2992175733 -cMass 1
+element corotTruss 636 431 329 0.015166985 10095 -rho 84.2992175733 -cMass 1
+element corotTruss 637 463 261 0.015166985 10095 -rho 84.2992175733 -cMass 1
+element corotTruss 638 463 397 0.015166985 10095 -rho 84.2992175733 -cMass 1
+element corotTruss 639 430 194 0.015166985 10097 -rho 84.2273660324 -cMass 1
+element corotTruss 640 430 330 0.015166985 10097 -rho 84.2273660324 -cMass 1
+element corotTruss 641 462 262 0.015166985 10097 -rho 84.2273660324 -cMass 1
+element corotTruss 642 462 398 0.015166985 10097 -rho 84.2273660324 -cMass 1
+element corotTruss 643 429 195 0.015166985 10099 -rho 84.1582809314 -cMass 1
+element corotTruss 644 429 331 0.015166985 10099 -rho 84.1582809314 -cMass 1
+element corotTruss 645 461 263 0.015166985 10099 -rho 84.1582809314 -cMass 1
+element corotTruss 646 461 399 0.015166985 10099 -rho 84.1582809314 -cMass 1
+element corotTruss 647 428 196 0.016052465 10101 -rho 95.3734073162 -cMass 1
+element corotTruss 648 428 332 0.016052465 10101 -rho 95.3734073162 -cMass 1
+element corotTruss 649 460 264 0.016052465 10101 -rho 95.3734073162 -cMass 1
+element corotTruss 650 460 400 0.016052465 10101 -rho 95.3734073162 -cMass 1
+element corotTruss 651 427 197 0.015166985 10103 -rho 84.0462076202 -cMass 1
+element corotTruss 652 427 333 0.015166985 10103 -rho 84.0462076202 -cMass 1
+element corotTruss 653 459 265 0.015166985 10103 -rho 84.0462076202 -cMass 1
+element corotTruss 654 459 401 0.015166985 10103 -rho 84.0462076202 -cMass 1
+element corotTruss 655 426 198 0.015166985 10105 -rho 95.2473461024 -cMass 1
+element corotTruss 656 426 334 0.015166985 10105 -rho 95.2473461024 -cMass 1
+element corotTruss 657 458 266 0.015166985 10105 -rho 95.2473461024 -cMass 1
+element corotTruss 658 458 402 0.015166985 10105 -rho 95.2473461024 -cMass 1
+element corotTruss 659 425 199 0.015166985 10107 -rho 95.1812530532 -cMass 1
+element corotTruss 660 425 335 0.015166985 10107 -rho 95.1812530532 -cMass 1
+element corotTruss 661 457 267 0.015166985 10107 -rho 95.1812530532 -cMass 1
+element corotTruss 662 457 403 0.015166985 10107 -rho 95.1812530532 -cMass 1
+element corotTruss 663 424 200 0.015166985 10109 -rho 95.1079632818 -cMass 1
+element corotTruss 664 424 336 0.015166985 10109 -rho 95.1079632818 -cMass 1
+element corotTruss 665 456 268 0.015166985 10109 -rho 95.1079632818 -cMass 1
+element corotTruss 666 456 404 0.015166985 10109 -rho 95.1079632818 -cMass 1
+element corotTruss 667 423 201 0.015166985 10111 -rho 93.515514343 -cMass 1
+element corotTruss 668 423 337 0.015166985 10111 -rho 93.515514343 -cMass 1
+element corotTruss 669 455 269 0.015166985 10111 -rho 93.515514343 -cMass 1
+element corotTruss 670 455 405 0.015166985 10111 -rho 93.515514343 -cMass 1
+element corotTruss 671 422 202 0.015166985 10113 -rho 92.7501751392 -cMass 1
+element corotTruss 672 422 338 0.015166985 10113 -rho 92.7501751392 -cMass 1
+element corotTruss 673 454 270 0.015166985 10113 -rho 92.7501751392 -cMass 1
+element corotTruss 674 454 406 0.015166985 10113 -rho 92.7501751392 -cMass 1
+element corotTruss 675 421 203 0.015166985 10115 -rho 92.0717549173 -cMass 1
+element corotTruss 676 421 339 0.015166985 10115 -rho 92.0717549173 -cMass 1
+element corotTruss 677 453 271 0.015166985 10115 -rho 92.0717549173 -cMass 1
+element corotTruss 678 453 407 0.015166985 10115 -rho 92.0717549173 -cMass 1
+element corotTruss 679 420 204 0.015166985 10117 -rho 92.0016436424 -cMass 1
+element corotTruss 680 420 340 0.015166985 10117 -rho 92.0016436424 -cMass 1
+element corotTruss 681 452 272 0.015166985 10117 -rho 92.0016436424 -cMass 1
+element corotTruss 682 452 408 0.015166985 10117 -rho 92.0016436424 -cMass 1
+element corotTruss 683 419 205 0.016052465 10119 -rho 91.6242869263 -cMass 1
+element corotTruss 684 419 341 0.016052465 10119 -rho 91.6242869263 -cMass 1
+element corotTruss 685 451 273 0.016052465 10119 -rho 91.6242869263 -cMass 1
+element corotTruss 686 451 409 0.016052465 10119 -rho 91.6242869263 -cMass 1
+element corotTruss 687 418 206 0.016052465 10121 -rho 91.2379933262 -cMass 1
+element corotTruss 688 418 342 0.016052465 10121 -rho 91.2379933262 -cMass 1
+element corotTruss 689 450 274 0.016052465 10121 -rho 91.2379933262 -cMass 1
+element corotTruss 690 450 410 0.016052465 10121 -rho 91.2379933262 -cMass 1
+element corotTruss 691 417 207 0.017898785 10123 -rho 90.4704610735 -cMass 1
+element corotTruss 692 417 343 0.017898785 10123 -rho 90.4704610735 -cMass 1
+element corotTruss 693 449 275 0.017898785 10123 -rho 90.4704610735 -cMass 1
+element corotTruss 694 449 411 0.017898785 10123 -rho 90.4704610735 -cMass 1
+element corotTruss 695 416 208 0.017898785 10125 -rho 90.3392276759 -cMass 1
+element corotTruss 696 416 344 0.017898785 10125 -rho 90.3392276759 -cMass 1
+element corotTruss 697 448 276 0.017898785 10125 -rho 90.3392276759 -cMass 1
+element corotTruss 698 448 412 0.017898785 10125 -rho 90.3392276759 -cMass 1
+element corotTruss 699 415 209 0.01959674 10127 -rho 90.0002353565 -cMass 1
+element corotTruss 700 415 345 0.01959674 10127 -rho 90.0002353565 -cMass 1
+element corotTruss 701 447 277 0.01959674 10127 -rho 90.0002353565 -cMass 1
+element corotTruss 702 447 413 0.01959674 10127 -rho 90.0002353565 -cMass 1
+element corotTruss 703 446 174 0.009326585 10129 -rho 53.7872680553 -cMass 1
+element corotTruss 704 446 310 0.009326585 10129 -rho 53.7872680553 -cMass 1
+element corotTruss 705 478 242 0.009326585 10129 -rho 53.7872680553 -cMass 1
+element corotTruss 706 478 378 0.009326585 10129 -rho 53.7872680553 -cMass 1
+element corotTruss 707 446 175 0.010023665 10131 -rho 62.7829341792 -cMass 1
+element corotTruss 708 446 311 0.010023665 10131 -rho 62.7829341792 -cMass 1
+element corotTruss 709 478 243 0.010023665 10131 -rho 62.7829341792 -cMass 1
+element corotTruss 710 478 379 0.010023665 10131 -rho 62.7829341792 -cMass 1
+element corotTruss 711 446 176 0.010023665 10133 -rho 62.7788410356 -cMass 1
+element corotTruss 712 446 312 0.010023665 10133 -rho 62.7788410356 -cMass 1
+element corotTruss 713 478 244 0.010023665 10133 -rho 62.7788410356 -cMass 1
+element corotTruss 714 478 380 0.010023665 10133 -rho 62.7788410356 -cMass 1
+element corotTruss 715 446 177 0.009326585 10135 -rho 53.7899904855 -cMass 1
+element corotTruss 716 446 313 0.009326585 10135 -rho 53.7899904855 -cMass 1
+element corotTruss 717 478 245 0.009326585 10135 -rho 53.7899904855 -cMass 1
+element corotTruss 718 478 381 0.009326585 10135 -rho 53.7899904855 -cMass 1
+geomTransf PDelta 20719 0 0 1
+element elasticBeamColumn 719 479 415 37.895 34500000000 14375000000 608.336 411 448.5 20719 -mass 94737.5 -cMass
+geomTransf PDelta 20720 0 0 1
+element elasticBeamColumn 720 496 447 37.895 34500000000 14375000000 608.336 411 448.5 20720 -mass 94737.5 -cMass
+geomTransf PDelta 20721 0 0 1
+element elasticBeamColumn 721 415 416 37.895 34500000000 14375000000 608.336 411 448.5 20721 -mass 94737.5 -cMass
+geomTransf PDelta 20722 0 0 1
+element elasticBeamColumn 722 447 448 37.895 34500000000 14375000000 608.336 411 448.5 20722 -mass 94737.5 -cMass
+geomTransf PDelta 20723 0 0 1
+element elasticBeamColumn 723 416 417 37.895 34500000000 14375000000 608.336 411 448.5 20723 -mass 94737.5 -cMass
+geomTransf PDelta 20724 0 0 1
+element elasticBeamColumn 724 448 449 37.895 34500000000 14375000000 608.336 411 448.5 20724 -mass 94737.5 -cMass
+geomTransf PDelta 20725 0 0 1
+element elasticBeamColumn 725 417 418 37.895 34500000000 14375000000 608.336 411 448.5 20725 -mass 94737.5 -cMass
+geomTransf PDelta 20726 0 0 1
+element elasticBeamColumn 726 449 450 37.895 34500000000 14375000000 608.336 411 448.5 20726 -mass 94737.5 -cMass
+geomTransf PDelta 20727 0 0 1
+element elasticBeamColumn 727 418 419 37.895 34500000000 14375000000 608.336 411 448.5 20727 -mass 94737.5 -cMass
+geomTransf PDelta 20728 0 0 1
+element elasticBeamColumn 728 450 451 37.895 34500000000 14375000000 608.336 411 448.5 20728 -mass 94737.5 -cMass
+geomTransf PDelta 20729 0 0 1
+element elasticBeamColumn 729 419 420 37.895 34500000000 14375000000 608.336 411 448.5 20729 -mass 94737.5 -cMass
+geomTransf PDelta 20730 0 0 1
+element elasticBeamColumn 730 451 452 37.895 34500000000 14375000000 608.336 411 448.5 20730 -mass 94737.5 -cMass
+geomTransf PDelta 20731 0 0 1
+element elasticBeamColumn 731 420 421 37.895 34500000000 14375000000 608.336 411 448.5 20731 -mass 94737.5 -cMass
+geomTransf PDelta 20732 0 0 1
+element elasticBeamColumn 732 452 453 37.895 34500000000 14375000000 608.336 411 448.5 20732 -mass 94737.5 -cMass
+geomTransf PDelta 20733 0 0 1
+element elasticBeamColumn 733 421 422 37.895 34500000000 14375000000 608.336 411 448.5 20733 -mass 94737.5 -cMass
+geomTransf PDelta 20734 0 0 1
+element elasticBeamColumn 734 453 454 37.895 34500000000 14375000000 608.336 411 448.5 20734 -mass 94737.5 -cMass
+geomTransf PDelta 20735 0 0 1
+element elasticBeamColumn 735 422 423 37.895 34500000000 14375000000 608.336 411 448.5 20735 -mass 94737.5 -cMass
+geomTransf PDelta 20736 0 0 1
+element elasticBeamColumn 736 454 455 37.895 34500000000 14375000000 608.336 411 448.5 20736 -mass 94737.5 -cMass
+geomTransf PDelta 20737 0 0 1
+element elasticBeamColumn 737 423 424 37.895 34500000000 14375000000 608.336 411 448.5 20737 -mass 94737.5 -cMass
+geomTransf PDelta 20738 0 0 1
+element elasticBeamColumn 738 455 456 37.895 34500000000 14375000000 608.336 411 448.5 20738 -mass 94737.5 -cMass
+geomTransf PDelta 20739 0 0 1
+element elasticBeamColumn 739 424 425 37.895 34500000000 14375000000 608.336 411 448.5 20739 -mass 94737.5 -cMass
+geomTransf PDelta 20740 0 0 1
+element elasticBeamColumn 740 456 457 37.895 34500000000 14375000000 608.336 411 448.5 20740 -mass 94737.5 -cMass
+geomTransf PDelta 20741 0 0 1
+element elasticBeamColumn 741 425 426 37.895 34500000000 14375000000 608.336 411 448.5 20741 -mass 94737.5 -cMass
+geomTransf PDelta 20742 0 0 1
+element elasticBeamColumn 742 457 458 37.895 34500000000 14375000000 608.336 411 448.5 20742 -mass 94737.5 -cMass
+geomTransf PDelta 20743 0 0 1
+element elasticBeamColumn 743 426 427 37.895 34500000000 14375000000 608.336 411 448.5 20743 -mass 94737.5 -cMass
+geomTransf PDelta 20744 0 0 1
+element elasticBeamColumn 744 458 459 37.895 34500000000 14375000000 608.336 411 448.5 20744 -mass 94737.5 -cMass
+geomTransf PDelta 20745 0 0 1
+element elasticBeamColumn 745 427 428 37.895 34500000000 14375000000 608.336 411 448.5 20745 -mass 94737.5 -cMass
+geomTransf PDelta 20746 0 0 1
+element elasticBeamColumn 746 459 460 37.895 34500000000 14375000000 608.336 411 448.5 20746 -mass 94737.5 -cMass
+geomTransf PDelta 20747 0 0 1
+element elasticBeamColumn 747 428 429 37.895 34500000000 14375000000 608.336 411 448.5 20747 -mass 94737.5 -cMass
+geomTransf PDelta 20748 0 0 1
+element elasticBeamColumn 748 460 461 37.895 34500000000 14375000000 608.336 411 448.5 20748 -mass 94737.5 -cMass
+geomTransf PDelta 20749 0 0 1
+element elasticBeamColumn 749 429 430 37.895 34500000000 14375000000 608.336 411 448.5 20749 -mass 94737.5 -cMass
+geomTransf PDelta 20750 0 0 1
+element elasticBeamColumn 750 461 462 37.895 34500000000 14375000000 608.336 411 448.5 20750 -mass 94737.5 -cMass
+geomTransf PDelta 20751 0 0 1
+element elasticBeamColumn 751 430 431 37.895 34500000000 14375000000 608.336 411 448.5 20751 -mass 94737.5 -cMass
+geomTransf PDelta 20752 0 0 1
+element elasticBeamColumn 752 462 463 37.895 34500000000 14375000000 608.336 411 448.5 20752 -mass 94737.5 -cMass
+geomTransf PDelta 20753 0 0 1
+element elasticBeamColumn 753 431 432 37.895 34500000000 14375000000 608.336 411 448.5 20753 -mass 94737.5 -cMass
+geomTransf PDelta 20754 0 0 1
+element elasticBeamColumn 754 463 464 37.895 34500000000 14375000000 608.336 411 448.5 20754 -mass 94737.5 -cMass
+geomTransf PDelta 20755 0 0 1
+element elasticBeamColumn 755 432 433 37.895 34500000000 14375000000 608.336 411 448.5 20755 -mass 94737.5 -cMass
+geomTransf PDelta 20756 0 0 1
+element elasticBeamColumn 756 464 465 37.895 34500000000 14375000000 608.336 411 448.5 20756 -mass 94737.5 -cMass
+geomTransf PDelta 20757 0 0 1
+element elasticBeamColumn 757 433 434 37.895 34500000000 14375000000 608.336 411 448.5 20757 -mass 94737.5 -cMass
+geomTransf PDelta 20758 0 0 1
+element elasticBeamColumn 758 465 466 37.895 34500000000 14375000000 608.336 411 448.5 20758 -mass 94737.5 -cMass
+geomTransf PDelta 20759 0 0 1
+element elasticBeamColumn 759 434 435 37.895 34500000000 14375000000 608.336 411 448.5 20759 -mass 94737.5 -cMass
+geomTransf PDelta 20760 0 0 1
+element elasticBeamColumn 760 466 467 37.895 34500000000 14375000000 608.336 411 448.5 20760 -mass 94737.5 -cMass
+geomTransf PDelta 20761 0 0 1
+element elasticBeamColumn 761 435 436 47.42 34500000000 14375000000 1210.84 983 707 20761 -mass 118550 -cMass
+geomTransf PDelta 20762 0 0 1
+element elasticBeamColumn 762 467 468 47.42 34500000000 14375000000 1210.84 983 707 20762 -mass 118550 -cMass
+geomTransf PDelta 20763 0 0 1
+element elasticBeamColumn 763 436 437 47.42 34500000000 14375000000 1210.84 983 707 20763 -mass 118550 -cMass
+geomTransf PDelta 20764 0 0 1
+element elasticBeamColumn 764 468 469 47.42 34500000000 14375000000 1210.84 983 707 20764 -mass 118550 -cMass
+geomTransf PDelta 20765 0 0 1
+element elasticBeamColumn 765 437 438 47.42 34500000000 14375000000 1210.84 983 707 20765 -mass 118550 -cMass
+geomTransf PDelta 20766 0 0 1
+element elasticBeamColumn 766 469 470 47.42 34500000000 14375000000 1210.84 983 707 20766 -mass 118550 -cMass
+geomTransf PDelta 20767 0 0 1
+element elasticBeamColumn 767 438 439 47.42 34500000000 14375000000 1210.84 983 707 20767 -mass 118550 -cMass
+geomTransf PDelta 20768 0 0 1
+element elasticBeamColumn 768 470 471 47.42 34500000000 14375000000 1210.84 983 707 20768 -mass 118550 -cMass
+geomTransf PDelta 20769 0 0 1
+element elasticBeamColumn 769 439 440 47.42 34500000000 14375000000 1210.84 983 707 20769 -mass 118550 -cMass
+geomTransf PDelta 20770 0 0 1
+element elasticBeamColumn 770 471 472 47.42 34500000000 14375000000 1210.84 983 707 20770 -mass 118550 -cMass
+geomTransf PDelta 20771 0 0 1
+element elasticBeamColumn 771 440 441 47.42 34500000000 14375000000 1210.84 983 707 20771 -mass 118550 -cMass
+geomTransf PDelta 20772 0 0 1
+element elasticBeamColumn 772 472 473 47.42 34500000000 14375000000 1210.84 983 707 20772 -mass 118550 -cMass
+geomTransf PDelta 20773 0 0 1
+element elasticBeamColumn 773 441 442 47.42 34500000000 14375000000 1210.84 983 707 20773 -mass 118550 -cMass
+geomTransf PDelta 20774 0 0 1
+element elasticBeamColumn 774 473 474 47.42 34500000000 14375000000 1210.84 983 707 20774 -mass 118550 -cMass
+geomTransf PDelta 20775 0 0 1
+element elasticBeamColumn 775 442 443 47.42 34500000000 14375000000 1210.84 983 707 20775 -mass 118550 -cMass
+geomTransf PDelta 20776 0 0 1
+element elasticBeamColumn 776 474 475 47.42 34500000000 14375000000 1210.84 983 707 20776 -mass 118550 -cMass
+geomTransf PDelta 20777 0 0 1
+element elasticBeamColumn 777 443 444 47.42 34500000000 14375000000 1210.84 983 707 20777 -mass 118550 -cMass
+geomTransf PDelta 20778 0 0 1
+element elasticBeamColumn 778 475 476 47.42 34500000000 14375000000 1210.84 983 707 20778 -mass 118550 -cMass
+geomTransf PDelta 20779 0 0 1
+element elasticBeamColumn 779 444 445 47.42 34500000000 14375000000 1210.84 983 707 20779 -mass 118550 -cMass
+geomTransf PDelta 20780 0 0 1
+element elasticBeamColumn 780 476 477 47.42 34500000000 14375000000 1210.84 983 707 20780 -mass 118550 -cMass
+geomTransf PDelta 20781 0 0 1
+element elasticBeamColumn 781 445 446 47.42 34500000000 14375000000 1210.84 983 707 20781 -mass 118550 -cMass
+geomTransf PDelta 20782 0 0 1
+element elasticBeamColumn 782 477 478 47.42 34500000000 14375000000 1210.84 983 707 20782 -mass 118550 -cMass
+geomTransf PDelta 20783 0 0 1
+element elasticBeamColumn 783 446 480 108.47 34500000000 14375000000 2366.696 2025 1225 20783 -mass 271175 -cMass
+geomTransf PDelta 20784 0 0 1
+element elasticBeamColumn 784 478 497 108.47 34500000000 14375000000 2366.696 2025 1225 20784 -mass 271175 -cMass
+geomTransf PDelta 20785 0 0 1
+element elasticBeamColumn 785 480 481 125 34500000000 14375000000 2951.326 2590 1415 20785 -mass 312500 -cMass
+geomTransf PDelta 20786 0 0 1
+element elasticBeamColumn 786 497 498 125 34500000000 14375000000 2951.326 2590 1415 20786 -mass 312500 -cMass
+geomTransf PDelta 20787 0 0 1
+element elasticBeamColumn 787 513 585 39.55 34500000000 14375000000 723.8 256 677 20787 -mass 98875 -cMass
+geomTransf PDelta 20788 0 0 1
+element elasticBeamColumn 788 585 586 39.55 34500000000 14375000000 723.8 256 677 20788 -mass 98875 -cMass
+geomTransf PDelta 20789 0 0 1
+element elasticBeamColumn 789 586 482 39.55 34500000000 14375000000 723.8 256 677 20789 -mass 98875 -cMass
+geomTransf PDelta 20790 0 0 1
+element elasticBeamColumn 790 514 589 39.55 34500000000 14375000000 723.8 256 677 20790 -mass 98875 -cMass
+geomTransf PDelta 20791 0 0 1
+element elasticBeamColumn 791 589 590 39.55 34500000000 14375000000 723.8 256 677 20791 -mass 98875 -cMass
+geomTransf PDelta 20792 0 0 1
+element elasticBeamColumn 792 590 483 39.55 34500000000 14375000000 723.8 256 677 20792 -mass 98875 -cMass
+geomTransf PDelta 20793 0 0 1
+element elasticBeamColumn 793 515 593 39.55 34500000000 14375000000 723.8 256 677 20793 -mass 98875 -cMass
+geomTransf PDelta 20794 0 0 1
+element elasticBeamColumn 794 593 594 39.55 34500000000 14375000000 723.8 256 677 20794 -mass 98875 -cMass
+geomTransf PDelta 20795 0 0 1
+element elasticBeamColumn 795 594 499 39.55 34500000000 14375000000 723.8 256 677 20795 -mass 98875 -cMass
+geomTransf PDelta 20796 0 0 1
+element elasticBeamColumn 796 516 597 39.55 34500000000 14375000000 723.8 256 677 20796 -mass 98875 -cMass
+geomTransf PDelta 20797 0 0 1
+element elasticBeamColumn 797 597 598 39.55 34500000000 14375000000 723.8 256 677 20797 -mass 98875 -cMass
+geomTransf PDelta 20798 0 0 1
+element elasticBeamColumn 798 598 500 39.55 34500000000 14375000000 723.8 256 677 20798 -mass 98875 -cMass
+geomTransf PDelta 20799 0 0 1
+element elasticBeamColumn 799 482 587 41.9 34500000000 14375000000 869.1 300.5 815.5 20799 -mass 104750 -cMass
+geomTransf PDelta 20800 0 0 1
+element elasticBeamColumn 800 587 588 41.9 34500000000 14375000000 869.1 300.5 815.5 20800 -mass 104750 -cMass
+geomTransf PDelta 20801 0 0 1
+element elasticBeamColumn 801 588 484 41.9 34500000000 14375000000 869.1 300.5 815.5 20801 -mass 104750 -cMass
+geomTransf PDelta 20802 0 0 1
+element elasticBeamColumn 802 483 591 41.9 34500000000 14375000000 869.1 300.5 815.5 20802 -mass 104750 -cMass
+geomTransf PDelta 20803 0 0 1
+element elasticBeamColumn 803 591 592 41.9 34500000000 14375000000 869.1 300.5 815.5 20803 -mass 104750 -cMass
+geomTransf PDelta 20804 0 0 1
+element elasticBeamColumn 804 592 485 41.9 34500000000 14375000000 869.1 300.5 815.5 20804 -mass 104750 -cMass
+geomTransf PDelta 20805 0 0 1
+element elasticBeamColumn 805 499 595 41.9 34500000000 14375000000 869.1 300.5 815.5 20805 -mass 104750 -cMass
+geomTransf PDelta 20806 0 0 1
+element elasticBeamColumn 806 595 596 41.9 34500000000 14375000000 869.1 300.5 815.5 20806 -mass 104750 -cMass
+geomTransf PDelta 20807 0 0 1
+element elasticBeamColumn 807 596 501 41.9 34500000000 14375000000 869.1 300.5 815.5 20807 -mass 104750 -cMass
+geomTransf PDelta 20808 0 0 1
+element elasticBeamColumn 808 500 599 41.9 34500000000 14375000000 869.1 300.5 815.5 20808 -mass 104750 -cMass
+geomTransf PDelta 20809 0 0 1
+element elasticBeamColumn 809 599 600 41.9 34500000000 14375000000 869.1 300.5 815.5 20809 -mass 104750 -cMass
+geomTransf PDelta 20810 0 0 1
+element elasticBeamColumn 810 600 502 41.9 34500000000 14375000000 869.1 300.5 815.5 20810 -mass 104750 -cMass
+geomTransf PDelta 20811 0 0 1
+element elasticBeamColumn 811 484 486 50.6 34500000000 14375000000 1139.9 373.5 1077 20811 -mass 126500 -cMass
+geomTransf PDelta 20812 0 0 1
+element elasticBeamColumn 812 485 487 50.6 34500000000 14375000000 1139.9 373.5 1077 20812 -mass 126500 -cMass
+geomTransf PDelta 20813 0 0 1
+element elasticBeamColumn 813 501 503 50.6 34500000000 14375000000 1139.9 373.5 1077 20813 -mass 126500 -cMass
+geomTransf PDelta 20814 0 0 1
+element elasticBeamColumn 814 502 504 50.6 34500000000 14375000000 1139.9 373.5 1077 20814 -mass 126500 -cMass
+geomTransf PDelta 20815 1 0 0
+element elasticBeamColumn 815 486 517 50.04 34500000000 14375000000 1354.9 1205 619.5 20815 -mass 125100 -cMass
+geomTransf PDelta 20816 1 0 0
+element elasticBeamColumn 816 519 487 50.04 34500000000 14375000000 1354.9 1205 619.5 20816 -mass 125100 -cMass
+geomTransf PDelta 20817 1 0 0
+element elasticBeamColumn 817 503 520 50.04 34500000000 14375000000 1354.9 1205 619.5 20817 -mass 125100 -cMass
+geomTransf PDelta 20818 1 0 0
+element elasticBeamColumn 818 522 504 50.04 34500000000 14375000000 1354.9 1205 619.5 20818 -mass 125100 -cMass
+geomTransf PDelta 20819 1 0 0
+element elasticBeamColumn 819 518 517 48.94 34500000000 14375000000 1289 1160 562 20819 -mass 122350 -cMass
+geomTransf PDelta 20820 1 0 0
+element elasticBeamColumn 820 519 518 48.94 34500000000 14375000000 1289 1160 562 20820 -mass 122350 -cMass
+geomTransf PDelta 20821 1 0 0
+element elasticBeamColumn 821 521 520 48.94 34500000000 14375000000 1289 1160 562 20821 -mass 122350 -cMass
+geomTransf PDelta 20822 1 0 0
+element elasticBeamColumn 822 522 521 48.94 34500000000 14375000000 1289 1160 562 20822 -mass 122350 -cMass
+geomTransf PDelta 20823 0 0 1
+element elasticBeamColumn 823 486 488 57.29 34500000000 14375000000 1291.6 409.5 1225 20823 -mass 143225 -cMass
+geomTransf PDelta 20824 0 0 1
+element elasticBeamColumn 824 487 489 57.29 34500000000 14375000000 1291.6 409.5 1225 20824 -mass 143225 -cMass
+geomTransf PDelta 20825 0 0 1
+element elasticBeamColumn 825 503 505 57.29 34500000000 14375000000 1291.6 409.5 1225 20825 -mass 143225 -cMass
+geomTransf PDelta 20826 0 0 1
+element elasticBeamColumn 826 504 506 57.29 34500000000 14375000000 1291.6 409.5 1225 20826 -mass 143225 -cMass
+geomTransf PDelta 20827 0 0 1
+element elasticBeamColumn 827 488 490 57.31 34500000000 14375000000 1357 436 1285 20827 -mass 143275 -cMass
+geomTransf PDelta 20828 0 0 1
+element elasticBeamColumn 828 489 491 57.31 34500000000 14375000000 1357 436 1285 20828 -mass 143275 -cMass
+geomTransf PDelta 20829 0 0 1
+element elasticBeamColumn 829 505 507 57.31 34500000000 14375000000 1357 436 1285 20829 -mass 143275 -cMass
+geomTransf PDelta 20830 0 0 1
+element elasticBeamColumn 830 506 508 57.31 34500000000 14375000000 1357 436 1285 20830 -mass 143275 -cMass
+geomTransf PDelta 20831 0 0 1
+element elasticBeamColumn 831 490 492 78.5 34500000000 14375000000 1743 531.5 1660 20831 -mass 196250 -cMass
+geomTransf PDelta 20832 0 0 1
+element elasticBeamColumn 832 491 493 78.5 34500000000 14375000000 1743 531.5 1660 20832 -mass 196250 -cMass
+geomTransf PDelta 20833 0 0 1
+element elasticBeamColumn 833 507 509 78.5 34500000000 14375000000 1743 531.5 1660 20833 -mass 196250 -cMass
+geomTransf PDelta 20834 0 0 1
+element elasticBeamColumn 834 508 510 78.5 34500000000 14375000000 1743 531.5 1660 20834 -mass 196250 -cMass
+geomTransf PDelta 20835 0 0 1
+element elasticBeamColumn 835 492 494 109.5 34500000000 14375000000 2188.8 617 2100 20835 -mass 273750 -cMass
+geomTransf PDelta 20836 0 0 1
+element elasticBeamColumn 836 493 495 109.5 34500000000 14375000000 2188.8 617 2100 20836 -mass 273750 -cMass
+geomTransf PDelta 20837 0 0 1
+element elasticBeamColumn 837 509 511 109.5 34500000000 14375000000 2188.8 617 2100 20837 -mass 273750 -cMass
+geomTransf PDelta 20838 0 0 1
+element elasticBeamColumn 838 510 512 109.5 34500000000 14375000000 2188.8 617 2100 20838 -mass 273750 -cMass
+geomTransf PDelta 20839 0 0 1
+element elasticBeamColumn 839 523 524 40.49 34500000000 14375000000 336.1 265.2 206.4 20839 -mass 101225 -cMass
+geomTransf PDelta 20840 0 0 1
+element elasticBeamColumn 840 526 527 40.49 34500000000 14375000000 336.1 265.2 206.4 20840 -mass 101225 -cMass
+geomTransf PDelta 20841 0 0 1
+element elasticBeamColumn 841 545 546 40.49 34500000000 14375000000 336.1 265.2 206.4 20841 -mass 101225 -cMass
+geomTransf PDelta 20842 0 0 1
+element elasticBeamColumn 842 548 549 40.49 34500000000 14375000000 336.1 265.2 206.4 20842 -mass 101225 -cMass
+geomTransf PDelta 20843 0 0 1
+element elasticBeamColumn 843 524 525 14.66 34500000000 14375000000 144.3 133.5 54.8 20843 -mass 36650 -cMass
+geomTransf PDelta 20844 0 0 1
+element elasticBeamColumn 844 527 528 14.66 34500000000 14375000000 144.3 133.5 54.8 20844 -mass 36650 -cMass
+geomTransf PDelta 20845 0 0 1
+element elasticBeamColumn 845 546 547 14.66 34500000000 14375000000 144.3 133.5 54.8 20845 -mass 36650 -cMass
+geomTransf PDelta 20846 0 0 1
+element elasticBeamColumn 846 549 550 14.66 34500000000 14375000000 144.3 133.5 54.8 20846 -mass 36650 -cMass
+geomTransf PDelta 20847 0 0 1
+element elasticBeamColumn 847 529 530 14.66 34500000000 14375000000 144.3 133.5 54.8 20847 -mass 36650 -cMass
+geomTransf PDelta 20848 0 0 1
+element elasticBeamColumn 848 531 532 14.66 34500000000 14375000000 144.3 133.5 54.8 20848 -mass 36650 -cMass
+geomTransf PDelta 20849 0 0 1
+element elasticBeamColumn 849 541 542 14.66 34500000000 14375000000 144.3 133.5 54.8 20849 -mass 36650 -cMass
+geomTransf PDelta 20850 0 0 1
+element elasticBeamColumn 850 543 544 14.66 34500000000 14375000000 144.3 133.5 54.8 20850 -mass 36650 -cMass
+geomTransf PDelta 20851 0 0 1
+element elasticBeamColumn 851 533 534 16.25 34500000000 14375000000 155.9 144.5 58.55 20851 -mass 40625 -cMass
+geomTransf PDelta 20852 0 0 1
+element elasticBeamColumn 852 535 536 16.25 34500000000 14375000000 155.9 144.5 58.55 20852 -mass 40625 -cMass
+geomTransf PDelta 20853 0 0 1
+element elasticBeamColumn 853 537 538 16.25 34500000000 14375000000 155.9 144.5 58.55 20853 -mass 40625 -cMass
+geomTransf PDelta 20854 0 0 1
+element elasticBeamColumn 854 539 540 16.25 34500000000 14375000000 155.9 144.5 58.55 20854 -mass 40625 -cMass
+constraints Plain
+numberer RCM
+system BandGeneral
+timeSeries Linear 1
+pattern Plain 1 1 {
+    load 1 0 [expr -635941.091302*$g] 0 0 0 0
+    load 2 0 [expr -1589852.72826*$g] 0 0 0 0
+    load 3 0 [expr -1214827.88508*$g] 0 0 0 0
+    load 4 0 [expr -347888.330834*$g] 0 0 0 0
+    load 5 0 [expr -434860.413543*$g] 0 0 0 0
+    load 6 0 [expr -521832.496251*$g] 0 0 0 0
+    load 7 0 [expr -521832.496251*$g] 0 0 0 0
+    load 8 0 [expr -1033253.55741*$g] 0 0 0 0
+    load 9 0 [expr -1287228.84881*$g] 0 0 0 0
+    load 10 0 [expr -1029783.07905*$g] 0 0 0 0
+    load 11 0 [expr -1033253.55741*$g] 0 0 0 0
+    load 12 0 [expr -521832.496251*$g] 0 0 0 0
+    load 13 0 [expr -434860.413543*$g] 0 0 0 0
+    load 14 0 [expr -521832.496251*$g] 0 0 0 0
+    load 15 0 [expr -695776.661668*$g] 0 0 0 0
+    load 16 0 [expr -1122453.71474*$g] 0 0 0 0
+    load 17 0 [expr -1290942.30651*$g] 0 0 0 0
+    load 18 0 [expr -1380642.17604*$g] 0 0 0 0
+    load 19 0 [expr -695776.661668*$g] 0 0 0 0
+    load 20 0 [expr -521832.496251*$g] 0 0 0 0
+    load 21 0 [expr -521832.496251*$g] 0 0 0 0
+    load 22 0 [expr -695776.661668*$g] 0 0 0 0
+    load 23 0 [expr -695776.661668*$g] 0 0 0 0
+    load 24 0 [expr -695776.661668*$g] 0 0 0 0
+    load 25 0 [expr -695776.661668*$g] 0 0 0 0
+    load 26 0 [expr -695776.661668*$g] 0 0 0 0
+    load 27 0 [expr -521832.496251*$g] 0 0 0 0
+    load 28 0 [expr -521832.496251*$g] 0 0 0 0
+    load 29 0 [expr -695776.661668*$g] 0 0 0 0
+    load 30 0 [expr -695776.661668*$g] 0 0 0 0
+    load 31 0 [expr -695776.661668*$g] 0 0 0 0
+    load 32 0 [expr -695776.661668*$g] 0 0 0 0
+    load 33 0 [expr -695776.661668*$g] 0 0 0 0
+    load 34 0 [expr -521832.496251*$g] 0 0 0 0
+    load 35 0 [expr -347888.330834*$g] 0 0 0 0
+    load 36 0 [expr -347888.330834*$g] 0 0 0 0
+    load 37 0 [expr -521830.88287*$g] 0 0 0 0
+    load 38 0 [expr -695771.109425*$g] 0 0 0 0
+    load 39 0 [expr -695766.607682*$g] 0 0 0 0
+    load 40 0 [expr -695762.336197*$g] 0 0 0 0
+    load 41 0 [expr -695758.214422*$g] 0 0 0 0
+    load 42 0 [expr -521816.032417*$g] 0 0 0 0
+    load 43 0 [expr -521812.442441*$g] 0 0 0 0
+    load 44 0 [expr -695746.668047*$g] 0 0 0 0
+    load 45 0 [expr -695743.095853*$g] 0 0 0 0
+    load 46 0 [expr -695739.660316*$g] 0 0 0 0
+    load 47 0 [expr -695736.361718*$g] 0 0 0 0
+    load 48 0 [expr -695733.200795*$g] 0 0 0 0
+    load 49 0 [expr -521797.913213*$g] 0 0 0 0
+    load 50 0 [expr -521795.206112*$g] 0 0 0 0
+    load 51 0 [expr -695724.543025*$g] 0 0 0 0
+    load 52 0 [expr -695721.932009*$g] 0 0 0 0
+    load 53 0 [expr -695719.458427*$g] 0 0 0 0
+    load 54 0 [expr -695717.122259*$g] 0 0 0 0
+    load 55 0 [expr -695714.923672*$g] 0 0 0 0
+    load 56 0 [expr -521784.824752*$g] 0 0 0 0
+    load 57 0 [expr -521783.044095*$g] 0 0 0 0
+    load 58 0 [expr -695709.152361*$g] 0 0 0 0
+    load 59 0 [expr -695707.503412*$g] 0 0 0 0
+    load 60 0 [expr -695705.991875*$g] 0 0 0 0
+    load 61 0 [expr -695704.617752*$g] 0 0 0 0
+    load 62 0 [expr -695703.381042*$g] 0 0 0 0
+    load 63 0 [expr -521776.808414*$g] 0 0 0 0
+    load 64 0 [expr -521775.910641*$g] 0 0 0 0
+    load 65 0 [expr -695700.494833*$g] 0 0 0 0
+    load 66 0 [expr -695699.807766*$g] 0 0 0 0
+    load 67 0 [expr -695699.258792*$g] 0 0 0 0
+    load 68 0 [expr -695698.846578*$g] 0 0 0 0
+    load 69 0 [expr -695698.571772*$g] 0 0 0 0
+    load 70 0 [expr -521773.834354*$g] 0 0 0 0
+    load 71 0 [expr -347849.2*$g] 0 0 0 0
+    load 72 0 [expr -635941.091302*$g] 0 0 0 0
+    load 73 0 [expr -1589852.72826*$g] 0 0 0 0
+    load 74 0 [expr -1214827.88508*$g] 0 0 0 0
+    load 75 0 [expr -347888.330834*$g] 0 0 0 0
+    load 76 0 [expr -434860.413543*$g] 0 0 0 0
+    load 77 0 [expr -521832.496251*$g] 0 0 0 0
+    load 78 0 [expr -521832.496251*$g] 0 0 0 0
+    load 79 0 [expr -1033253.55741*$g] 0 0 0 0
+    load 80 0 [expr -1287228.84881*$g] 0 0 0 0
+    load 81 0 [expr -1029783.07905*$g] 0 0 0 0
+    load 82 0 [expr -1033253.55741*$g] 0 0 0 0
+    load 83 0 [expr -521832.496251*$g] 0 0 0 0
+    load 84 0 [expr -434860.413543*$g] 0 0 0 0
+    load 85 0 [expr -521832.496251*$g] 0 0 0 0
+    load 86 0 [expr -695776.661668*$g] 0 0 0 0
+    load 87 0 [expr -1122453.71474*$g] 0 0 0 0
+    load 88 0 [expr -1290942.30651*$g] 0 0 0 0
+    load 89 0 [expr -1380642.17604*$g] 0 0 0 0
+    load 90 0 [expr -695776.661668*$g] 0 0 0 0
+    load 91 0 [expr -521832.496251*$g] 0 0 0 0
+    load 92 0 [expr -521832.496251*$g] 0 0 0 0
+    load 93 0 [expr -695776.661668*$g] 0 0 0 0
+    load 94 0 [expr -695776.661668*$g] 0 0 0 0
+    load 95 0 [expr -695776.661668*$g] 0 0 0 0
+    load 96 0 [expr -695776.661668*$g] 0 0 0 0
+    load 97 0 [expr -695776.661668*$g] 0 0 0 0
+    load 98 0 [expr -521832.496251*$g] 0 0 0 0
+    load 99 0 [expr -521832.496251*$g] 0 0 0 0
+    load 100 0 [expr -695776.661668*$g] 0 0 0 0
+    load 101 0 [expr -695776.661668*$g] 0 0 0 0
+    load 102 0 [expr -695776.661668*$g] 0 0 0 0
+    load 103 0 [expr -695776.661668*$g] 0 0 0 0
+    load 104 0 [expr -695776.661668*$g] 0 0 0 0
+    load 105 0 [expr -521832.496251*$g] 0 0 0 0
+    load 106 0 [expr -347888.330834*$g] 0 0 0 0
+    load 107 0 [expr -347888.330834*$g] 0 0 0 0
+    load 108 0 [expr -521830.88287*$g] 0 0 0 0
+    load 109 0 [expr -695771.109425*$g] 0 0 0 0
+    load 110 0 [expr -695766.607682*$g] 0 0 0 0
+    load 111 0 [expr -695762.336197*$g] 0 0 0 0
+    load 112 0 [expr -695758.214422*$g] 0 0 0 0
+    load 113 0 [expr -521816.032417*$g] 0 0 0 0
+    load 114 0 [expr -521812.442441*$g] 0 0 0 0
+    load 115 0 [expr -695746.668047*$g] 0 0 0 0
+    load 116 0 [expr -695743.095853*$g] 0 0 0 0
+    load 117 0 [expr -695739.660316*$g] 0 0 0 0
+    load 118 0 [expr -695736.361718*$g] 0 0 0 0
+    load 119 0 [expr -695733.200795*$g] 0 0 0 0
+    load 120 0 [expr -521797.913213*$g] 0 0 0 0
+    load 121 0 [expr -521795.206112*$g] 0 0 0 0
+    load 122 0 [expr -695724.543025*$g] 0 0 0 0
+    load 123 0 [expr -695721.932009*$g] 0 0 0 0
+    load 124 0 [expr -695719.458427*$g] 0 0 0 0
+    load 125 0 [expr -695717.122259*$g] 0 0 0 0
+    load 126 0 [expr -695714.923672*$g] 0 0 0 0
+    load 127 0 [expr -521784.824752*$g] 0 0 0 0
+    load 128 0 [expr -521783.044095*$g] 0 0 0 0
+    load 129 0 [expr -695709.152361*$g] 0 0 0 0
+    load 130 0 [expr -695707.503412*$g] 0 0 0 0
+    load 131 0 [expr -695705.991875*$g] 0 0 0 0
+    load 132 0 [expr -695704.617752*$g] 0 0 0 0
+    load 133 0 [expr -695703.381042*$g] 0 0 0 0
+    load 134 0 [expr -521776.808414*$g] 0 0 0 0
+    load 135 0 [expr -521775.910641*$g] 0 0 0 0
+    load 136 0 [expr -695700.494833*$g] 0 0 0 0
+    load 137 0 [expr -695699.807766*$g] 0 0 0 0
+    load 138 0 [expr -695699.258792*$g] 0 0 0 0
+    load 139 0 [expr -695698.846578*$g] 0 0 0 0
+    load 140 0 [expr -695698.571772*$g] 0 0 0 0
+    load 141 0 [expr -521773.834354*$g] 0 0 0 0
+    load 142 0 [expr -26160.623615*$g] 0 0 0 0
+    load 143 0 [expr -25562.1845979*$g] 0 0 0 0
+    load 144 0 [expr -24963.5090496*$g] 0 0 0 0
+    load 145 0 [expr -24365.0103211*$g] 0 0 0 0
+    load 146 0 [expr -23766.4682513*$g] 0 0 0 0
+    load 147 0 [expr -23167.8792228*$g] 0 0 0 0
+    load 148 0 [expr -22569.2390945*$g] 0 0 0 0
+    load 149 0 [expr -21970.5343055*$g] 0 0 0 0
+    load 150 0 [expr -21428.9525206*$g] 0 0 0 0
+    load 151 0 [expr -20888.5440616*$g] 0 0 0 0
+    load 152 0 [expr -20348.9309239*$g] 0 0 0 0
+    load 153 0 [expr -19807.2031147*$g] 0 0 0 0
+    load 154 0 [expr -19107.6804334*$g] 0 0 0 0
+    load 155 0 [expr -19363.4012826*$g] 0 0 0 0
+    load 156 0 [expr -17723.4208403*$g] 0 0 0 0
+    load 157 0 [expr -17039.7132231*$g] 0 0 0 0
+    load 158 0 [expr -16359.2665728*$g] 0 0 0 0
+    load 159 0 [expr -15689.5190454*$g] 0 0 0 0
+    load 160 0 [expr -13246.7162216*$g] 0 0 0 0
+    load 161 0 [expr -12633.0165376*$g] 0 0 0 0
+    load 162 0 [expr -10692.5837654*$g] 0 0 0 0
+    load 163 0 [expr -10195.8409491*$g] 0 0 0 0
+    load 164 0 [expr -8485.095738*$g] 0 0 0 0
+    load 165 0 [expr -9228.93195632*$g] 0 0 0 0
+    load 166 0 [expr -8764.36488326*$g] 0 0 0 0
+    load 167 0 [expr -7264.41220415*$g] 0 0 0 0
+    load 168 0 [expr -6365.81222258*$g] 0 0 0 0
+    load 169 0 [expr -5586.40981882*$g] 0 0 0 0
+    load 170 0 [expr -5290.18580397*$g] 0 0 0 0
+    load 171 0 [expr -4620.39561319*$g] 0 0 0 0
+    load 172 0 [expr -4377.07682019*$g] 0 0 0 0
+    load 173 0 [expr -4319.42645198*$g] 0 0 0 0
+    load 174 0 [expr -4227.01912603*$g] 0 0 0 0
+    load 175 0 [expr -4875.24987361*$g] 0 0 0 0
+    load 176 0 [expr -4867.61159713*$g] 0 0 0 0
+    load 177 0 [expr -4208.74242416*$g] 0 0 0 0
+    load 178 0 [expr -4289.40311319*$g] 0 0 0 0
+    load 179 0 [expr -4339.98748053*$g] 0 0 0 0
+    load 180 0 [expr -4573.57629095*$g] 0 0 0 0
+    load 181 0 [expr -5231.29563565*$g] 0 0 0 0
+    load 182 0 [expr -5518.38178198*$g] 0 0 0 0
+    load 183 0 [expr -5827.43352742*$g] 0 0 0 0
+    load 184 0 [expr -6632.02719695*$g] 0 0 0 0
+    load 185 0 [expr -8090.71607504*$g] 0 0 0 0
+    load 186 0 [expr -8595.14584594*$g] 0 0 0 0
+    load 187 0 [expr -7807.01317946*$g] 0 0 0 0
+    load 188 0 [expr -9651.06689919*$g] 0 0 0 0
+    load 189 0 [expr -10079.3453454*$g] 0 0 0 0
+    load 190 0 [expr -11949.1885264*$g] 0 0 0 0
+    load 191 0 [expr -12614.1197069*$g] 0 0 0 0
+    load 192 0 [expr -15154.7486792*$g] 0 0 0 0
+    load 193 0 [expr -14262.4029643*$g] 0 0 0 0
+    load 194 0 [expr -14857.7858386*$g] 0 0 0 0
+    load 195 0 [expr -15458.4679656*$g] 0 0 0 0
+    load 196 0 [expr -18218.9283626*$g] 0 0 0 0
+    load 197 0 [expr -16677.0084137*$g] 0 0 0 0
+    load 198 0 [expr -19609.0992008*$g] 0 0 0 0
+    load 199 0 [expr -20308.2680082*$g] 0 0 0 0
+    load 200 0 [expr -21008.7698197*$g] 0 0 0 0
+    load 201 0 [expr -21364.6330294*$g] 0 0 0 0
+    load 202 0 [expr -21894.740549*$g] 0 0 0 0
+    load 203 0 [expr -22437.2115219*$g] 0 0 0 0
+    load 204 0 [expr -23124.77513*$g] 0 0 0 0
+    load 205 0 [expr -23734.0224413*$g] 0 0 0 0
+    load 206 0 [expr -24337.215103*$g] 0 0 0 0
+    load 207 0 [expr -24831.7566344*$g] 0 0 0 0
+    load 208 0 [expr -25495.7820641*$g] 0 0 0 0
+    load 209 0 [expr -26099.1697595*$g] 0 0 0 0
+    load 210 0 [expr -26160.623615*$g] 0 0 0 0
+    load 211 0 [expr -25562.1845979*$g] 0 0 0 0
+    load 212 0 [expr -24963.5090496*$g] 0 0 0 0
+    load 213 0 [expr -24365.0103211*$g] 0 0 0 0
+    load 214 0 [expr -23766.4682513*$g] 0 0 0 0
+    load 215 0 [expr -23167.8792228*$g] 0 0 0 0
+    load 216 0 [expr -22569.2390945*$g] 0 0 0 0
+    load 217 0 [expr -21970.5343055*$g] 0 0 0 0
+    load 218 0 [expr -21428.9525206*$g] 0 0 0 0
+    load 219 0 [expr -20888.5440616*$g] 0 0 0 0
+    load 220 0 [expr -20348.9309239*$g] 0 0 0 0
+    load 221 0 [expr -19807.2031147*$g] 0 0 0 0
+    load 222 0 [expr -19107.6804334*$g] 0 0 0 0
+    load 223 0 [expr -19363.4012826*$g] 0 0 0 0
+    load 224 0 [expr -17723.4208403*$g] 0 0 0 0
+    load 225 0 [expr -17039.7132231*$g] 0 0 0 0
+    load 226 0 [expr -16359.2665728*$g] 0 0 0 0
+    load 227 0 [expr -15689.5190454*$g] 0 0 0 0
+    load 228 0 [expr -13246.7162216*$g] 0 0 0 0
+    load 229 0 [expr -12633.0165376*$g] 0 0 0 0
+    load 230 0 [expr -10692.5837654*$g] 0 0 0 0
+    load 231 0 [expr -10195.8409491*$g] 0 0 0 0
+    load 232 0 [expr -8485.095738*$g] 0 0 0 0
+    load 233 0 [expr -9228.93195632*$g] 0 0 0 0
+    load 234 0 [expr -8764.36488326*$g] 0 0 0 0
+    load 235 0 [expr -7264.41220415*$g] 0 0 0 0
+    load 236 0 [expr -6365.81222258*$g] 0 0 0 0
+    load 237 0 [expr -5586.40981882*$g] 0 0 0 0
+    load 238 0 [expr -5290.18580397*$g] 0 0 0 0
+    load 239 0 [expr -4620.39561319*$g] 0 0 0 0
+    load 240 0 [expr -4377.07682019*$g] 0 0 0 0
+    load 241 0 [expr -4319.42645198*$g] 0 0 0 0
+    load 242 0 [expr -4227.01912603*$g] 0 0 0 0
+    load 243 0 [expr -4875.24987361*$g] 0 0 0 0
+    load 244 0 [expr -4867.61159713*$g] 0 0 0 0
+    load 245 0 [expr -4208.74242416*$g] 0 0 0 0
+    load 246 0 [expr -4289.40311319*$g] 0 0 0 0
+    load 247 0 [expr -4339.98748053*$g] 0 0 0 0
+    load 248 0 [expr -4573.57629095*$g] 0 0 0 0
+    load 249 0 [expr -5231.29563565*$g] 0 0 0 0
+    load 250 0 [expr -5518.38178198*$g] 0 0 0 0
+    load 251 0 [expr -5827.43352742*$g] 0 0 0 0
+    load 252 0 [expr -6632.02719695*$g] 0 0 0 0
+    load 253 0 [expr -8090.71607504*$g] 0 0 0 0
+    load 254 0 [expr -8595.14584594*$g] 0 0 0 0
+    load 255 0 [expr -7807.01317946*$g] 0 0 0 0
+    load 256 0 [expr -9651.06689919*$g] 0 0 0 0
+    load 257 0 [expr -10079.3453454*$g] 0 0 0 0
+    load 258 0 [expr -11949.1885264*$g] 0 0 0 0
+    load 259 0 [expr -12614.1197069*$g] 0 0 0 0
+    load 260 0 [expr -15154.7486792*$g] 0 0 0 0
+    load 261 0 [expr -14262.4029643*$g] 0 0 0 0
+    load 262 0 [expr -14857.7858386*$g] 0 0 0 0
+    load 263 0 [expr -15458.4679656*$g] 0 0 0 0
+    load 264 0 [expr -18218.9283626*$g] 0 0 0 0
+    load 265 0 [expr -16677.0084137*$g] 0 0 0 0
+    load 266 0 [expr -19609.0992008*$g] 0 0 0 0
+    load 267 0 [expr -20308.2680082*$g] 0 0 0 0
+    load 268 0 [expr -21008.7698197*$g] 0 0 0 0
+    load 269 0 [expr -21364.6330294*$g] 0 0 0 0
+    load 270 0 [expr -21894.740549*$g] 0 0 0 0
+    load 271 0 [expr -22437.2115219*$g] 0 0 0 0
+    load 272 0 [expr -23124.77513*$g] 0 0 0 0
+    load 273 0 [expr -23734.0224413*$g] 0 0 0 0
+    load 274 0 [expr -24337.215103*$g] 0 0 0 0
+    load 275 0 [expr -24831.7566344*$g] 0 0 0 0
+    load 276 0 [expr -25495.7820641*$g] 0 0 0 0
+    load 277 0 [expr -26099.1697595*$g] 0 0 0 0
+    load 278 0 [expr -26160.623615*$g] 0 0 0 0
+    load 279 0 [expr -25562.1845979*$g] 0 0 0 0
+    load 280 0 [expr -24963.5090496*$g] 0 0 0 0
+    load 281 0 [expr -24365.0103211*$g] 0 0 0 0
+    load 282 0 [expr -23766.4682513*$g] 0 0 0 0
+    load 283 0 [expr -23167.8792228*$g] 0 0 0 0
+    load 284 0 [expr -22569.2390945*$g] 0 0 0 0
+    load 285 0 [expr -21970.5343055*$g] 0 0 0 0
+    load 286 0 [expr -21428.9525206*$g] 0 0 0 0
+    load 287 0 [expr -20888.5440616*$g] 0 0 0 0
+    load 288 0 [expr -20348.9309239*$g] 0 0 0 0
+    load 289 0 [expr -19807.2031147*$g] 0 0 0 0
+    load 290 0 [expr -19107.6804334*$g] 0 0 0 0
+    load 291 0 [expr -19363.4012826*$g] 0 0 0 0
+    load 292 0 [expr -17723.4208403*$g] 0 0 0 0
+    load 293 0 [expr -17039.7132231*$g] 0 0 0 0
+    load 294 0 [expr -16359.2665728*$g] 0 0 0 0
+    load 295 0 [expr -15689.5190454*$g] 0 0 0 0
+    load 296 0 [expr -13246.7162216*$g] 0 0 0 0
+    load 297 0 [expr -12633.0165376*$g] 0 0 0 0
+    load 298 0 [expr -10692.5837654*$g] 0 0 0 0
+    load 299 0 [expr -10195.8409491*$g] 0 0 0 0
+    load 300 0 [expr -8485.095738*$g] 0 0 0 0
+    load 301 0 [expr -9228.93195632*$g] 0 0 0 0
+    load 302 0 [expr -8764.36488326*$g] 0 0 0 0
+    load 303 0 [expr -7264.41220415*$g] 0 0 0 0
+    load 304 0 [expr -6365.81222258*$g] 0 0 0 0
+    load 305 0 [expr -5586.40981882*$g] 0 0 0 0
+    load 306 0 [expr -5290.18580397*$g] 0 0 0 0
+    load 307 0 [expr -4620.39561319*$g] 0 0 0 0
+    load 308 0 [expr -4377.07682019*$g] 0 0 0 0
+    load 309 0 [expr -4319.42645198*$g] 0 0 0 0
+    load 310 0 [expr -4227.01912603*$g] 0 0 0 0
+    load 311 0 [expr -4875.24987361*$g] 0 0 0 0
+    load 312 0 [expr -4867.61159713*$g] 0 0 0 0
+    load 313 0 [expr -4208.74242416*$g] 0 0 0 0
+    load 314 0 [expr -4289.40311319*$g] 0 0 0 0
+    load 315 0 [expr -4339.98748053*$g] 0 0 0 0
+    load 316 0 [expr -4573.57629095*$g] 0 0 0 0
+    load 317 0 [expr -5231.29563565*$g] 0 0 0 0
+    load 318 0 [expr -5518.38178198*$g] 0 0 0 0
+    load 319 0 [expr -5827.43352742*$g] 0 0 0 0
+    load 320 0 [expr -6632.02719695*$g] 0 0 0 0
+    load 321 0 [expr -8090.71607504*$g] 0 0 0 0
+    load 322 0 [expr -8595.14584594*$g] 0 0 0 0
+    load 323 0 [expr -7807.01317946*$g] 0 0 0 0
+    load 324 0 [expr -9651.06689919*$g] 0 0 0 0
+    load 325 0 [expr -10079.3453454*$g] 0 0 0 0
+    load 326 0 [expr -11949.1885264*$g] 0 0 0 0
+    load 327 0 [expr -12614.1197069*$g] 0 0 0 0
+    load 328 0 [expr -15154.7486792*$g] 0 0 0 0
+    load 329 0 [expr -14262.4029643*$g] 0 0 0 0
+    load 330 0 [expr -14857.7858386*$g] 0 0 0 0
+    load 331 0 [expr -15458.4679656*$g] 0 0 0 0
+    load 332 0 [expr -18218.9283626*$g] 0 0 0 0
+    load 333 0 [expr -16677.0084137*$g] 0 0 0 0
+    load 334 0 [expr -19609.0992008*$g] 0 0 0 0
+    load 335 0 [expr -20308.2680082*$g] 0 0 0 0
+    load 336 0 [expr -21008.7698197*$g] 0 0 0 0
+    load 337 0 [expr -21364.6330294*$g] 0 0 0 0
+    load 338 0 [expr -21894.740549*$g] 0 0 0 0
+    load 339 0 [expr -22437.2115219*$g] 0 0 0 0
+    load 340 0 [expr -23124.77513*$g] 0 0 0 0
+    load 341 0 [expr -23734.0224413*$g] 0 0 0 0
+    load 342 0 [expr -24337.215103*$g] 0 0 0 0
+    load 343 0 [expr -24831.7566344*$g] 0 0 0 0
+    load 344 0 [expr -25495.7820641*$g] 0 0 0 0
+    load 345 0 [expr -26099.1697595*$g] 0 0 0 0
+    load 346 0 [expr -26160.623615*$g] 0 0 0 0
+    load 347 0 [expr -25562.1845979*$g] 0 0 0 0
+    load 348 0 [expr -24963.5090496*$g] 0 0 0 0
+    load 349 0 [expr -24365.0103211*$g] 0 0 0 0
+    load 350 0 [expr -23766.4682513*$g] 0 0 0 0
+    load 351 0 [expr -23167.8792228*$g] 0 0 0 0
+    load 352 0 [expr -22569.2390945*$g] 0 0 0 0
+    load 353 0 [expr -21970.5343055*$g] 0 0 0 0
+    load 354 0 [expr -21428.9525206*$g] 0 0 0 0
+    load 355 0 [expr -20888.5440616*$g] 0 0 0 0
+    load 356 0 [expr -20348.9309239*$g] 0 0 0 0
+    load 357 0 [expr -19807.2031147*$g] 0 0 0 0
+    load 358 0 [expr -19107.6804334*$g] 0 0 0 0
+    load 359 0 [expr -19363.4012826*$g] 0 0 0 0
+    load 360 0 [expr -17723.4208403*$g] 0 0 0 0
+    load 361 0 [expr -17039.7132231*$g] 0 0 0 0
+    load 362 0 [expr -16359.2665728*$g] 0 0 0 0
+    load 363 0 [expr -15689.5190454*$g] 0 0 0 0
+    load 364 0 [expr -13246.7162216*$g] 0 0 0 0
+    load 365 0 [expr -12633.0165376*$g] 0 0 0 0
+    load 366 0 [expr -10692.5837654*$g] 0 0 0 0
+    load 367 0 [expr -10195.8409491*$g] 0 0 0 0
+    load 368 0 [expr -8485.095738*$g] 0 0 0 0
+    load 369 0 [expr -9228.93195632*$g] 0 0 0 0
+    load 370 0 [expr -8764.36488326*$g] 0 0 0 0
+    load 371 0 [expr -7264.41220415*$g] 0 0 0 0
+    load 372 0 [expr -6365.81222258*$g] 0 0 0 0
+    load 373 0 [expr -5586.40981882*$g] 0 0 0 0
+    load 374 0 [expr -5290.18580397*$g] 0 0 0 0
+    load 375 0 [expr -4620.39561319*$g] 0 0 0 0
+    load 376 0 [expr -4377.07682019*$g] 0 0 0 0
+    load 377 0 [expr -4319.42645198*$g] 0 0 0 0
+    load 378 0 [expr -4227.01912603*$g] 0 0 0 0
+    load 379 0 [expr -4875.24987361*$g] 0 0 0 0
+    load 380 0 [expr -4867.61159713*$g] 0 0 0 0
+    load 381 0 [expr -4208.74242416*$g] 0 0 0 0
+    load 382 0 [expr -4289.40311319*$g] 0 0 0 0
+    load 383 0 [expr -4339.98748053*$g] 0 0 0 0
+    load 384 0 [expr -4573.57629095*$g] 0 0 0 0
+    load 385 0 [expr -5231.29563565*$g] 0 0 0 0
+    load 386 0 [expr -5518.38178198*$g] 0 0 0 0
+    load 387 0 [expr -5827.43352742*$g] 0 0 0 0
+    load 388 0 [expr -6632.02719695*$g] 0 0 0 0
+    load 389 0 [expr -8090.71607504*$g] 0 0 0 0
+    load 390 0 [expr -8595.14584594*$g] 0 0 0 0
+    load 391 0 [expr -7807.01317946*$g] 0 0 0 0
+    load 392 0 [expr -9651.06689919*$g] 0 0 0 0
+    load 393 0 [expr -10079.3453454*$g] 0 0 0 0
+    load 394 0 [expr -11949.1885264*$g] 0 0 0 0
+    load 395 0 [expr -12614.1197069*$g] 0 0 0 0
+    load 396 0 [expr -15154.7486792*$g] 0 0 0 0
+    load 397 0 [expr -14262.4029643*$g] 0 0 0 0
+    load 398 0 [expr -14857.7858386*$g] 0 0 0 0
+    load 399 0 [expr -15458.4679656*$g] 0 0 0 0
+    load 400 0 [expr -18218.9283626*$g] 0 0 0 0
+    load 401 0 [expr -16677.0084137*$g] 0 0 0 0
+    load 402 0 [expr -19609.0992008*$g] 0 0 0 0
+    load 403 0 [expr -20308.2680082*$g] 0 0 0 0
+    load 404 0 [expr -21008.7698197*$g] 0 0 0 0
+    load 405 0 [expr -21364.6330294*$g] 0 0 0 0
+    load 406 0 [expr -21894.740549*$g] 0 0 0 0
+    load 407 0 [expr -22437.2115219*$g] 0 0 0 0
+    load 408 0 [expr -23124.77513*$g] 0 0 0 0
+    load 409 0 [expr -23734.0224413*$g] 0 0 0 0
+    load 410 0 [expr -24337.215103*$g] 0 0 0 0
+    load 411 0 [expr -24831.7566344*$g] 0 0 0 0
+    load 412 0 [expr -25495.7820641*$g] 0 0 0 0
+    load 413 0 [expr -26099.1697595*$g] 0 0 0 0
+    load 415 0 [expr -596562.477374*$g] 0 0 0 0
+    load 416 0 [expr -294878.324574*$g] 0 0 0 0
+    load 417 0 [expr -292495.028868*$g] 0 0 0 0
+    load 418 0 [expr -290479.475848*$g] 0 0 0 0
+    load 419 0 [expr -288265.481385*$g] 0 0 0 0
+    load 420 0 [expr -286039.283706*$g] 0 0 0 0
+    load 421 0 [expr -283675.298733*$g] 0 0 0 0
+    load 422 0 [expr -281625.054084*$g] 0 0 0 0
+    load 423 0 [expr -279732.72985*$g] 0 0 0 0
+    load 424 0 [expr -278214.925262*$g] 0 0 0 0
+    load 425 0 [expr -276037.855364*$g] 0 0 0 0
+    load 426 0 [expr -275043.440881*$g] 0 0 0 0
+    load 427 0 [expr -269490.225819*$g] 0 0 0 0
+    load 428 0 [expr -273909.723665*$g] 0 0 0 0
+    load 429 0 [expr -266065.690737*$g] 0 0 0 0
+    load 430 0 [expr -264614.813748*$g] 0 0 0 0
+    load 431 0 [expr -263370.532199*$g] 0 0 0 0
+    load 432 0 [expr -265374.160449*$g] 0 0 0 0
+    load 433 0 [expr -257302.046857*$g] 0 0 0 0
+    load 434 0 [expr -257018.485128*$g] 0 0 0 0
+    load 435 0 [expr -278862.689472*$g] 0 0 0 0
+    load 436 0 [expr -307735.365696*$g] 0 0 0 0
+    load 437 0 [expr -306316.167835*$g] 0 0 0 0
+    load 438 0 [expr -316789.480605*$g] 0 0 0 0
+    load 439 0 [expr -324750.411917*$g] 0 0 0 0
+    load 440 0 [expr -355583.628802*$g] 0 0 0 0
+    load 441 0 [expr -351347.3915*$g] 0 0 0 0
+    load 442 0 [expr -353616.108202*$g] 0 0 0 0
+    load 443 0 [expr -422038.337879*$g] 0 0 0 0
+    load 444 0 [expr -510429.718808*$g] 0 0 0 0
+    load 445 0 [expr -385235.503601*$g] 0 0 0 0
+    load 446 0 [expr -882834.542672*$g] 0 0 0 0
+    load 447 0 [expr -596562.477374*$g] 0 0 0 0
+    load 448 0 [expr -294878.324574*$g] 0 0 0 0
+    load 449 0 [expr -292495.028868*$g] 0 0 0 0
+    load 450 0 [expr -290479.475848*$g] 0 0 0 0
+    load 451 0 [expr -288265.481385*$g] 0 0 0 0
+    load 452 0 [expr -286039.283706*$g] 0 0 0 0
+    load 453 0 [expr -283675.298733*$g] 0 0 0 0
+    load 454 0 [expr -281625.054084*$g] 0 0 0 0
+    load 455 0 [expr -279732.72985*$g] 0 0 0 0
+    load 456 0 [expr -278214.925262*$g] 0 0 0 0
+    load 457 0 [expr -276037.855364*$g] 0 0 0 0
+    load 458 0 [expr -275043.440881*$g] 0 0 0 0
+    load 459 0 [expr -269490.225819*$g] 0 0 0 0
+    load 460 0 [expr -273909.723665*$g] 0 0 0 0
+    load 461 0 [expr -266065.690737*$g] 0 0 0 0
+    load 462 0 [expr -264614.813748*$g] 0 0 0 0
+    load 463 0 [expr -263370.532199*$g] 0 0 0 0
+    load 464 0 [expr -265374.160449*$g] 0 0 0 0
+    load 465 0 [expr -257302.046857*$g] 0 0 0 0
+    load 466 0 [expr -257018.485128*$g] 0 0 0 0
+    load 467 0 [expr -278862.689472*$g] 0 0 0 0
+    load 468 0 [expr -307735.365696*$g] 0 0 0 0
+    load 469 0 [expr -306316.167835*$g] 0 0 0 0
+    load 470 0 [expr -316789.480605*$g] 0 0 0 0
+    load 471 0 [expr -324750.411917*$g] 0 0 0 0
+    load 472 0 [expr -355583.628802*$g] 0 0 0 0
+    load 473 0 [expr -351347.3915*$g] 0 0 0 0
+    load 474 0 [expr -353616.108202*$g] 0 0 0 0
+    load 475 0 [expr -422038.337879*$g] 0 0 0 0
+    load 476 0 [expr -510429.718808*$g] 0 0 0 0
+    load 477 0 [expr -385235.503601*$g] 0 0 0 0
+    load 478 0 [expr -882834.542672*$g] 0 0 0 0
+    load 479 0 [expr -395694.853125*$g] 0 0 0 0
+    load 480 0 [expr -1616063.2125*$g] 0 0 0 0
+    load 481 0 [expr -879687.5*$g] 0 0 0 0
+    load 482 0 [expr -1522218.44717*$g] 0 0 0 0
+    load 483 0 [expr -1522218.44717*$g] 0 0 0 0
+    load 484 0 [expr -1941362.43538*$g] 0 0 0 0
+    load 485 0 [expr -1941362.43538*$g] 0 0 0 0
+    load 486 0 [expr -1808152.0385*$g] 0 0 0 0
+    load 487 0 [expr -1808152.0385*$g] 0 0 0 0
+    load 488 0 [expr -2452966.81684*$g] 0 0 0 0
+    load 489 0 [expr -2452966.81684*$g] 0 0 0 0
+    load 490 0 [expr -3810226.64807*$g] 0 0 0 0
+    load 491 0 [expr -3810226.64807*$g] 0 0 0 0
+    load 492 0 [expr -3396512.2491*$g] 0 0 0 0
+    load 493 0 [expr -3396512.2491*$g] 0 0 0 0
+    load 494 0 [expr -1378569.77517*$g] 0 0 0 0
+    load 495 0 [expr -1378569.77517*$g] 0 0 0 0
+    load 496 0 [expr -395694.853125*$g] 0 0 0 0
+    load 497 0 [expr -1616063.2125*$g] 0 0 0 0
+    load 498 0 [expr -879687.5*$g] 0 0 0 0
+    load 499 0 [expr -1522218.44717*$g] 0 0 0 0
+    load 500 0 [expr -1522218.44717*$g] 0 0 0 0
+    load 501 0 [expr -1941362.43538*$g] 0 0 0 0
+    load 502 0 [expr -1941362.43538*$g] 0 0 0 0
+    load 503 0 [expr -1808152.0385*$g] 0 0 0 0
+    load 504 0 [expr -1808152.0385*$g] 0 0 0 0
+    load 505 0 [expr -2452966.81684*$g] 0 0 0 0
+    load 506 0 [expr -2452966.81684*$g] 0 0 0 0
+    load 507 0 [expr -3810226.64807*$g] 0 0 0 0
+    load 508 0 [expr -3810226.64807*$g] 0 0 0 0
+    load 509 0 [expr -3396512.2491*$g] 0 0 0 0
+    load 510 0 [expr -3396512.2491*$g] 0 0 0 0
+    load 511 0 [expr -1378569.77517*$g] 0 0 0 0
+    load 512 0 [expr -1378569.77517*$g] 0 0 0 0
+    load 513 0 [expr -943574.849867*$g] 0 0 0 0
+    load 514 0 [expr -943574.849867*$g] 0 0 0 0
+    load 515 0 [expr -943574.849867*$g] 0 0 0 0
+    load 516 0 [expr -943574.849867*$g] 0 0 0 0
+    load 517 0 [expr -1394725*$g] 0 0 0 0
+    load 518 0 [expr -1125620*$g] 0 0 0 0
+    load 519 0 [expr -1394725*$g] 0 0 0 0
+    load 520 0 [expr -1394725*$g] 0 0 0 0
+    load 521 0 [expr -1125620*$g] 0 0 0 0
+    load 522 0 [expr -1394725*$g] 0 0 0 0
+    load 523 0 [expr -177143.75*$g] 0 0 0 0
+    load 524 0 [expr -1153866.25*$g] 0 0 0 0
+    load 525 0 [expr -976722.5*$g] 0 0 0 0
+    load 526 0 [expr -177143.75*$g] 0 0 0 0
+    load 527 0 [expr -1153866.25*$g] 0 0 0 0
+    load 528 0 [expr -976722.5*$g] 0 0 0 0
+    load 529 0 [expr -1072379*$g] 0 0 0 0
+    load 530 0 [expr -1072379*$g] 0 0 0 0
+    load 531 0 [expr -1072379*$g] 0 0 0 0
+    load 532 0 [expr -1072379*$g] 0 0 0 0
+    load 533 0 [expr -1217734.375*$g] 0 0 0 0
+    load 534 0 [expr -1217734.375*$g] 0 0 0 0
+    load 535 0 [expr -1217734.375*$g] 0 0 0 0
+    load 536 0 [expr -1217734.375*$g] 0 0 0 0
+    load 537 0 [expr -1217734.375*$g] 0 0 0 0
+    load 538 0 [expr -1217734.375*$g] 0 0 0 0
+    load 539 0 [expr -1217734.375*$g] 0 0 0 0
+    load 540 0 [expr -1217734.375*$g] 0 0 0 0
+    load 541 0 [expr -1072379*$g] 0 0 0 0
+    load 542 0 [expr -1072379*$g] 0 0 0 0
+    load 543 0 [expr -1072379*$g] 0 0 0 0
+    load 544 0 [expr -1072379*$g] 0 0 0 0
+    load 545 0 [expr -177143.75*$g] 0 0 0 0
+    load 546 0 [expr -1153866.25*$g] 0 0 0 0
+    load 547 0 [expr -976722.5*$g] 0 0 0 0
+    load 548 0 [expr -177143.75*$g] 0 0 0 0
+    load 549 0 [expr -1153866.25*$g] 0 0 0 0
+    load 550 0 [expr -976722.5*$g] 0 0 0 0
+    load 551 0 [expr -772337.309288*$g] 0 0 0 0
+    load 552 0 [expr -772337.309288*$g] 0 0 0 0
+    load 553 0 [expr -1032753.84521*$g] 0 0 0 0
+    load 554 0 [expr -1032753.84521*$g] 0 0 0 0
+    load 555 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 556 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 557 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 558 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 559 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 560 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 561 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 562 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 563 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 564 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 565 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 566 0 [expr -9.2e-10*$g] 0 0 0 0
+    load 567 0 [expr -260916.248126*$g] 0 0 0 0
+    load 568 0 [expr -347888.330834*$g] 0 0 0 0
+    load 569 0 [expr -347888.330834*$g] 0 0 0 0
+    load 570 0 [expr -347888.330834*$g] 0 0 0 0
+    load 571 0 [expr -347888.330834*$g] 0 0 0 0
+    load 572 0 [expr -347876.136682*$g] 0 0 0 0
+    load 573 0 [expr -347864.350489*$g] 0 0 0 0
+    load 574 0 [expr -347855.933888*$g] 0 0 0 0
+    load 575 0 [expr -347850.883836*$g] 0 0 0 0
+    load 576 0 [expr -260916.248126*$g] 0 0 0 0
+    load 577 0 [expr -347888.330834*$g] 0 0 0 0
+    load 578 0 [expr -347888.330834*$g] 0 0 0 0
+    load 579 0 [expr -347888.330834*$g] 0 0 0 0
+    load 580 0 [expr -347888.330834*$g] 0 0 0 0
+    load 581 0 [expr -347876.136682*$g] 0 0 0 0
+    load 582 0 [expr -347864.350489*$g] 0 0 0 0
+    load 583 0 [expr -347855.933888*$g] 0 0 0 0
+    load 584 0 [expr -347850.883836*$g] 0 0 0 0
+    load 585 0 [expr -2438229.59202*$g] 0 0 0 0
+    load 586 0 [expr -2525965.77881*$g] 0 0 0 0
+    load 587 0 [expr -2074495.90528*$g] 0 0 0 0
+    load 588 0 [expr -3209396.53435*$g] 0 0 0 0
+    load 589 0 [expr -2438229.59202*$g] 0 0 0 0
+    load 590 0 [expr -2525965.77881*$g] 0 0 0 0
+    load 591 0 [expr -2074495.90528*$g] 0 0 0 0
+    load 592 0 [expr -3209396.53435*$g] 0 0 0 0
+    load 593 0 [expr -2438229.59202*$g] 0 0 0 0
+    load 594 0 [expr -2525965.77881*$g] 0 0 0 0
+    load 595 0 [expr -2074495.90528*$g] 0 0 0 0
+    load 596 0 [expr -3209396.53435*$g] 0 0 0 0
+    load 597 0 [expr -2438229.59202*$g] 0 0 0 0
+    load 598 0 [expr -2525965.77881*$g] 0 0 0 0
+    load 599 0 [expr -2074495.90528*$g] 0 0 0 0
+    load 600 0 [expr -3209396.53435*$g] 0 0 0 0
+}
+test NormDispIncr 1.0e-7 50
+algorithm Newton
+integrator LoadControl 0.1
+analysis Static
+set staticOk [analyze 10]
+if {$staticOk != 0} {
+    puts "gravity_static_status=FAIL"
+} else {
+    puts "gravity_static_status=OK"
+}
+loadConst -time 0.0
+set cableTags {447 448 449 450 451 452 453 454 455 456 457 458 459 460 461 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476 477 478 479 480 481 482 483 484 485 486 487 488 489 490 491 492 493 494 495 496 497 498 499 500 501 502 503 504 505 506 507 508 509 510 511 512 513 514 515 516 517 518 519 520 521 522 523 524 525 526 527 528 529 530 531 532 533 534 535 536 537 538 539 540 541 542 543 544 545 546 547 548 549 550 551 552 553 554 555 556 557 558 559 560 561 562 563 564 565 566 567 568 569 570 571 572 573 574 575 576 577 578 579 580 581 582 583 584 585 586 587 588 589 590 591 592 593 594 595 596 597 598 599 600 601 602 603 604 605 606 607 608 609 610 611 612 613 614 615 616 617 618 619 620 621 622 623 624 625 626 627 628 629 630 631 632 633 634 635 636 637 638 639 640 641 642 643 644 645 646 647 648 649 650 651 652 653 654 655 656 657 658 659 660 661 662 663 664 665 666 667 668 669 670 671 672 673 674 675 676 677 678 679 680 681 682 683 684 685 686 687 688 689 690 691 692 693 694 695 696 697 698 699 700 701 702 703 704 705 706 707 708 709 710 711 712 713 714 715 716 717 718}
+set cableForceCount 0
+set cableForceSum 0.0
+set cableForceMin 1.0e100
+set cableForceMax -1.0e100
+foreach ele $cableTags {
+    set response [eleResponse $ele axialForce]
+    if {[llength $response] == 0} { set response [eleResponse $ele forces] }
+    if {[llength $response] > 0} {
+        set axial [lindex $response 0]
+        set cableForceCount [expr $cableForceCount + 1]
+        set cableForceSum [expr $cableForceSum + $axial]
+        if {$axial < $cableForceMin} { set cableForceMin $axial }
+        if {$axial > $cableForceMax} { set cableForceMax $axial }
+    }
+}
+set cableForceMean 0.0
+if {$cableForceCount > 0} { set cableForceMean [expr $cableForceSum / $cableForceCount] }
+puts [format "cable_force_stats count=%d min=%.6e max=%.6e mean=%.6e" $cableForceCount $cableForceMin $cableForceMax $cableForceMean]
+set eig [eigen 24]
+set freqs {}
+foreach lambda $eig {
+    if {$lambda > 1.0e-10} {
+        lappend freqs [expr sqrt($lambda)/(2.0*acos(-1.0))]
+    }
+}
+set ref {0.06 0.10 0.18 0.23 0.29 0.32 0.39 0.42 0.43 0.47}
+puts "Mode  OpenSees_Hz  Ansys_Hz  Error_pct  Status"
+set allPass true
+set jsonFreq ""
+set jsonErr ""
+for {set i 0} {$i < 10 && $i < [llength $freqs]} {incr i} {
+    set f [lindex $freqs $i]
+    set r [lindex $ref $i]
+    set err [expr abs($f-$r)/$r*100.0]
+    set status PASS
+    if {$err > 5.0} { set status FAIL; set allPass false }
+    puts [format "%2d    %.6f    %.6f    %.2f       %s" [expr $i+1] $f $r $err $status]
+    if {$i > 0} { append jsonFreq ","; append jsonErr "," }
+    append jsonFreq [format "%.6f" $f]
+    append jsonErr [format "%.6f" $err]
+}
+if {[llength $freqs] < 10} { set allPass false }
+set modeShapeFile "D:/sim-cli/.sim/stbridge_opensees_modes_plain.csv"
+set modeShapeOut [open $modeShapeFile w]
+puts $modeShapeOut "mode,node,ux,uy,uz"
+for {set mode 1} {$mode <= 24 && $mode <= [llength $freqs]} {incr mode} {
+    foreach node [getNodeTags] {
+        set ux [nodeEigenvector $node $mode 1]
+        set uy [nodeEigenvector $node $mode 2]
+        set uz [nodeEigenvector $node $mode 3]
+        puts $modeShapeOut [format "%d,%d,%.12e,%.12e,%.12e" $mode $node $ux $uy $uz]
+    }
+}
+close $modeShapeOut
+set modeFrequencyFile "D:/sim-cli/.sim/stbridge_opensees_frequencies_plain.csv"
+set modeFrequencyOut [open $modeFrequencyFile w]
+puts $modeFrequencyOut "mode,frequency_hz"
+for {set mode 1} {$mode <= [llength $freqs]} {incr mode} {
+    puts $modeFrequencyOut [format "%d,%.12e" $mode [lindex $freqs [expr $mode - 1]]]
+}
+close $modeFrequencyOut
+for {set mode 1} {$mode <= 10 && $mode <= [llength $freqs]} {incr mode} {
+    set sx 0.0; set sy 0.0; set sz 0.0
+    set maxNode 0; set maxMag -1.0; set maxXNode 0; set maxYNode 0; set maxZNode 0
+    set maxAbsX -1.0; set maxAbsY -1.0; set maxAbsZ -1.0
+    set maxUx 0.0; set maxUy 0.0; set maxUz 0.0
+    foreach node [getNodeTags] {
+        set ux [nodeEigenvector $node $mode 1]
+        set uy [nodeEigenvector $node $mode 2]
+        set uz [nodeEigenvector $node $mode 3]
+        set sx [expr $sx + $ux*$ux]
+        set sy [expr $sy + $uy*$uy]
+        set sz [expr $sz + $uz*$uz]
+        set mag [expr sqrt($ux*$ux + $uy*$uy + $uz*$uz)]
+        set absX [expr abs($ux)]
+        set absY [expr abs($uy)]
+        set absZ [expr abs($uz)]
+        if {$mag > $maxMag} { set maxMag $mag; set maxNode $node }
+        if {$absX > $maxAbsX} { set maxAbsX $absX; set maxXNode $node; set maxUx $ux }
+        if {$absY > $maxAbsY} { set maxAbsY $absY; set maxYNode $node; set maxUy $uy }
+        if {$absZ > $maxAbsZ} { set maxAbsZ $absZ; set maxZNode $node; set maxUz $uz }
+    }
+    puts [format "mode_direction %d X=%.4e Y=%.4e Z=%.4e" $mode $sx $sy $sz]
+    set coord [nodeCoord $maxNode]
+    puts [format "mode_peak %d node=%d coord=(%.6g,%.6g,%.6g) resultant=%.4e x_node=%d ux=%.4e y_node=%d uy=%.4e z_node=%d uz=%.4e" $mode $maxNode [lindex $coord 0] [lindex $coord 1] [lindex $coord 2] $maxMag $maxXNode $maxUx $maxYNode $maxUy $maxZNode $maxUz]
+}
+set passText false
+if {$allPass} { set passText true }
+puts "{\"frequencies\":\[$jsonFreq\],\"reference\":\[0.06,0.1,0.18,0.23,0.29,0.32,0.39,0.42,0.43,0.47\],\"errors_pct\":\[$jsonErr\],\"all_within_5pct\":$passText}"
+wipe

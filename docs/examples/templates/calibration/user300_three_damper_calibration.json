@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "solver": "ANSYS_MAPDL_2024_R2_USER300",
+  "profiles": [
+    {
+      "damperType": "VISCOUS",
+      "user300Type": 3,
+      "sourcePath": "user300_viscous_calibration_summary.json",
+      "sourceSha256": "714a537807e9bfc0c89fc9122568ccfcc31fbdae1fed05e4f45b8aec85086ad8",
+      "maxTargetRelativeError": 0.00033710678757903346
+    },
+    {
+      "damperType": "EDDY_CURRENT",
+      "user300Type": 1,
+      "sourcePath": "user300_eddy_current_calibration_summary.json",
+      "sourceSha256": "9af3b5cac670a5512a830ced099c3680cebdfe69c9b4868e091c5d69c8c02238",
+      "maxTargetRelativeError": 0.0001657012
+    },
+    {
+      "damperType": "FRICTION",
+      "user300Type": 2,
+      "sourcePath": "user300_friction_calibration_summary.json",
+      "sourceSha256": "c8442fa3f10168eda82cc3b97528dde1d70d7cfb9647eb6e066ceb034cee221d",
+      "maxTargetRelativeError": 0.00007783134986091767
+    }
+  ]
+}

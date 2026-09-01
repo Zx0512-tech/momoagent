@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "solver": "OPENSEESPY_INPROC_USER300",
+  "openseespy_version": "3.8.0",
+  "evidence_class": "RUNTIME_FORMULA_CONFORMANCE",
+  "source": "openseespy_inproc_user300_runtime_sampling",
+  "damper_type": "friction",
+  "damper_type_keyopt": 2,
+  "material": "User300Friction",
+  "force_law": "F = FC*tanh(v/VS)",
+  "fc_n": 50000.0,
+  "vs_mps": 2e-05,
+  "sample_count": 557,
+  "velocity_range_mps": [
+    -1.0,
+    1.0
+  ],
+  "peak_target_force_n": 50000.0,
+  "max_force_target_error_n": 0.0,
+  "max_force_target_relative_error": 0.0
+}

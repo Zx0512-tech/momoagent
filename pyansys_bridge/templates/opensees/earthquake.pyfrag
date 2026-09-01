@@ -1,0 +1,8 @@
+# Earthquake load module
+# load={{ earthquake_name }}, path={{ earthquake_path }}, scale={{ earthquake_scale }}, dt={{ earthquake_dt }}, duration={{ earthquake_duration }}
+eq_path = r"{{ earthquake_path }}"
+if eq_path and eq_path != "None":
+    ops.timeSeries('Path', 4101, '-filePath', eq_path, '-dt', {{ earthquake_dt }}, '-factor', {{ earthquake_scale }} * {{ earthquake_uniform_factor }})
+else:
+    ops.timeSeries('Constant', 4101, '-factor', {{ earthquake_scale }} * {{ earthquake_uniform_factor }})
+ops.pattern('UniformExcitation', 4101, {{ earthquake_uniform_dof }}, '-accel', 4101)

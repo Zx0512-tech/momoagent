@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "damper_type": "viscous",
+  "damper_type_keyopt": 3,
+  "tangent_mode_keyopt": 6,
+  "c_n_s_per_m_alpha": 1000000.0,
+  "alpha": 0.3,
+  "vfloor_mps": 0.00001,
+  "sample_count": 2000,
+  "max_force_ansys_opensees_difference_n": 0.015558350016362965,
+  "max_force_target_error_n": 337.10678757903344,
+  "max_force_target_relative_error": 0.00033710678757903346,
+  "source": "openseespy_ansys_user300_separate_comparison"
+}

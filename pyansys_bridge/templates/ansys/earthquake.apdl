@@ -1,0 +1,5 @@
+! Earthquake load module
+{% if command_role == ansys_load_render_role %}
+! Unified transient load tables
+{{ load_tables }}
+{% endif %}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0",
+  "damper_type": "eddy_current",
+  "damper_type_keyopt": 1,
+  "tangent_mode_keyopt": 1,
+  "fmax_n": 50000.0,
+  "vcr_mps": 0.1,
+  "max_force_self_error_n": 0.002784087249892764,
+  "max_force_target_error_n": 8.285060000000158,
+  "max_force_target_relative_error": 0.0001657012,
+  "source": "eddy_current_userelem_run"
+}

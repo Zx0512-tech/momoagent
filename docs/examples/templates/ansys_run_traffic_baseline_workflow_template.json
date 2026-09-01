@@ -1,0 +1,11 @@
+{
+  "baseline_config": "ansys_run_traffic_baseline_template.json",
+  "optimization_config": "ansys_run_traffic_optimization_template.json",
+  "baseline_objective_limits": {
+    "scenario": "traffic",
+    "objectives": [
+      "cumulative_displacement"
+    ]
+  },
+  "summary_path": "../../../output/run_templates/ansys_traffic/workflow_summary.json"
+}

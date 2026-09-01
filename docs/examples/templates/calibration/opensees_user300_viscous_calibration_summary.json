@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "solver": "OPENSEESPY_INPROC_USER300",
+  "openseespy_version": "3.8.0",
+  "evidence_class": "RUNTIME_FORMULA_CONFORMANCE",
+  "source": "openseespy_inproc_user300_runtime_sampling",
+  "damper_type": "viscous",
+  "damper_type_keyopt": 3,
+  "material": "User300Viscous",
+  "force_law": "F = C*max(abs(v),VFLOOR)^(alpha-1)*v",
+  "c_n_s_per_m_alpha": 1000000.0,
+  "alpha": 0.3,
+  "vfloor_mps": 1e-05,
+  "sample_count": 557,
+  "velocity_range_mps": [
+    -1.0,
+    1.0
+  ],
+  "peak_target_force_n": 1000000.0,
+  "max_force_target_error_n": 0.0,
+  "max_force_target_relative_error": 0.0,
+  "cross_solver_reference": {
+    "artifact": "user300_viscous_calibration_summary.json",
+    "max_force_ansys_opensees_difference_n": 0.015558350016362965
+  }
+}

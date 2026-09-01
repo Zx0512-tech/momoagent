@@ -1,0 +1,2599 @@
+{
+  "schemaVersion": 1,
+  "project": "MOMO Competition Submission",
+  "generatedAt": "2026-08-31T05:19:51.274Z",
+  "fileCount": 518,
+  "totalSizeBytes": 39364399,
+  "files": [
+    {
+      "path": ".env.example",
+      "sizeBytes": 725,
+      "sha256": "1490ceaa7cbd50308140ff52204cc3aaf734a56bfcfa3f8d8de55c9e7d0ff8b5"
+    },
+    {
+      "path": ".gitignore",
+      "sizeBytes": 576,
+      "sha256": "955db3d6ab81f76d91f9d67e44bb9148caf80b30b76ed22a959a7a3e7caa7bdf"
+    },
+    {
+      "path": "README.md",
+      "sizeBytes": 5883,
+      "sha256": "bd254d81e44bc229ac56e11a7bc7aab5952a95a721424aaa92917aca1057c0dc"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sizeBytes": 708,
+      "sha256": "f115ed6530f1d114db4ae8b40d75d51d4a3ce22b38e349cbec7541a60a21d5dc"
+    },
+    {
+      "path": "VERSION",
+      "sizeBytes": 7,
+      "sha256": "4ca8bbd3c595ee306226c6996b32b8d47a900217c55a7ed0cfc868ee444f34f1"
+    },
+    {
+      "path": "analysis_data/baseline_outputs/damper_displacement.csv",
+      "sizeBytes": 289019,
+      "sha256": "af439802091ad6cb6fe09351d56e3a620acd899e5eaf4ffce25d7332bd186d63"
+    },
+    {
+      "path": "analysis_data/baseline_outputs/damper_force.csv",
+      "sizeBytes": 213658,
+      "sha256": "5d075c105d401d8df3d99b5d390f073d2d1a7c0fdfa160944c4976513e3662d9"
+    },
+    {
+      "path": "analysis_data/baseline_outputs/girder_displacement.csv",
+      "sizeBytes": 127619,
+      "sha256": "24ca5c63e153861d3cb7528669d65f45688cfccf7af1abb7b9036ef6ae8420a1"
+    },
+    {
+      "path": "analysis_data/baseline_outputs/tower_force.csv",
+      "sizeBytes": 226719,
+      "sha256": "f1887b01439edb3fbbd863d14d09ba80aaa639a9f1e016860fc3047d49d90037"
+    },
+    {
+      "path": "analysis_data/earthquake_inputs/earthquake_acceleration_record.txt",
+      "sizeBytes": 53957,
+      "sha256": "d03ba9952274cb445db156e6e879efde05d5c0832771bb772258762c21ef018b"
+    },
+    {
+      "path": "analysis_data/traffic_inputs/traffic_random_base_3600s.csv",
+      "sizeBytes": 2965405,
+      "sha256": "72f6f16b1930ed00ff545987fdf3ba3e7b6a095c8deee97a3319696285463773"
+    },
+    {
+      "path": "analysis_data/traffic_inputs/traffic_random_base_3600s_mappings.json",
+      "sizeBytes": 24620,
+      "sha256": "41aa11e6e826ca50bd829d3dc96117decfb12f6771a77a7ed9e33cf83a9ad7b5"
+    },
+    {
+      "path": "analysis_data/wind_inputs/generate_wind_nodal_force.py",
+      "sizeBytes": 8784,
+      "sha256": "69f2ae03380c7bd58ae71b7b73defb12ff7759695ed2c042334a3b2ee1f338b6"
+    },
+    {
+      "path": "analysis_data/wind_inputs/wind_vertical_10mps_3600s.csv",
+      "sizeBytes": 642256,
+      "sha256": "b65482e1fff266029dba72dab552d26811c9f26175dacbcc1a2d163486a50886"
+    },
+    {
+      "path": "analysis_data/wind_inputs/wind_vertical_8nodes_10mps_3600s.csv",
+      "sizeBytes": 431246,
+      "sha256": "7ec13c99d9ac602a5beba6e9f3db15ed5538f06f026662874748c160479ba805"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/PF_reference_output.txt",
+      "sizeBytes": 47964,
+      "sha256": "ed5db74fe3ca33cff1f975d807cbfd0308c9b77bf7e6768325210d3722e636c0"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/STbridge_apdl_model.txt",
+      "sizeBytes": 16764,
+      "sha256": "507a485a3515a6c01691b461fb0e50c8325d7e61d28de79ed3553930e17ccbc5"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/STbridge_apdl_model_backup.txt",
+      "sizeBytes": 19111,
+      "sha256": "80562a5e5ec16da2c55589cd737e0345409ff1c8036bd2be911c43884bd47aa9"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_baseline0.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_baseline1.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_traffic_base0.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_traffic_base1.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_traffic_dense0.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_traffic_dense1.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_traffic_heavy0.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_traffic_heavy1.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_wind_only0.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_wind_only1.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_wind_traffic0.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_ansys/stbridge_wind_traffic1.page",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/USER300_OPENSEESPY_RUNTIME.md",
+      "sizeBytes": 536,
+      "sha256": "2af678bd1a2a2cc5a7435330f5552b7b7b470087a8e6698e676a8a6989a118ae"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/baseline_verified/README.md",
+      "sizeBytes": 2244,
+      "sha256": "f336ec095e943fdfe255a7615e5a690ef72225eba2e2a87c0e1bb486550f5fd1"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/baseline_verified/mode_match_report.json",
+      "sizeBytes": 23326,
+      "sha256": "cd6d555d50589a33aaed389d9266c33ba286531c83dd1cd60ac497936d228693"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/baseline_verified/stbridge_baseline_modal_plain.tcl",
+      "sizeBytes": 165266,
+      "sha256": "2d46525e63b2ba5f33c41b763e4ed90750261911e50aa487608f4d2c2b9c34fb"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/baseline_verified/stbridge_baseline_openseespy_gravity_modal.py",
+      "sizeBytes": 216829,
+      "sha256": "44881527ea45c6bac8ac68b782d6efa26405aba212aacbf193a2c54054028801"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/baseline_verified/validation_summary.json",
+      "sizeBytes": 2176,
+      "sha256": "2935b1d9383fe845530bbb07887e7aafbef42316b9a04c13904461bab99162c2"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/openseespy/__init__.py",
+      "sizeBytes": 220,
+      "sha256": "8def82f37982601ae104e0c3bcc1f1a1baf0ee2defdc3f82017a5cde1352b845"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/openseespy/opensees.cp313-win_amd64.pyd",
+      "sizeBytes": 21707264,
+      "sha256": "1ec7e7ccfc52393ad470b5f6b1b306780151bfc4c54a45a0d63a82be34ff8021"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/parse_ansys_to_opensees.py",
+      "sizeBytes": 23888,
+      "sha256": "dca75233b9a1d62104294f66051b598c1adc20a8e44aeb6f8018fe3a1901ce32"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/sitecustomize.py",
+      "sizeBytes": 1228,
+      "sha256": "315384b36a9e6ed4e27c0dd438e17714d521de93039cda90e09a8224a7fba3f6"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/stbridge_opensees_modal_builder.py",
+      "sizeBytes": 11380,
+      "sha256": "7d6ffaf5560841fb44dfb82b53c3558dd1292dfe52b4b67e89bef9b1faf0893f"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/stbridge_opensees_modal_model.py",
+      "sizeBytes": 205568,
+      "sha256": "6489b3fd4ed700e24e5ddc0dbeef8f5cd7de7a06bbbe7c645e6baa0e4f7aaa0f"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/stbridge_opensees_reference_builder.py",
+      "sizeBytes": 4785,
+      "sha256": "4229e4778a12d6ac25149fbcecb212cd0b699295bc42a204af94ea3a8bb089e6"
+    },
+    {
+      "path": "bridge_models/stbridge_opensees/verify_user300_openseespy_runtime.py",
+      "sizeBytes": 1659,
+      "sha256": "88c18b5f71c7d5ad437a8a6bc42fa2e16128e9410a8a911d0ae7a9fadbe31add"
+    },
+    {
+      "path": "demo_prompt.txt",
+      "sizeBytes": 441,
+      "sha256": "b66564fbaf9a648ff16b2accf102e45b1deacf8be3df45c4566af24a7ad4839e"
+    },
+    {
+      "path": "docs/examples/ansys_friction_damper_joint_dry_run_smoke.json",
+      "sizeBytes": 2364,
+      "sha256": "645d84c9b0eb0b1ede66b92f7179b48b98549ddf15f70cd5ae94b428031aec96"
+    },
+    {
+      "path": "docs/examples/ansys_joint_baseline_workflow_smoke.json",
+      "sizeBytes": 656,
+      "sha256": "a65d4456daa15cb2a266e814c4ca8fc3ea0503dbff54dff3cdb7cb7486b4c1e1"
+    },
+    {
+      "path": "docs/examples/ansys_joint_dry_run_smoke.json",
+      "sizeBytes": 2331,
+      "sha256": "6305ca44a33e75432d3763617912fa4b93f71248cc92edd761f6e01df99f3190"
+    },
+    {
+      "path": "docs/examples/ansys_undamped_earthquake_baseline_smoke.json",
+      "sizeBytes": 672,
+      "sha256": "21401bf9045c6470a0680b6e1f402bfbc50fabe7b466f754c7a846fe383cae95"
+    },
+    {
+      "path": "docs/examples/baselines/undamped_earthquake_smoke_summary.json",
+      "sizeBytes": 349,
+      "sha256": "d9073046aee88761078f8c8d614827479264617ec4c423fb2b135b088ca00bb0"
+    },
+    {
+      "path": "docs/examples/earthquake_baseline_optimization_workflow_smoke.json",
+      "sizeBytes": 638,
+      "sha256": "6dc24aafea8c5e8ad726d49677a15e48c0082f06073964b87e16b3c664dea763"
+    },
+    {
+      "path": "docs/examples/earthquake_smoke.json",
+      "sizeBytes": 1335,
+      "sha256": "fb6167e05763b94cc386de4abb0d4483d5ff9f70e9ecf9d7f7af3bac0cdd3d8d"
+    },
+    {
+      "path": "docs/examples/joint_earthquake_operation_baseline_workflow_smoke.json",
+      "sizeBytes": 639,
+      "sha256": "30fad952a0a8541de13e9fc4bb8e9544f837d6dd23c20633ac907e2b493a33f0"
+    },
+    {
+      "path": "docs/examples/joint_earthquake_operation_smoke.json",
+      "sizeBytes": 2070,
+      "sha256": "a4362a09da5313534f96324c42f81d6d6e9e449c3d338d9804c30f26121662c9"
+    },
+    {
+      "path": "docs/examples/opensees_eddy_current_damper_joint_dry_run_smoke.json",
+      "sizeBytes": 2447,
+      "sha256": "b365409a22e25b4f3a17c7131645ef3ec16702494aa1700d3616876f47253dbb"
+    },
+    {
+      "path": "docs/examples/opensees_joint_baseline_workflow_smoke.json",
+      "sizeBytes": 671,
+      "sha256": "e522afef30c827c10e2a37f8b3fba0fdb1f46f93136a46f35210df1ef16b9edd"
+    },
+    {
+      "path": "docs/examples/opensees_joint_dry_run_smoke.json",
+      "sizeBytes": 2402,
+      "sha256": "1dc45be1c976d85ba757f5d3f8531a3c22567b2005e242a9c69aba349a27768c"
+    },
+    {
+      "path": "docs/examples/opensees_reference_frequencies.csv",
+      "sizeBytes": 235,
+      "sha256": "ed63c789bcae933c90cf1163e9377254095cbdcd52ea1018d8b3329d9b8d6781"
+    },
+    {
+      "path": "docs/examples/opensees_undamped_earthquake_baseline_smoke.json",
+      "sizeBytes": 740,
+      "sha256": "0c0bca39af602398589692046f3e079bed8bfc20e013614b33953b477645a0eb"
+    },
+    {
+      "path": "docs/examples/operation_smoke.json",
+      "sizeBytes": 1290,
+      "sha256": "2413fe84dc47f696540a81e40a2d711a52d30f92b706515c56fc104bcb741845"
+    },
+    {
+      "path": "docs/examples/real_agent_baseline_manifest.json",
+      "sizeBytes": 22107,
+      "sha256": "4d59d84bcfc3bbb7d97ea1ee721444cbd3d5d06c9e953e58dd007eb755aaf4d4"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_earthquake_baseline_eq_doe16_20260705.json",
+      "sizeBytes": 1594,
+      "sha256": "27d77100b9bdaa374629255d187f1908ae0a6614fee1cd299a341e28ecd2969e"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_earthquake_baseline_eq_doe16_20260706_rerun.json",
+      "sizeBytes": 1546,
+      "sha256": "c5f8246ac8cc764d998f85377287eba07e16d7e9d1ed07ec436f9245924664cb"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_earthquake_baseline_full_workflow_20260705.json",
+      "sizeBytes": 1601,
+      "sha256": "1254c42eb8109f7d2d3db8049a60758d0060d2d548b82189c8f32fa4f58f9fe2"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_earthquake_baseline_r4_20260712.json",
+      "sizeBytes": 1526,
+      "sha256": "6e7f6e4a8ac19d8e810d953ac654bb4c72e44ed06bfe71d457412928ea2edc8a"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_earthquake_baseline_template.json",
+      "sizeBytes": 1530,
+      "sha256": "ba3199fc952ad0b1f39240a80038529f0d1df515f3c7bcc573640220b7580736"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_baseline_workflow_eq_doe16_20260705.json",
+      "sizeBytes": 475,
+      "sha256": "4986f4bb2ddd582b39ffccb7a8b045531f63181c28ac844ce33f73d80e115a61"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_baseline_workflow_eq_doe16_20260706_rerun.json",
+      "sizeBytes": 481,
+      "sha256": "cb0d07dcf70e8464ba8378fa0ce9b68dcd7505bfd84ada71a554929d8a998442"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_baseline_workflow_full_workflow_20260705.json",
+      "sizeBytes": 499,
+      "sha256": "86e5f285a92f203a1f3ccf6b066d4c68f0f25ca8131acaa3a2cb8233b7bffa43"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_baseline_workflow_r4_20260712.json",
+      "sizeBytes": 467,
+      "sha256": "e18aecd3a5555d3dc240958c7b9c7b9a79c0ce4d33ce0e81fecf21c330b084ba"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_baseline_workflow_template.json",
+      "sizeBytes": 418,
+      "sha256": "ec43fef05a2ca7995e9ee9b7c116e6ba99f5102e6c1158899342fa1c88ec76ae"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_optimization_eq_doe16_20260705.json",
+      "sizeBytes": 4170,
+      "sha256": "74e091397cf469ea2362efc1d9d2c83eb32744950028b51adbcbe7a426df64c1"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_optimization_eq_doe16_20260706_rerun.json",
+      "sizeBytes": 4005,
+      "sha256": "948e20dd4565232dfef4a891fe509a8f15303aae0d30a164737a1e7a08b4c093"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_optimization_full_workflow_20260705.json",
+      "sizeBytes": 4206,
+      "sha256": "8b3b9f61baf4f3435de665a0a8195be3145ded87f6e0145c0af1a232a7a1e16c"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_optimization_r4_20260712.json",
+      "sizeBytes": 4964,
+      "sha256": "a8b965f9a213630c385eaa307761594151aa89268f4f0f2e239263bdffed3458"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_joint_optimization_template.json",
+      "sizeBytes": 5265,
+      "sha256": "7b429bfab2e6aa201c991ea622554991dbb32eb12fbbe015fc8de9ae7e976d85"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_operation_optimization_template.json",
+      "sizeBytes": 3453,
+      "sha256": "a0f4b87d58295cf4d48fda71bcb781240125a9d327409509aa130edb5bc048eb"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_traffic_baseline_template.json",
+      "sizeBytes": 4310,
+      "sha256": "fd9d2abf9fa0ca2d721b9569e092ff0e884e475256e81bedb4734f5d8ffae290"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_traffic_baseline_workflow_template.json",
+      "sizeBytes": 362,
+      "sha256": "a06f511b928fe1966f1a005d21bb5115f3293ae7e1f5ef6388c2a3c2f35d1861"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_traffic_optimization_template.json",
+      "sizeBytes": 6597,
+      "sha256": "a82ac02e332e5c2c100c40a9cb9e4baa525fdd9cc55bffe187e3eb43c4de9d73"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_wind_baseline_template.json",
+      "sizeBytes": 2287,
+      "sha256": "aaaa0e522dcb1bcc8b0514cc8a73c73006cf8ad75af3c1b814f532c8e325a1d8"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_wind_baseline_workflow_template.json",
+      "sizeBytes": 339,
+      "sha256": "02d054f3a18c5d74677622b87f4184e48c03e9676f260a2ca6c8e1bba381054d"
+    },
+    {
+      "path": "docs/examples/templates/ansys_run_wind_optimization_template.json",
+      "sizeBytes": 4146,
+      "sha256": "3974de9cfb2bc75244aede6d51d1e808527503a853c8d086972ef82d83899482"
+    },
+    {
+      "path": "docs/examples/templates/calibration/ansys_damper_calibration.txt",
+      "sizeBytes": 451,
+      "sha256": "e67c2903af5a90442ac7e4710ab819865c55fd64b2e058c8f2ac5568d542e722"
+    },
+    {
+      "path": "docs/examples/templates/calibration/ansys_operation_load_calibration.txt",
+      "sizeBytes": 509,
+      "sha256": "f45adf8ed7b3ef14281998a5eb8ee8763ca06b601762ec412c5605bc343f5333"
+    },
+    {
+      "path": "docs/examples/templates/calibration/opensees_damper_calibration.txt",
+      "sizeBytes": 398,
+      "sha256": "ad8447bd1d96829c98c04f3b8e3f854ec3a1050aa2b508c43330f64e174aa9aa"
+    },
+    {
+      "path": "docs/examples/templates/calibration/opensees_operation_load_calibration.txt",
+      "sizeBytes": 471,
+      "sha256": "cb63ed0a037b7abc2957bcea1789007545c606c0da85e6a1ffa470497d1833c8"
+    },
+    {
+      "path": "docs/examples/templates/calibration/opensees_user300_eddy_current_calibration_summary.json",
+      "sizeBytes": 589,
+      "sha256": "8b4097ee23795700c5e09034217db85f432585c168c028a765db518b6078e81c"
+    },
+    {
+      "path": "docs/examples/templates/calibration/opensees_user300_friction_calibration_summary.json",
+      "sizeBytes": 558,
+      "sha256": "5f8f5506a0b65d04bcd032c163aa9cca201f13260491a982cf6036a19e8870a7"
+    },
+    {
+      "path": "docs/examples/templates/calibration/opensees_user300_three_damper_calibration.json",
+      "sizeBytes": 1020,
+      "sha256": "228eee33531dde2f03d664558ed8169f4722f6de61f18b55a36abc1bad23f6ef"
+    },
+    {
+      "path": "docs/examples/templates/calibration/opensees_user300_viscous_calibration_summary.json",
+      "sizeBytes": 773,
+      "sha256": "c3ea224e92d87de59cc1d23045a9957327bba0fb8fae3687d907d205e4f712b7"
+    },
+    {
+      "path": "docs/examples/templates/calibration/user300_eddy_current_calibration_summary.json",
+      "sizeBytes": 347,
+      "sha256": "9af3b5cac670a5512a830ced099c3680cebdfe69c9b4868e091c5d69c8c02238"
+    },
+    {
+      "path": "docs/examples/templates/calibration/user300_friction_calibration_summary.json",
+      "sizeBytes": 352,
+      "sha256": "c8442fa3f10168eda82cc3b97528dde1d70d7cfb9647eb6e066ceb034cee221d"
+    },
+    {
+      "path": "docs/examples/templates/calibration/user300_three_damper_calibration.json",
+      "sizeBytes": 925,
+      "sha256": "760c90313a1d5449a78f001ffd644fa399322174130160314cda4e097613aa5b"
+    },
+    {
+      "path": "docs/examples/templates/calibration/user300_viscous_calibration_summary.json",
+      "sizeBytes": 447,
+      "sha256": "714a537807e9bfc0c89fc9122568ccfcc31fbdae1fed05e4f45b8aec85086ad8"
+    },
+    {
+      "path": "docs/examples/templates/opensees_run_earthquake_baseline_template.json",
+      "sizeBytes": 1719,
+      "sha256": "cfb1f811bba0b5cb2767e04035a4bd4e7735c363e59fb9238b0e93b8d5e43e4c"
+    },
+    {
+      "path": "docs/examples/templates/opensees_run_joint_baseline_workflow_template.json",
+      "sizeBytes": 649,
+      "sha256": "a71fbc047b813b3eb7399d75190949a86c504dac04dd73fd7e2eec466c176f1d"
+    },
+    {
+      "path": "docs/examples/templates/opensees_run_joint_optimization_template.json",
+      "sizeBytes": 4138,
+      "sha256": "249443f7bc988bde2275eb2dba02c7654355bc916d07f902e0a10c9de8abac01"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_earthquake_baseline_eq_doe16_20260705.json",
+      "sizeBytes": 1704,
+      "sha256": "7b139f87697dd1d25a3f541703319cf4020bc4adda2899fbffc2954ef6460428"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_earthquake_baseline_eq_doe16_20260706_rerun.json",
+      "sizeBytes": 1639,
+      "sha256": "e8c635a039e886a75075d24695da618fa48148aafc4f9ab69d05b44138ae37df"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_earthquake_baseline_full_workflow_20260705.json",
+      "sizeBytes": 1702,
+      "sha256": "01cb96166c55211cbefdbe14c3add661762a4c7c87627338428ca0a9c729cbc9"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_earthquake_baseline_template.json",
+      "sizeBytes": 1656,
+      "sha256": "c6f3923e21c441eef84f578a66a6a1028b657972810cce439e9f7b6f8318e288"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_baseline_workflow_eq_doe16_20260705.json",
+      "sizeBytes": 510,
+      "sha256": "bace9c11bc28b16e0b538e6ddc8cf093d6fd75e1bbd0147964992481d6c9205a"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_baseline_workflow_eq_doe16_20260706_rerun.json",
+      "sizeBytes": 516,
+      "sha256": "07eebb68324f2a60218dada8eb53475ef723b0910a0cc57d694cac1c7c71945f"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_baseline_workflow_full_workflow_20260705.json",
+      "sizeBytes": 518,
+      "sha256": "d29da15eb27f6f165b2afe586c9a2abc6fe03f54a6293aa7d49301bfb641ef26"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_baseline_workflow_template.json",
+      "sizeBytes": 461,
+      "sha256": "58a4ec7c205f4e6687155cf32ce24e5fdd9f6ae886600836c875f07b024866cc"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_optimization_eq_doe16_20260705.json",
+      "sizeBytes": 4400,
+      "sha256": "4c6ebbb5a5ae1a7f12221c9888b25721a5776cf29e5ad925cbdef3dc95686f6c"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_optimization_eq_doe16_20260706_rerun.json",
+      "sizeBytes": 4213,
+      "sha256": "8791eea4ac3d30776ad9618258db60251cf6a60b25e332d19fb6fbb8638018ed"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_optimization_full_workflow_20260705.json",
+      "sizeBytes": 4388,
+      "sha256": "14631bf82395affd59ff10c5d46e6363c7831c97550d8cd549f9e7ddd205a0ba"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_joint_optimization_template.json",
+      "sizeBytes": 4139,
+      "sha256": "559fc58b1c8400a4c3b8e3906b3771c93d7a5179ac8bf057270415e6c22e2ee9"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_operation_optimization_template.json",
+      "sizeBytes": 3216,
+      "sha256": "50ffda14a2fcf2cb773aa0e34bea909022e22f19ed3413a158e5265badcd347d"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_traffic_baseline_template.json",
+      "sizeBytes": 2130,
+      "sha256": "186fc07a8892d61acbf44dad7ccf6322dcb5a34ebacb7ac837bd31e845bb1330"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_traffic_baseline_workflow_template.json",
+      "sizeBytes": 398,
+      "sha256": "b13e8d9035c30fd8b59e0841c0e8abe27a2d2777f71ac25248c27c0a39339bd5"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_traffic_optimization_template.json",
+      "sizeBytes": 4915,
+      "sha256": "8e941150d366ee9462760282c9e77ed1555f7ec1c01365c8814af34900b8cf80"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_wind_baseline_template.json",
+      "sizeBytes": 2201,
+      "sha256": "d8f892f3a3e45aaee52b3fb09c12bcf0a60694a8d24ce051559ccbebcd754c9a"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_wind_baseline_workflow_template.json",
+      "sizeBytes": 386,
+      "sha256": "8bbe90ac75aa3db97b04ff67bbecba228aeb8a3992738e9d52de55da2c2c7ec0"
+    },
+    {
+      "path": "docs/examples/templates/openseespy_inproc_run_wind_optimization_template.json",
+      "sizeBytes": 4288,
+      "sha256": "48534df56747ac32eb7d805379afb89d2497f40fe01517cba0a4ca97f13b6a36"
+    },
+    {
+      "path": "docs/examples/templates/solver_parity_baseline_workflow_template.json",
+      "sizeBytes": 335,
+      "sha256": "190950d6b4e7127977c2571933451c9e6dd8264051adb586f8bfd9e57211c657"
+    },
+    {
+      "path": "docs/examples/undamped_earthquake_baseline_smoke.json",
+      "sizeBytes": 391,
+      "sha256": "a0df019b7cb0626f41e525c748e3c2d968645621163916712ca98f94c6c5c007"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/final_review/openseespy_inproc_command.py",
+      "sizeBytes": 32493,
+      "sha256": "c4745699cae40733c5d6bc0ffd25a626ca8c6d2bd8990174da2de89b6154e3d3"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/final_review/summary.json",
+      "sizeBytes": 1302481,
+      "sha256": "645694649e9f7e22624011ac3b83c9570eeec21bfa3ecba913ccf3fa643edfa0"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/final_review/timeseries.csv",
+      "sizeBytes": 921722,
+      "sha256": "930226ad1ca16bb5a804cc9865507fb9afcd163e5b1d73726f7383341cce65e1"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/final_review/tower_base_shear_components.csv",
+      "sizeBytes": 1159260,
+      "sha256": "7d3be774a9a5e629dc2ba889e79b75bfe910e915495fca225b82cb2f909f5a92"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/final_review/tower_girder_relative_response.csv",
+      "sizeBytes": 1053187,
+      "sha256": "360019dd1c815039ed160f9dc4112a84ddfe4d0a6d6b9e3f4b702374da6de88c"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/index.csv",
+      "sizeBytes": 3163,
+      "sha256": "3acdfbe878f8366335b951594151171d19d6f091c7abbf706fb4b5248b326105"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/optimization_summary.json",
+      "sizeBytes": 429915,
+      "sha256": "4039496c97f48e4a59c4e265d814c12ab7f70fb0e403e45994386bf519ffad4f"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/real_earthquake_workflow_overview.json",
+      "sizeBytes": 235199,
+      "sha256": "6120f9936e61ca9522883ba4ffdb2bacf306f259107856018c722f718cd278ac"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/real_output_manifest.json",
+      "sizeBytes": 20995,
+      "sha256": "e990df0b063571c37a7e97e33063f6fb650402c4601138a8e27d53138ecea21e"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/undamped_earthquake_summary.json",
+      "sizeBytes": 1241400,
+      "sha256": "12168b7e9c01c7457fc5f508343ab936c9fe68d37755e367edae2c4b05d72b17"
+    },
+    {
+      "path": "evidence/opensees_optimization_20260802/workflow_summary.json",
+      "sizeBytes": 4377,
+      "sha256": "14e1d5ee1063025f42812b4537e02a4f07b00c2a22fd96470ae37977ac24486f"
+    },
+    {
+      "path": "install.ps1",
+      "sizeBytes": 2302,
+      "sha256": "b3ce350c5ff160a7dd42174b8935282d6a40149f58356b48d37bd394079a6543"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/__init__.py",
+      "sizeBytes": 1031,
+      "sha256": "11089d8ea9549ecab6205e57aa1eda24ccc7d78150b0288f48faafaab111e29f"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/analysis.py",
+      "sizeBytes": 36853,
+      "sha256": "1cd567ba3972859028d46024c01f734d6a6acb762415c630944e79e83bbed1e9"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/capabilities.py",
+      "sizeBytes": 10294,
+      "sha256": "d3b77e2cc4368b3e9a74bef8a85920cb1f0f50ee425a366272084a83ec085c05"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/core.py",
+      "sizeBytes": 4979,
+      "sha256": "8ec1ff9a637d369590169e1b8dc62cce4b53b5eb90a569e6c4d60fcb0020c2ba"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/damper_comparison.py",
+      "sizeBytes": 26181,
+      "sha256": "c3a7a29d46f0f191acfe58ba9ab7b4f95f7f1b0f2a6100c4381e8c7d333ddef0"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/damper_optimization.py",
+      "sizeBytes": 29386,
+      "sha256": "53eebb84c90ffb66846dcdd1b9c6171e7f0bd2c80c364a13fc2a04fe55005017"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/damper_parameter_sweep.py",
+      "sizeBytes": 16314,
+      "sha256": "771e6d629c8060c5740e24b281ba8be074693c0638389ef49c6d200047f564b4"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/engineering.py",
+      "sizeBytes": 2997,
+      "sha256": "e7e4de9d91460ab7cd71b62438228caab717cf6185be52d62d4857c2156b477e"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/evidence_gates.py",
+      "sizeBytes": 7356,
+      "sha256": "131687a1c735e9cad36b1fb08679062c430906d81ffb2588fc9fda6f0a1fdd8c"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/figure_contracts.py",
+      "sizeBytes": 2482,
+      "sha256": "a96f53ff40c91010ad3196d144f6c025e1d1a32b501005324df351911ca52ba8"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/inquiry.py",
+      "sizeBytes": 11847,
+      "sha256": "cfa4d81e5916344ce9b61f2b52a85ad618876b874a933bd736522d1394b6deff"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/task_registry.py",
+      "sizeBytes": 3233,
+      "sha256": "afbb912896fc6d86c13af8c12b12258824f3f14d5f8c553f8f5fc62efffc9379"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/tools.py",
+      "sizeBytes": 9840,
+      "sha256": "995a6ceefb95e2865c1a346138b990927bcd044225c815529d4d77a3203c8ff3"
+    },
+    {
+      "path": "momo_agent/backend/app/agents/workflows.py",
+      "sizeBytes": 23049,
+      "sha256": "2c89754e8f3840b5578f995f6b551ac5af9aab8987ebfb7e957932d04f83a172"
+    },
+    {
+      "path": "momo_agent/backend/app/api/routes.py",
+      "sizeBytes": 4078,
+      "sha256": "cbf9862fa876c31067576e06df3fd9c07db19336bb3e629359822a6eed41991f"
+    },
+    {
+      "path": "momo_agent/backend/app/api/schemas.py",
+      "sizeBytes": 2709,
+      "sha256": "0ce6e552829ed1c37fed37b22872a4ae46cfa9136311b15dfabf8b1c065e3899"
+    },
+    {
+      "path": "momo_agent/backend/app/api/v1/agent_router.py",
+      "sizeBytes": 6457,
+      "sha256": "38342f7540e642d18209e1a9423e6067d35888ef44442d18170e7e4a14ebeb1b"
+    },
+    {
+      "path": "momo_agent/backend/app/api/v1/agent_schemas.py",
+      "sizeBytes": 6933,
+      "sha256": "eaf903e20429721fdaf541850472001c86634f88fd2a9512e0b0b062d770ef41"
+    },
+    {
+      "path": "momo_agent/backend/app/api/v1/router.py",
+      "sizeBytes": 14708,
+      "sha256": "8edc0520b13c1b30a2ceb4c81ceda8a3c9f1d201ff3954574046be282f518728"
+    },
+    {
+      "path": "momo_agent/backend/app/api/v1/schemas.py",
+      "sizeBytes": 23889,
+      "sha256": "e644140de417bd99ae181ad0af01da343636d0d1f1f25395398f9d60e6dee9f3"
+    },
+    {
+      "path": "momo_agent/backend/app/core/config.py",
+      "sizeBytes": 397,
+      "sha256": "6faaecc6a53fba71312e9e6d0a48f3a927570d9acd2f763baae7df2531a1c569"
+    },
+    {
+      "path": "momo_agent/backend/app/core/engineering_limits.py",
+      "sizeBytes": 402,
+      "sha256": "0606b14826fd987639e36ed6bdd2722c940bdabac38fa53d98db986be1cccdaf"
+    },
+    {
+      "path": "momo_agent/backend/app/core/exceptions.py",
+      "sizeBytes": 3437,
+      "sha256": "49a4075b62a9ec213a573e7e7d9f04753dd5e608c398214ce50625b27172ab10"
+    },
+    {
+      "path": "momo_agent/backend/app/core/json_safety.py",
+      "sizeBytes": 810,
+      "sha256": "0e020c09c834590843dee94b03dfc31757a12a7777a152ed1438a424638c00ab"
+    },
+    {
+      "path": "momo_agent/backend/app/core/logging_config.py",
+      "sizeBytes": 1850,
+      "sha256": "9cbc320aef23429c246a3349509fe2fb9dd94ac345efe298b869d08050183f81"
+    },
+    {
+      "path": "momo_agent/backend/app/main.py",
+      "sizeBytes": 6698,
+      "sha256": "d1ffa5bf601da394f4c61c71cb3bf838ccfbba335ed769eafb24eb6f7951472f"
+    },
+    {
+      "path": "momo_agent/backend/app/models/wind.py",
+      "sizeBytes": 549,
+      "sha256": "f11b3c5c2425947c0223ef25a85d4a64bb0df6ba80976aa31a3b60cbb01908ba"
+    },
+    {
+      "path": "momo_agent/backend/app/platform_hosting.py",
+      "sizeBytes": 919,
+      "sha256": "9c1119f3fd4c20e8bcc000126b92a6bbed1dafc0c847d592da773c6741e47baa"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_capabilities.py",
+      "sizeBytes": 1935,
+      "sha256": "794683fdb62fcc4d1a88c0ef8756045a4bc9d2cfe4029849e9e5f9390632a2d3"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_conversation.py",
+      "sizeBytes": 67054,
+      "sha256": "8d9999eddc2bb764d9ec78722e9add36ddea672a19e3e9285ddc9618d697d3cb"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_engineering.py",
+      "sizeBytes": 24012,
+      "sha256": "4d1e6964b93aefeb0b84c6ec9d135c5d6896dc6b7584bd4c6e36239b0b9aca86"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_evidence.py",
+      "sizeBytes": 12373,
+      "sha256": "1e68b0f513d69be6072b241f677df725e886122c4affc8352948ba321eaf4367"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_figure_service.py",
+      "sizeBytes": 13515,
+      "sha256": "f7d4d716140aaa1f74b3c1bdd4ac551250956795150f2446f35d0ef5b626e0e4"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_harness.py",
+      "sizeBytes": 153409,
+      "sha256": "342f66d60a51a7ea17de0e472a0eacc5d83528b78a264abbfb21ec57bca0c5dc"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_llm.py",
+      "sizeBytes": 103971,
+      "sha256": "1d3c9f6b4d5b11135e4a4d6a96ec9d794b9983e9e8a64bd6dabb1ccb58a43257"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_repository.py",
+      "sizeBytes": 20978,
+      "sha256": "8ca21001f43b32caef862681542a9f9f901a1bd09f9f7752ac4b1d1bc0740632"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_service.py",
+      "sizeBytes": 131882,
+      "sha256": "f587ca725ee2ee3aee887aadba374bf9d0ceaf0f6c5c9dd7fac46a3a6d810910"
+    },
+    {
+      "path": "momo_agent/backend/app/services/agent_task_handlers.py",
+      "sizeBytes": 12841,
+      "sha256": "eb09fd0e20c2421f0207538be2aab8cb8d8cc58c8dff81f01a1c1f18e687f557"
+    },
+    {
+      "path": "momo_agent/backend/app/services/exporter.py",
+      "sizeBytes": 10757,
+      "sha256": "90939286e4166c498e0a74cdf9a73ca4e02e247223a2eaa70965243deab98514"
+    },
+    {
+      "path": "momo_agent/backend/app/services/load_artifact_service.py",
+      "sizeBytes": 22704,
+      "sha256": "ea901f11037262726edfef976728c6951b9fb3f20c3672666d22e6a9579dcd2a"
+    },
+    {
+      "path": "momo_agent/backend/app/services/load_conversion.py",
+      "sizeBytes": 3021,
+      "sha256": "084885f3a52abd74b3626580b146eb149bd7437f2d7dec7a3c18970e17bd1cd6"
+    },
+    {
+      "path": "momo_agent/backend/app/services/load_format_readers.py",
+      "sizeBytes": 9264,
+      "sha256": "99329d12d2f807255c202e5a323e21bd3df169ec957a09fda11bc82104b2d7df"
+    },
+    {
+      "path": "momo_agent/backend/app/services/load_import_service.py",
+      "sizeBytes": 31793,
+      "sha256": "52c270329b2aceddbfa219a49a5fe5f31501b203bc05007401831bfd68c87754"
+    },
+    {
+      "path": "momo_agent/backend/app/services/load_mapping_inference.py",
+      "sizeBytes": 33847,
+      "sha256": "c364b62c2f0bd78785b28d740a6e7141d3a351f6eaad0a489722b1ca4677f0fe"
+    },
+    {
+      "path": "momo_agent/backend/app/services/load_mapping_llm.py",
+      "sizeBytes": 19982,
+      "sha256": "be15e3e7e87da3ccfdf79c97280971f1ce22f5066655bc71a6f19268803c1014"
+    },
+    {
+      "path": "momo_agent/backend/app/services/model_import_service.py",
+      "sizeBytes": 6953,
+      "sha256": "f7c41e3e8438655daa08c89b6999619f2003677f1b034f9fc2ea6cffc9f94714"
+    },
+    {
+      "path": "momo_agent/backend/app/services/normative.py",
+      "sizeBytes": 3230,
+      "sha256": "b514d06f09f8b8428a4b50bfc4a4c91e727fd1fdac4717ded5ab9d458f34881e"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_dispatcher.py",
+      "sizeBytes": 15059,
+      "sha256": "1fdded051f733663b98d3d61e73204e30a38dd4569ef5a0bb0e93f8668d96bfd"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_job_executor.py",
+      "sizeBytes": 1023,
+      "sha256": "2fad82884f4f52935555401f5c10264d88ba440295c3f0e3177f0acfe5aab470"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_processes.py",
+      "sizeBytes": 2860,
+      "sha256": "341b7b67805e39eabd9aff8f248c55b495c755f7c2c323aa304f6e767f328c83"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_readiness.py",
+      "sizeBytes": 9338,
+      "sha256": "09f337f3498a1b2f127ccfb2bba474c05159e926ac417647611044f07ae85029"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_repository.py",
+      "sizeBytes": 11046,
+      "sha256": "9b0c6f7df5b660ab4d28644d56eca3c7e81bcf3acb0ed857e06251a83dc9663a"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_store.py",
+      "sizeBytes": 301728,
+      "sha256": "8abfb3a5bd78a3b290d6c8a4abb99459b5e97abe2590895b462238b2f9bc585f"
+    },
+    {
+      "path": "momo_agent/backend/app/services/platform_worker.py",
+      "sizeBytes": 6331,
+      "sha256": "4bb0e2c6f1dfeb877bfb421e0db8baf767c8042341fba72ade3d2e6d96bb6334"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/__init__.py",
+      "sizeBytes": 1630,
+      "sha256": "de3650eaa89a8fecea4a46eb3c25fe6b1e548210d799f247e5cfe775aacab35f"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/active_learning_executor.py",
+      "sizeBytes": 3543,
+      "sha256": "24cffbc689bd9a3564a7505f5b929237ebec387b2f26fea45cd274d52641d141"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/contracts.py",
+      "sizeBytes": 2834,
+      "sha256": "5999c5a6dbcfc2c3afc20c8e10cabe72a7902a08b8a835e3dde83c553beb5642"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/doe.py",
+      "sizeBytes": 2535,
+      "sha256": "27e81f425fd289209c52b03389d29581097044572b41373d355b2bc4b29a2878"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/executor.py",
+      "sizeBytes": 12115,
+      "sha256": "eecc40c8693fe4e70d01bc00655f9fb2afd124f8b4e504596cbab4e4054e6363"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/registry.py",
+      "sizeBytes": 15801,
+      "sha256": "72994574c199631c42aa6c5d8f57b328e2c0733aae2c59f45b39a32c6e71bffb"
+    },
+    {
+      "path": "momo_agent/backend/app/services/real_execution/surrogate_executor.py",
+      "sizeBytes": 4229,
+      "sha256": "ef93cd498e41a67bb270a042328cda068c6f0a4770354621978b3cc47c424065"
+    },
+    {
+      "path": "momo_agent/backend/app/services/result_inquiry.py",
+      "sizeBytes": 21207,
+      "sha256": "5adc37efa999fc31d3c83ed6317974a9b777c7d5bfc1b2bb76e7f1fd408d7cbe"
+    },
+    {
+      "path": "momo_agent/backend/app/services/simulation.py",
+      "sizeBytes": 6229,
+      "sha256": "7c241e7b83b2720bd50b2693bdb611835054d4c9a73d9fa6ce8d8c22809a7558"
+    },
+    {
+      "path": "momo_agent/backend/app/services/spectrum.py",
+      "sizeBytes": 6869,
+      "sha256": "f2a19176bce47f0514883e09cffbd3af693268c65088a29441cf56e148edd5a1"
+    },
+    {
+      "path": "momo_agent/backend/app/services/traffic_library.py",
+      "sizeBytes": 8972,
+      "sha256": "233c27dc2256ea0497bddbfd955aef8c8c18bec10505e6d0a3f47364bfdc35cb"
+    },
+    {
+      "path": "momo_agent/backend/app/services/validation.py",
+      "sizeBytes": 619,
+      "sha256": "2ef50d6daee04e5279ed1c49e7067ccadfcfb08edf4f201bfb59a67ac394a3cb"
+    },
+    {
+      "path": "momo_agent/backend/app/services/workflow.py",
+      "sizeBytes": 18475,
+      "sha256": "843d70f86640e2483ad4e7f24e857dfee6ec646c48d58b9613e77ca9bd3474aa"
+    },
+    {
+      "path": "momo_agent/backend/pytest.ini",
+      "sizeBytes": 99,
+      "sha256": "e7297139bcae15b5fcf0301192a436e9368fffcffc5c534e40e53c47baba3dde"
+    },
+    {
+      "path": "momo_agent/backend/requirements.txt",
+      "sizeBytes": 232,
+      "sha256": "5746d2d0290e3c14728547fa6b1bd1cf36546ae70537a73625a6d541b18a1027"
+    },
+    {
+      "path": "momo_agent/backend/tests/__init__.py",
+      "sizeBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "momo_agent/backend/tests/conftest.py",
+      "sizeBytes": 3591,
+      "sha256": "243df24bd2aea7a9349e44220c2fb3907681f8b15952c1392ec732f66e487a98"
+    },
+    {
+      "path": "momo_agent/backend/tests/fixtures/earthquake/README.md",
+      "sizeBytes": 2335,
+      "sha256": "9cdef4e4250395508bb16f5baa3b32810db62a232898163d584ccc31cd873b74"
+    },
+    {
+      "path": "momo_agent/backend/tests/fixtures/earthquake/RSN1633_MANJIL_ABBAR--L.AT2",
+      "sizeBytes": 41463,
+      "sha256": "cea0644744731d793b1332216b4c296fce3b8769b96cd58ac90eaacc214192c7"
+    },
+    {
+      "path": "momo_agent/backend/tests/fixtures/earthquake/RSN164_IMPVALL.H_H-CPE147.AT2",
+      "sizeBytes": 98537,
+      "sha256": "30a3e62807d12102a6ccd3b5d94a08d7385c11b24c50a08eed25262cb999fba3"
+    },
+    {
+      "path": "momo_agent/backend/tests/fixtures/earthquake/RSN767_LOMAP_G03090.AT2",
+      "sizeBytes": 121799,
+      "sha256": "137166050d45ab928756eb5a72dc259254de8cfc4e0b1c2d7db733e33fffe6a0"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_active_learning_budget.py",
+      "sizeBytes": 2504,
+      "sha256": "b1ae02d5f2e18c1ac1cf30c927e79282a98ea0a1136eb300b10e00c561b1f1c9"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_approval_update.py",
+      "sizeBytes": 13527,
+      "sha256": "f09defd0f49230dda3d39fd415f84e366d266f4268bf38787ec049e8fd6d2eb2"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_capability_tools.py",
+      "sizeBytes": 5152,
+      "sha256": "22d09c06101802f99eb239915c913e078b558ff6a505d9cf4c270eecb5733315"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_damper_comparison_api.py",
+      "sizeBytes": 11116,
+      "sha256": "186c94bdbdce1cefaf04a7eeef47527c4896cb1763a208734d8a05f898ae0dba"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_engineering.py",
+      "sizeBytes": 9240,
+      "sha256": "837a5a693feaf966c27083627623cd703ce4bc83584fbb51f0c0327352623ca7"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_evidence.py",
+      "sizeBytes": 7015,
+      "sha256": "1217bf00cf866ab6135b947e1abf594b8a9ba6a4f6c86ef03beb8555e9a66716"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_figure_service.py",
+      "sizeBytes": 6400,
+      "sha256": "69255821501516d69d9c332ea3fb8459ddc42530391ac25d83403cd20ec395d0"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_full_optimization_api.py",
+      "sizeBytes": 17069,
+      "sha256": "6cad76ea783efdfabe5619f3e53cd2da09ff406f16f976820b39c2cb93b6ade2"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_harness.py",
+      "sizeBytes": 108135,
+      "sha256": "2208a5d72211fc1facccf6040d6f7ca3c0135c410297a7bd7520f5ea723a4418"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_llm.py",
+      "sizeBytes": 71062,
+      "sha256": "9f93dbed291dd8c540b0f2fa34704feb1267e30a2395ba4af370c0e26de2fb62"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_load_api.py",
+      "sizeBytes": 45903,
+      "sha256": "b10851aedcf3ef20bdc85d3b6d4bcf4154007e9d205496e07a23583318310406"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_message_stream.py",
+      "sizeBytes": 1511,
+      "sha256": "5d17f51d13ab91e54688d4975ac1f867c67ef2c4e306b3808be9af1eeb990cf1"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_repository.py",
+      "sizeBytes": 13905,
+      "sha256": "84e2f019307f7da1776560152f628886ff47cdb93592da49d77210f9ce8ca6f2"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_runtime.py",
+      "sizeBytes": 14138,
+      "sha256": "531f3c9c1d242fa8e81d2c90b50c0a68ef1a002a4f53a27a5a422169ffb65784"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_runtime_safety.py",
+      "sizeBytes": 7216,
+      "sha256": "555b6948c4884abc55e7b9bf39b0558a05f5f37f9393d173219fb61c57c36ecf"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_timeseries_catalog_errors.py",
+      "sizeBytes": 6465,
+      "sha256": "1dc837b5e2a4b7112b0bc24b0a8cba0235c178ad87dcbbe7943a0f8e652c77b9"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_timeseries_comparison.py",
+      "sizeBytes": 7353,
+      "sha256": "6608d82f058fcb1303c08a2accd1556e1d0b4410347a819ae45f66f948824a1d"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_agent_workflow.py",
+      "sizeBytes": 8123,
+      "sha256": "46f0d88303f865316f7f801c82b99d2d76315044dc319ba419b8a01093de0583"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_analysis_agent.py",
+      "sizeBytes": 2489,
+      "sha256": "7344c3118cbfcc9f1c393286e834cadeb5f5849b899ba04b25f415e1d3be7e1b"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_ansys_parser_safety.py",
+      "sizeBytes": 654,
+      "sha256": "0e372a944907b2080efcd3e564083eb7adbd430a049c4fd68d114b5056bd0808"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_bridge_json_safety.py",
+      "sizeBytes": 1619,
+      "sha256": "daf272c5e882cee1b7a3929b968b2fa605e1b2d6df649ee7523a59bd8536fa42"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_command_stream_progress.py",
+      "sizeBytes": 9201,
+      "sha256": "4c526120b2644f0ff3ae2075ee9bce5201b79197ef103b9ba55a9974b9f047e1"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_config_runner_progress.py",
+      "sizeBytes": 7191,
+      "sha256": "676060d8d5b440c9485560b847a90457a1f3ecbeac3192b77378160ddbcada12"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_damper_comparison_agent.py",
+      "sizeBytes": 6514,
+      "sha256": "4df8e25459b279ad172ac422c1f30477f0affb0279d8c79b2559cbebee38ffd2"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_damper_optimization_agent.py",
+      "sizeBytes": 5836,
+      "sha256": "0313cea7718b3635d6c45a6936b714abc50bfd5feeae1fb17c8388032cde65c5"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_damper_sweep_evidence_reverification.py",
+      "sizeBytes": 5877,
+      "sha256": "918a07a870a030735804a42791f521ec69c7d599d2257708ebf36dead30eb041"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_damper_sweep_license.py",
+      "sizeBytes": 10910,
+      "sha256": "06305ffa31b8140b5a49a87dac9acdbacc7c794808266c4df5d3ef009580fc12"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_damper_sweep_output_integrity.py",
+      "sizeBytes": 4888,
+      "sha256": "f1bc430ca8a8a244809b0a999698a16adc1cbbf252ad1690c7c2f3821c17eedc"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_damper_sweep_wind.py",
+      "sizeBytes": 20367,
+      "sha256": "30602ba783d0c17377d198fd13a25da4d32cbd79f1643463de1b490f74abebb0"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_doe_runner_progress.py",
+      "sizeBytes": 5454,
+      "sha256": "fd1f98d7130d522beb2c567500e9263909b745304f1c80a3ab8eac5d9ac57d72"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_earthquake_load_format_import.py",
+      "sizeBytes": 31108,
+      "sha256": "ca591ec7ebbaa428339b9103fc6baa51fc9ea7cb087bf5c580170cf5caed5d10"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_engineering_base.py",
+      "sizeBytes": 1933,
+      "sha256": "c3e7d976291808272cd11045c593da753d92cedc979a82d0198b5cb58eece6c8"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_evidence_gates.py",
+      "sizeBytes": 3866,
+      "sha256": "f9ad43f77e99a33553a1fb50058e31c502e9147c4871275acda9ff8d51e727fb"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_fem_model_support.py",
+      "sizeBytes": 17741,
+      "sha256": "c764cf605cb58a271644e7f4e380bb1bd043f87d84a366d6a430ba17bf597a70"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_job_case_progress.py",
+      "sizeBytes": 17162,
+      "sha256": "28655871eee0d3b4d44b7b13d6c5725442c5d1b495b67e0db33a14afb80b4ba3"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_load_conversion.py",
+      "sizeBytes": 3724,
+      "sha256": "72097229d5c8bb69705aa48906d2d6053c61f0dd20811a07ebad6257812ab4bb"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_load_mapping_llm.py",
+      "sizeBytes": 20809,
+      "sha256": "8a9eac7a291372e494ac964211bfbba2ca95dd6f06f9bc0bb25ae34ae73ff637"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_normative.py",
+      "sizeBytes": 4080,
+      "sha256": "4d1735d4b7394d3536cf8930c2858ad86d3426205e64ad0626a7eb61e3fa7ca3"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_opensees_element_response.py",
+      "sizeBytes": 10202,
+      "sha256": "55a7b3ff7e8f05b91fa921c267785ab67197bca1eb610800d085679b1f770cb1"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_platform_api_v1.py",
+      "sizeBytes": 79850,
+      "sha256": "de2e4f5868db05850742673bd385e4170201af8084bc44161670c9866063423b"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_platform_hosting.py",
+      "sizeBytes": 1081,
+      "sha256": "85b7a5b0683bd02451ea798af8e0190f9166930d91611fafe630b7021db92d0c"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_platform_job_reliability.py",
+      "sizeBytes": 28159,
+      "sha256": "f87c97775cbb58a3ca579f581f4aeda8aa5d3e7e2d28a6707016fd41ae208304"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_platform_readiness.py",
+      "sizeBytes": 11063,
+      "sha256": "5008650b34caaaed9d84509fb5cf515af2a5820cc22c7fb91a3c7cbc470318cf"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_progress_sink.py",
+      "sizeBytes": 8047,
+      "sha256": "d284451f09370f1d492a03e053b09fa7c18782536013b26db934d7f2d5b08513"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_progress_vertical.py",
+      "sizeBytes": 9976,
+      "sha256": "0f3cff46b663b22841d88b0edfcdcd014698d0c6d1587ef976ec955dc3d252b2"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_real_agent_baseline_manifest.py",
+      "sizeBytes": 5076,
+      "sha256": "bfeb4751040fe3567eca1e1cf8284135d3d595168d173d0398c4964360aedf87"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_real_execution_capabilities.py",
+      "sizeBytes": 15590,
+      "sha256": "936c0312ad43e78d24983d0951fb6545bb26b093e0b5f6845881bd2617f67b17"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_real_solver_executor.py",
+      "sizeBytes": 7333,
+      "sha256": "f2b06e18668788898838b3c4a8bc8a073cf1e4f2ec1f73bd187c8dcda159b044"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_response_controlling_node.py",
+      "sizeBytes": 5007,
+      "sha256": "a872436adafef514f1d4567aa2feadd11b1da36137092a2f83e1fcb32a603cdd"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_result_inquiry.py",
+      "sizeBytes": 46281,
+      "sha256": "687926f4cc857fc17f3a11fceb8123a8cf20281e472545a7527e4a4f912129f8"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_session_title_summary.py",
+      "sizeBytes": 3466,
+      "sha256": "27cfd7a7b9bc6913433eaaf6727ccc4e5e3de35312707c74c3e9b316ca5c76ab"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_simulation.py",
+      "sizeBytes": 1493,
+      "sha256": "de0d1db02c668935d972b1caaa246122882a12200cd94637f9005304ae173220"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_solver_output_binding.py",
+      "sizeBytes": 2800,
+      "sha256": "282f2339acc2e5791df0177a572225ba1a445d748756e5b64e79aa0ec40a66b6"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_solver_progress_passthrough.py",
+      "sizeBytes": 5883,
+      "sha256": "f419d38ffafde6779cf1a6d425752eeec535732119d38374e17265842d1dc74a"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_spectrum.py",
+      "sizeBytes": 3846,
+      "sha256": "5a66d1f2c53329c4f14aa6added277d7bbada7cee2b6b9ba7c3347204918dd4c"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_tower_base_peak_node.py",
+      "sizeBytes": 4479,
+      "sha256": "7f2d3575e53b787925b90a08640af12ebd17946b6fd1fdec074d7d6d91c0f710"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_traffic_analysis_agent.py",
+      "sizeBytes": 32780,
+      "sha256": "20ec68949481cf718c6375cb9b8b9b04853dd6224a3e943df4748f0f8e08aa28"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_traffic_damper_optimization.py",
+      "sizeBytes": 33269,
+      "sha256": "f050d337a9bbe438d5863b85f1a4682b4fd4fd68983077631a4f641c4312e37b"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_traffic_damper_sweep.py",
+      "sizeBytes": 12669,
+      "sha256": "702415fd468cb421b3aa69d4146d68ffc698009f0a3776428b1d1718034bf73b"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_traffic_load_mapping_inference.py",
+      "sizeBytes": 7531,
+      "sha256": "e3b8f92923e7147fe98d9ae73aa0ad18c3c1905961a030833ddecea2f9e768d4"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_traffic_matrix_standardization.py",
+      "sizeBytes": 9052,
+      "sha256": "16980d0cf5484ed04435706dd7b9eb9e40868cd03447f0b12518512a87b39d5a"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_traffic_upload_end_to_end.py",
+      "sizeBytes": 11288,
+      "sha256": "44d1868ba02b6e70aee195bd4f33aad1d39e8d7f1c87a3cf085035a0bef29168"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_verify_submission.py",
+      "sizeBytes": 2666,
+      "sha256": "d3f2376bf824f5279aeaeb43ec32a723fc4d6be79f06e439e82076efd334cf2e"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_web_app.py",
+      "sizeBytes": 4710,
+      "sha256": "a50fc776fdded202678c559c2b4c0a72ab617289f09c21978147a121aee9d3fb"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_wind_analysis_agent.py",
+      "sizeBytes": 28001,
+      "sha256": "ee378c70917a1aafcca08b1f55fd8e9f0bf9c8d91217b544bf452b8850bf0b83"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_wind_damper_comparison.py",
+      "sizeBytes": 22659,
+      "sha256": "fa54049dc2747f703c53469eb529bda7775fa204e4f64cf37c414a8e6d912093"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_wind_damper_optimization.py",
+      "sizeBytes": 30858,
+      "sha256": "a6fa1914b26a53214754aa918b66e46ef7a9b93d707acd9cc25fd6f7f66ba871"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_wind_load_mapping_inference.py",
+      "sizeBytes": 6958,
+      "sha256": "43ef105a2988341067910cceaafb3491d31bdec56d8fca9241330a63a6ade765"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_wind_parameter_sweep_agent.py",
+      "sizeBytes": 7470,
+      "sha256": "d4f27c59d57474871c2a767eff06ce0866ee2afca06a6946012202904b8b1c9a"
+    },
+    {
+      "path": "momo_agent/backend/tests/test_workflow_api.py",
+      "sizeBytes": 5660,
+      "sha256": "b089f5074375f1ff2db60d92903dcb5c3318dcf4c35b4ac9e130ab60073db483"
+    },
+    {
+      "path": "platform-ui/.env.development",
+      "sizeBytes": 55,
+      "sha256": "a7bdfe93e86f30719e40aa0f066ea9f59a2bb3e55e9b8b896d79b4d2e083559d"
+    },
+    {
+      "path": "platform-ui/.env.production",
+      "sizeBytes": 34,
+      "sha256": "e81640c2962516cf9606d8af2460e484f50dd0691bba7dcd67a53bfc79a8d8b8"
+    },
+    {
+      "path": "platform-ui/.gitignore",
+      "sizeBytes": 253,
+      "sha256": "fe718e7babb14f3cbad2d97f08889b9ce5215ed3fe0e43b2b8cfbfb3b9b844e8"
+    },
+    {
+      "path": "platform-ui/.oxlintrc.json",
+      "sizeBytes": 245,
+      "sha256": "b4d344818a1e1bf43997e4744a9153c8eef770c98b58229cd86363dabb85ded4"
+    },
+    {
+      "path": "platform-ui/README.md",
+      "sizeBytes": 2342,
+      "sha256": "8838c618d6debb34eee80cc1eb2c8120d7d19cfa12d79ffdad2ef70d7182ae59"
+    },
+    {
+      "path": "platform-ui/dist/assets/ArtifactBrowserPage-DTPzW33D.js",
+      "sizeBytes": 11102,
+      "sha256": "06f8683c2885628f58d30408850250ee76838e3273474d414aae522fe4e2d360"
+    },
+    {
+      "path": "platform-ui/dist/assets/ArtifactPreview-DcuQSWEe.js",
+      "sizeBytes": 23938,
+      "sha256": "d7e0b1bbd87a6aa28c5a0d37a65530c2917b4d43e46a9862f3171d12c7ecddf2"
+    },
+    {
+      "path": "platform-ui/dist/assets/ChatPage-D7zG3ehM.js",
+      "sizeBytes": 81648,
+      "sha256": "9a9a961f189a27ccdd0e8cc9d5280416e039c5261e4e97f4071c8e06754c663b"
+    },
+    {
+      "path": "platform-ui/dist/assets/CommandStreamPage-DOP_OO2j.js",
+      "sizeBytes": 15461,
+      "sha256": "d0f720a059f03363ce644f67279ca36c7db7f364ecfbbc895466c63115ed3c9a"
+    },
+    {
+      "path": "platform-ui/dist/assets/DamperBasePage-NsD3eRfb.js",
+      "sizeBytes": 9018,
+      "sha256": "d345818025818b4864069f77c2ad712b797466579e4885911fc77ca7e1875e71"
+    },
+    {
+      "path": "platform-ui/dist/assets/DashboardPage-BYvLLSD6.js",
+      "sizeBytes": 17681,
+      "sha256": "9e74a7d1af078650d8651c91f15eea49b75cba739ae2228ee18eda80278e423a"
+    },
+    {
+      "path": "platform-ui/dist/assets/ErrorPanel-Dk9H6dpz.js",
+      "sizeBytes": 2217,
+      "sha256": "628b85b623c8b1ae6709a37814c849a8b16233b86f0b07d1336e255eb9b96302"
+    },
+    {
+      "path": "platform-ui/dist/assets/ExperimentDesignPage-DTzFh6u9.js",
+      "sizeBytes": 12467,
+      "sha256": "f64860396817ff1e99af47d64c8168d27393290944136edf7ff6cfe6ef370b66"
+    },
+    {
+      "path": "platform-ui/dist/assets/LineChart-D2dFCx1n.js",
+      "sizeBytes": 16976,
+      "sha256": "76b235633c99af233de2ecec09102e14ba34c8d679969e699ece632ba1a57e1b"
+    },
+    {
+      "path": "platform-ui/dist/assets/LoadsPage-DHy1C0Dy.js",
+      "sizeBytes": 43525,
+      "sha256": "dd6bbd54a48b7e0fc3f22fcc79242577a33c54b7c5bd6d385e53f9b8d36345af"
+    },
+    {
+      "path": "platform-ui/dist/assets/OptimizationPage-BghIXtRo.js",
+      "sizeBytes": 27087,
+      "sha256": "cc3eca1b9bed1d0ce673098b911a7d91f77b6d0d0f9e1ffc70e7687207524f78"
+    },
+    {
+      "path": "platform-ui/dist/assets/ProgressBar-B0n1zl5Y.js",
+      "sizeBytes": 2692,
+      "sha256": "1e3cf1ca038cf0e176a4f79c7f255b4485c46592c0262eb8152a3804368f9aea"
+    },
+    {
+      "path": "platform-ui/dist/assets/ResultsPage-BKVtSqZg.js",
+      "sizeBytes": 9997,
+      "sha256": "70932f43945feb1982869b56988161da5e605262ef95ae0fed419de9942562a5"
+    },
+    {
+      "path": "platform-ui/dist/assets/ScatterChart-mNbdIh_F.js",
+      "sizeBytes": 11400,
+      "sha256": "f7b59b4f35243adbbfffff13b0a6a3aa85df201dd3e17b59688a48de29ac44e9"
+    },
+    {
+      "path": "platform-ui/dist/assets/SolverBatchPage-gV6YRYGl.js",
+      "sizeBytes": 12609,
+      "sha256": "0f3eaa06f645936af1681cf03ddf4234bf137adba90b2726e2fafda8e12f9872"
+    },
+    {
+      "path": "platform-ui/dist/assets/SurrogatePage-DmKhtH50.js",
+      "sizeBytes": 16946,
+      "sha256": "4721dd45dfc4c4f1498d097dc38cdb72154d0f848b8fdbed815cc27272e0e0c6"
+    },
+    {
+      "path": "platform-ui/dist/assets/chart-JqBldQdQ.js",
+      "sizeBytes": 333660,
+      "sha256": "6d740c0e0ae2710f5e53f183921aca3ced1b95b070da15ec1fd7572ac95e54f7"
+    },
+    {
+      "path": "platform-ui/dist/assets/circle-check-CumvKWiL.js",
+      "sizeBytes": 168,
+      "sha256": "280e6e5d8a0013a5bb280f629ceef639e51c021dd2513c5bc86bbffbf7b8df52"
+    },
+    {
+      "path": "platform-ui/dist/assets/circle-play-CMJQljGy.js",
+      "sizeBytes": 246,
+      "sha256": "9bf08fbba6378f4a28f3348ebc735d1016306973c30e1f9cf615c6615c77e967"
+    },
+    {
+      "path": "platform-ui/dist/assets/circle-x-DTFpwEfR.js",
+      "sizeBytes": 197,
+      "sha256": "91a375af83ed1df88644df2c79d68bc600231da50f22ab24eb593e5be127893b"
+    },
+    {
+      "path": "platform-ui/dist/assets/download-DKtzuA8a.js",
+      "sizeBytes": 222,
+      "sha256": "d2a86e890904572199f4f5dc1cc32e900198ebca739bd3fdbc6fb735453d7b87"
+    },
+    {
+      "path": "platform-ui/dist/assets/engineeringConfigStore-BR-4ZVF0.js",
+      "sizeBytes": 18482,
+      "sha256": "39e22d797cb8d301595189e14fa5e023fa6bdca8def9d51458326365e8b68d01"
+    },
+    {
+      "path": "platform-ui/dist/assets/errors-7btT30FJ.js",
+      "sizeBytes": 80,
+      "sha256": "b050663ae1a512547459c6340edd0cc4173e0bc3a081c22629a1ace1a2002e4a"
+    },
+    {
+      "path": "platform-ui/dist/assets/eye-Ny9-Q-je.js",
+      "sizeBytes": 246,
+      "sha256": "3de018fc615c55e86e5256ed1aa04a8ae8179fc49d882c212305c50a3cd9722f"
+    },
+    {
+      "path": "platform-ui/dist/assets/index-CX-_sU5P.js",
+      "sizeBytes": 303592,
+      "sha256": "814bb75d8be1db35ac441fefb2c78ba67c35ce9d629b7b89837ee3b619ef5c64"
+    },
+    {
+      "path": "platform-ui/dist/assets/index-CmtH6FTS.css",
+      "sizeBytes": 5419,
+      "sha256": "be43b3127955c97220b2f79ff95db6a7e19ea564198d496880acd35c90d8af27"
+    },
+    {
+      "path": "platform-ui/dist/assets/jobStore-BY1DPiyz.js",
+      "sizeBytes": 1786,
+      "sha256": "ea0962836215b86aecc9754fe77222a1d3c7e586a6b230fe5fd4173ba4b4c57c"
+    },
+    {
+      "path": "platform-ui/dist/assets/plus-CaSYA2cM.js",
+      "sizeBytes": 143,
+      "sha256": "798c310d68bb194001c58f5375319e1d0080dad7958bce7188eec9d889ab3ee8"
+    },
+    {
+      "path": "platform-ui/dist/assets/rotate-ccw-phwi_783.js",
+      "sizeBytes": 190,
+      "sha256": "86b8d1da6e95a8a59d88f54f3491204f6818a87e357709343c65f9e12402d63e"
+    },
+    {
+      "path": "platform-ui/dist/assets/save-MhuHfNHT.js",
+      "sizeBytes": 317,
+      "sha256": "e686b1ae6df324047f14175a357afea4d70a07cd37838ecdda9ecc54cc3f8e49"
+    },
+    {
+      "path": "platform-ui/dist/assets/shield-BtluMQuU.js",
+      "sizeBytes": 262,
+      "sha256": "59c4d99f208338ee670e76059be742254f5212f3ac0684a43edf758ced491651"
+    },
+    {
+      "path": "platform-ui/dist/assets/shield-check-CtNyImUA.js",
+      "sizeBytes": 310,
+      "sha256": "f62be5e4aa4a143c0098b519a41d7e87d79faa0b5164af8dd2a73a82dfd2f4a3"
+    },
+    {
+      "path": "platform-ui/dist/assets/tooltipContext-BFlZ0ZuJ.js",
+      "sizeBytes": 4877,
+      "sha256": "2b2b6ac64208cc96c71465aa0c156fc1d0648f26568476b03f2db3847c1099a5"
+    },
+    {
+      "path": "platform-ui/dist/assets/triangle-alert-CJo2Q6ca.js",
+      "sizeBytes": 255,
+      "sha256": "f2e52ba8423e6cd22c1a8331e7375ca05d57b723d78a7eb51b47df569a62ceb5"
+    },
+    {
+      "path": "platform-ui/dist/assets/useCapabilityAvailability-Tjdm1Ug2.js",
+      "sizeBytes": 527,
+      "sha256": "338f2b9aa391236a1cd637972049c9a3fc2202914ddd2b29a117b89e37a49ec7"
+    },
+    {
+      "path": "platform-ui/dist/assets/useManagedIntervals-CSZgeSuw.js",
+      "sizeBytes": 428,
+      "sha256": "d859a0a62d08afc7f9786faa9e663419a9e9a9a98f7ce828f21ad804daca56e6"
+    },
+    {
+      "path": "platform-ui/dist/favicon.svg",
+      "sizeBytes": 9522,
+      "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+    },
+    {
+      "path": "platform-ui/dist/icons.svg",
+      "sizeBytes": 5031,
+      "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+    },
+    {
+      "path": "platform-ui/dist/index.html",
+      "sizeBytes": 432,
+      "sha256": "ea5e61ca8bbfe3cca90283eb0bc579ac7ce13f83a65dc42f6a3f0d4f474b545f"
+    },
+    {
+      "path": "platform-ui/index.html",
+      "sizeBytes": 334,
+      "sha256": "181e96e49b2f605e2e883f524029e493007308d4714959989e85ec50e8866a27"
+    },
+    {
+      "path": "platform-ui/package-lock.json",
+      "sizeBytes": 78568,
+      "sha256": "b920b1497b7d083f80fe485b318d22a81648dd3cbdd1ebe78d075f2817ebc593"
+    },
+    {
+      "path": "platform-ui/package.json",
+      "sizeBytes": 790,
+      "sha256": "00fe7a1360d786fb9bf904e1c2f01723a552e7a1643c7eb4f905aa0d4bb4a17c"
+    },
+    {
+      "path": "platform-ui/public/favicon.svg",
+      "sizeBytes": 9522,
+      "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+    },
+    {
+      "path": "platform-ui/public/icons.svg",
+      "sizeBytes": 5031,
+      "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+    },
+    {
+      "path": "platform-ui/scripts/check-bundle-size.mjs",
+      "sizeBytes": 795,
+      "sha256": "a934a3131f1708f19b96207929e563b1ee8f810f0b6bdaa2ead2f667b7f25064"
+    },
+    {
+      "path": "platform-ui/src/App.css",
+      "sizeBytes": 26,
+      "sha256": "439d617883cc612edb1389525da847f2888c9988c4bfa2b1b26ed21ad27ffb7f"
+    },
+    {
+      "path": "platform-ui/src/App.tsx",
+      "sizeBytes": 2468,
+      "sha256": "5553b84516ebaaf4df9d4629e3103f5d8f4204e9ca97f9e31a5e603977ee050a"
+    },
+    {
+      "path": "platform-ui/src/api/agentApi.test.ts",
+      "sizeBytes": 3673,
+      "sha256": "40a2f90fe1e4b495ac87aa510a86af0ba59d0778e370be06cd7b610fed69ed65"
+    },
+    {
+      "path": "platform-ui/src/api/agentApi.ts",
+      "sizeBytes": 17569,
+      "sha256": "bd986932731620cf20395777e925950f751a2fd164954458ac7071e98b6ddca3"
+    },
+    {
+      "path": "platform-ui/src/api/client.test.ts",
+      "sizeBytes": 531,
+      "sha256": "1b68f9c706c9aafb1a2469aa9f3b40966cc8c61f754bb6ddaa81282132182c3a"
+    },
+    {
+      "path": "platform-ui/src/api/client.ts",
+      "sizeBytes": 22947,
+      "sha256": "7d0e89df18b33674e0c8a6768e1d03ebe023b17de934602fabcdf64d52bcf5d6"
+    },
+    {
+      "path": "platform-ui/src/api/engineeringOptions.test.ts",
+      "sizeBytes": 2770,
+      "sha256": "5a0d6cd8c6ac66cc0a0dbe54b8782ab01a439099d7b3766a8a545b5b2394f5e0"
+    },
+    {
+      "path": "platform-ui/src/api/engineeringOptions.ts",
+      "sizeBytes": 20629,
+      "sha256": "4e922d93e33256c83a74a6d7beec61fab4a3197457c2f25c2f4a629d7eca6da2"
+    },
+    {
+      "path": "platform-ui/src/api/mockDb.ts",
+      "sizeBytes": 35917,
+      "sha256": "ec96cf5cd433557c75e0d0f338cbf68ae5214dd2b7247ce39ec1d3e5f9f70e7f"
+    },
+    {
+      "path": "platform-ui/src/api/types.ts",
+      "sizeBytes": 18444,
+      "sha256": "23c47d499f11bd10e4d7b5adf380bf8fc90857d62eb149684351717cff85b72e"
+    },
+    {
+      "path": "platform-ui/src/assets/hero.png",
+      "sizeBytes": 13057,
+      "sha256": "881ffbcaafc212e49addad08846a5b82761355fa20624253af3477ba33262c5c"
+    },
+    {
+      "path": "platform-ui/src/assets/react.svg",
+      "sizeBytes": 4126,
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "platform-ui/src/assets/vite.svg",
+      "sizeBytes": 8709,
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "platform-ui/src/components/artifact/ArtifactPreview.tsx",
+      "sizeBytes": 13061,
+      "sha256": "a6162d5c81b22c39e6b15a990ee2d2aa859834b17d44eb7a11f8d73b82f5ec3f"
+    },
+    {
+      "path": "platform-ui/src/components/artifact/EarthquakeWorkflowOverviewPanel.tsx",
+      "sizeBytes": 12076,
+      "sha256": "8585dd46456cf23b5a8e8dc306db53c379aa69beed9c0f163bc4a61629e920f5"
+    },
+    {
+      "path": "platform-ui/src/components/artifact/earthquakeWorkflowStatus.test.ts",
+      "sizeBytes": 1429,
+      "sha256": "901ed5eb0becbed740dd38d9c72e4010cb0017d698cde8d79d5010bd7d6a948e"
+    },
+    {
+      "path": "platform-ui/src/components/artifact/earthquakeWorkflowStatus.ts",
+      "sizeBytes": 766,
+      "sha256": "acddd47e4b291a0eafcaddf8c2284e7d7e48f4a369dc04f7c821b47778aa2875"
+    },
+    {
+      "path": "platform-ui/src/components/data/CsvPreview.tsx",
+      "sizeBytes": 3454,
+      "sha256": "878772a9d162ae54db245751b944dfd791e95ed858816d12d4ffbb04155db4d4"
+    },
+    {
+      "path": "platform-ui/src/components/data/JsonViewer.tsx",
+      "sizeBytes": 2503,
+      "sha256": "bd0d122fc379a3153d9c4938f4d780a013a7a430770c36debb9d0bae9547e037"
+    },
+    {
+      "path": "platform-ui/src/components/data/MarkdownViewer.tsx",
+      "sizeBytes": 5996,
+      "sha256": "3d54e555489b3bde4e479f6190d89922049064d9f06a050f6d87d25b9f37877d"
+    },
+    {
+      "path": "platform-ui/src/components/engineering/VehicleLibraryDetail.tsx",
+      "sizeBytes": 4536,
+      "sha256": "57a2e9e376e500c6878735bdd7b246b457a2a8bbb6d52b614ab3f89ee029daa2"
+    },
+    {
+      "path": "platform-ui/src/components/feedback/ErrorPanel.tsx",
+      "sizeBytes": 2528,
+      "sha256": "ac24417f6d49b32752f9e8f6a94cfc720a8021e110e6f48d2fcf82df4580ad06"
+    },
+    {
+      "path": "platform-ui/src/components/feedback/LoadingSpinner.tsx",
+      "sizeBytes": 1086,
+      "sha256": "fbe655599c831d086d01c63c4987c3189f723505ff45a25e514661066032ea84"
+    },
+    {
+      "path": "platform-ui/src/components/feedback/ProgressBar.tsx",
+      "sizeBytes": 2248,
+      "sha256": "c4c7b1088e80f992266345ab14732cca0bca1028dcf330e7246ef3acd429052b"
+    },
+    {
+      "path": "platform-ui/src/components/feedback/StatusBadge.tsx",
+      "sizeBytes": 1349,
+      "sha256": "7c9bdeca0108ca4b4e094dd8dacae3a0793b9a52efe9444ca1a2d06d5274f449"
+    },
+    {
+      "path": "platform-ui/src/components/layout/AppShell.tsx",
+      "sizeBytes": 1413,
+      "sha256": "cdda0993f3785fc9b608a544373cecd6e13c70896b8f4afcb52db7d33280743b"
+    },
+    {
+      "path": "platform-ui/src/components/layout/ChatSidebar.tsx",
+      "sizeBytes": 7508,
+      "sha256": "b70298e0bec06cfc46b77cdfd9aa4c5ca9579b2a0959267e35fd444eb2eba928"
+    },
+    {
+      "path": "platform-ui/src/components/layout/Sidebar.tsx",
+      "sizeBytes": 3982,
+      "sha256": "1a33d8c35503583c6fb66c2903b18a85a4ce5ecd9d09bd2f26533fcb20248da6"
+    },
+    {
+      "path": "platform-ui/src/components/layout/TopBar.tsx",
+      "sizeBytes": 3487,
+      "sha256": "d91518bf841d4d100550c49ea8fb7431116a172aa5fc0d81b523c490509ea7d4"
+    },
+    {
+      "path": "platform-ui/src/hooks/useCapabilityAvailability.ts",
+      "sizeBytes": 1262,
+      "sha256": "0a8be265470ce47babb2d946b1f2551de3352f0d7d4cc5037e7d09c76a61f667"
+    },
+    {
+      "path": "platform-ui/src/hooks/useManagedIntervals.ts",
+      "sizeBytes": 817,
+      "sha256": "8bc7f62fee61a63e5f0e1ff60d8a29172602553c74cde43bf1586bc60b4ec5d6"
+    },
+    {
+      "path": "platform-ui/src/index.css",
+      "sizeBytes": 7907,
+      "sha256": "161e78506d55e93be34dfc59fc4f3f918d4e7bfa9f32fef6e20a87fd01f02b4c"
+    },
+    {
+      "path": "platform-ui/src/main.tsx",
+      "sizeBytes": 230,
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "platform-ui/src/pages/agent/AgentWorkbenchPage.test.tsx",
+      "sizeBytes": 2028,
+      "sha256": "f7eae6e3d0b8675632b4d31b0559ff35ba059539070964f1dea7af3b2a98f5ce"
+    },
+    {
+      "path": "platform-ui/src/pages/agent/AgentWorkbenchPage.tsx",
+      "sizeBytes": 18142,
+      "sha256": "dd304ca13e6cc62612891d1862597b2f962e2fe90036e90e39051b8e15ad57fd"
+    },
+    {
+      "path": "platform-ui/src/pages/agent/FullOptimizationPanel.tsx",
+      "sizeBytes": 9394,
+      "sha256": "11b96d7a1dca289bd4b97fc890f0f2ef53a8e0e5f19b9e048618d9f5029f6664"
+    },
+    {
+      "path": "platform-ui/src/pages/artifacts/ArtifactBrowserPage.tsx",
+      "sizeBytes": 17066,
+      "sha256": "0f18e834b2eb9c34f5f7c019e64cf2bb4c77dac7bc25d27be27472fe4cefc8c7"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/ChatPage.tsx",
+      "sizeBytes": 9129,
+      "sha256": "7bfd3bef31be34cce46dec646ddedcaaa4ad1a976a441a31b5ddfc1332358104"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/Composer.tsx",
+      "sizeBytes": 5929,
+      "sha256": "74b042ffc30526eae78005a6eda70108f57a3b53fb5681b1c8bdc25226d68721"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/EmptyState.tsx",
+      "sizeBytes": 4068,
+      "sha256": "6c8151c907e5aa6624df71ba2585f6ea529a953f939f78eca92589c7c9fb23c1"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/MessageBubble.tsx",
+      "sizeBytes": 2241,
+      "sha256": "203ca5166ee6127a2f363f59cfeeda67638bdf84065417693d7eb6d13777c3ab"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/ApprovalCard.tsx",
+      "sizeBytes": 1995,
+      "sha256": "5c2320d58744cffe5437ff0a2bd5a59133d4f0201132c178174216cf97914b8e"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/EvidenceCard.tsx",
+      "sizeBytes": 2350,
+      "sha256": "4c977a598031559f5c25e195039bca6a7486bdea4bb1b55b203a772b262440a5"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/MappingCard.tsx",
+      "sizeBytes": 8583,
+      "sha256": "aab5ca1eee26f5193c75ce5e75ad0714818cb555ce03fd89bab47d36838d1618"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/PlanCard.tsx",
+      "sizeBytes": 5042,
+      "sha256": "1481a8b7b0f7c0fd0f988e1dba255c0432a630411076cbee28ac1fe80b7d1154"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/ProgressCard.tsx",
+      "sizeBytes": 9716,
+      "sha256": "a59707d0909746b3617f21e74c79954627e5eb9c383791daa81cb28a316a7dae"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/ResultCard.tsx",
+      "sizeBytes": 25560,
+      "sha256": "1d387db9d65b933a9d7985f87b826e57bda7a97282a5138a90b417b5d480fe25"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/TimeseriesSection.tsx",
+      "sizeBytes": 16950,
+      "sha256": "ada3cdad8f0e45cae425c7e74f1b061908519d3797d7f5837c260934a4ef2caf"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/cardStyles.tsx",
+      "sizeBytes": 5302,
+      "sha256": "3a05c01171ddbe422ea73c60d07fbe1bafe99039454dc6167713dbb5e2eb33f5"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/cards.test.tsx",
+      "sizeBytes": 26587,
+      "sha256": "492f3e7a2a2640699e9e57d03d221c09da723e7a0a209bebdceaabe20e9a1c24"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/cards/timeseriesComparison.ts",
+      "sizeBytes": 1869,
+      "sha256": "0d9ed9f737e8a7ffa0ec0b8adc438b3cf42e331a3448abbdd22c45fcfc0cdd2a"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/chatStatus.test.ts",
+      "sizeBytes": 308,
+      "sha256": "aef6328436454782757face31b76495da988284ea682836b446a71325ed3adfe"
+    },
+    {
+      "path": "platform-ui/src/pages/chat/chatStatus.ts",
+      "sizeBytes": 304,
+      "sha256": "62c6956a0a749c9d0e92937ed9d15e2c0b074659e4ac1b86e945b02763172d2d"
+    },
+    {
+      "path": "platform-ui/src/pages/command-stream/CommandStreamPage.tsx",
+      "sizeBytes": 22623,
+      "sha256": "5f144ea39773f472405331fd1f490c20b92704e8d037fbba0266f3365320cca8"
+    },
+    {
+      "path": "platform-ui/src/pages/damper-base/DamperBasePage.tsx",
+      "sizeBytes": 13726,
+      "sha256": "d33b720fa12bbbeb25eb0d9b4ccd6a6090aa5945b849c159ec8e768c1348c20b"
+    },
+    {
+      "path": "platform-ui/src/pages/dashboard/DashboardPage.tsx",
+      "sizeBytes": 28652,
+      "sha256": "247e40ffabb48032026714e8d4c55d451977c8126cbceb549c22f4f598254495"
+    },
+    {
+      "path": "platform-ui/src/pages/dashboard/dashboardExecution.test.ts",
+      "sizeBytes": 1351,
+      "sha256": "55fd74d42adff2338521402113ede7aac78469541e3dc361879b82192b72b2a9"
+    },
+    {
+      "path": "platform-ui/src/pages/dashboard/dashboardExecution.ts",
+      "sizeBytes": 1442,
+      "sha256": "b2b991417c37dc9db3609ccf3cce0ce56ee4b7ce9ae3d7e1c22e285504f1bb13"
+    },
+    {
+      "path": "platform-ui/src/pages/experiment-design/ExperimentDesignPage.tsx",
+      "sizeBytes": 20294,
+      "sha256": "cadd4bb9e596f33e9a7600aaab0d7002d6c38d88a0c6e1b4d6f328d836c07725"
+    },
+    {
+      "path": "platform-ui/src/pages/loads/LoadsPage.tsx",
+      "sizeBytes": 41550,
+      "sha256": "917658003e444dbeb929827f2703a1d8a7bbd9ec3e06f44295be781cdb42e0b9"
+    },
+    {
+      "path": "platform-ui/src/pages/optimization/OptimizationPage.tsx",
+      "sizeBytes": 46704,
+      "sha256": "36bdfa3385532490891385b4f3c89d817bc0584fe3ad20ac8ce05e9acefea4eb"
+    },
+    {
+      "path": "platform-ui/src/pages/results/ResultsPage.tsx",
+      "sizeBytes": 16884,
+      "sha256": "f08763bcda95479f1227595cc0ce086ada3b7ab8eb10189093b1b0f689bc96f3"
+    },
+    {
+      "path": "platform-ui/src/pages/solver/SolverBatchPage.tsx",
+      "sizeBytes": 20207,
+      "sha256": "1c82aa728fc358bf8ebba2400694dd563f4366edb941167593aed5925f86c5be"
+    },
+    {
+      "path": "platform-ui/src/pages/surrogate/SurrogatePage.test.tsx",
+      "sizeBytes": 869,
+      "sha256": "012536faf24a57f14114620b701cd1c2514e1d35d55fff24c176b571a54079e9"
+    },
+    {
+      "path": "platform-ui/src/pages/surrogate/SurrogatePage.tsx",
+      "sizeBytes": 29628,
+      "sha256": "d4bafeec452d65363a89814e27c2b3d6ad1b6fb5cf1e0ede60b32f5617dedc8c"
+    },
+    {
+      "path": "platform-ui/src/pages/surrogate/surrogateDemo.ts",
+      "sizeBytes": 1292,
+      "sha256": "deb35c39ed869baf665571c4f32fefedccb52c0ca94be54436abbbdde1dcae90"
+    },
+    {
+      "path": "platform-ui/src/stores/chatStore.test.ts",
+      "sizeBytes": 18542,
+      "sha256": "16b8bfc4072c019ef390dd406c8654f9ac1762192d36325a1b43a0a926eb417d"
+    },
+    {
+      "path": "platform-ui/src/stores/chatStore.ts",
+      "sizeBytes": 16345,
+      "sha256": "60e830741eade84cdab5071c7ac556187b1c7897ca51f912c23f576956158f55"
+    },
+    {
+      "path": "platform-ui/src/stores/engineeringConfigStore.test.ts",
+      "sizeBytes": 1381,
+      "sha256": "594e21769d8cb6d7a17ee4c303bd2d04cc9f89f7fc2adecb62c85508f7ca025f"
+    },
+    {
+      "path": "platform-ui/src/stores/engineeringConfigStore.ts",
+      "sizeBytes": 31496,
+      "sha256": "0c026eff29f205be41e611f03c2f619f180b84b738eb023d1c2bb595aeff659b"
+    },
+    {
+      "path": "platform-ui/src/stores/jobStore.test.ts",
+      "sizeBytes": 4222,
+      "sha256": "26e67ee1123b6b0bceb6a302c5fe9366958ca5ffb469d4d34286d147da4caddf"
+    },
+    {
+      "path": "platform-ui/src/stores/jobStore.ts",
+      "sizeBytes": 4359,
+      "sha256": "9bff1eebe7af1bd960280d41fbe87d9c76b21588174b0269e8a13d8d5cee6ead"
+    },
+    {
+      "path": "platform-ui/src/theme/chart.ts",
+      "sizeBytes": 683,
+      "sha256": "57ef95364bfd0c3baa504aa94af814a34e2aa355988c89c58d6ff80589ee778a"
+    },
+    {
+      "path": "platform-ui/src/utils/errors.ts",
+      "sizeBytes": 152,
+      "sha256": "0ebb97e37a22448c9a21ac810229b83fd6bd631c738757021da42a8a7fc576da"
+    },
+    {
+      "path": "platform-ui/tsconfig.app.json",
+      "sizeBytes": 655,
+      "sha256": "8e5d12ba330e7d86409edec74b95451e0db22ee09b9426c94b5bf817571eddb0"
+    },
+    {
+      "path": "platform-ui/tsconfig.json",
+      "sizeBytes": 119,
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "platform-ui/tsconfig.node.json",
+      "sizeBytes": 558,
+      "sha256": "d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8"
+    },
+    {
+      "path": "platform-ui/vite.config.ts",
+      "sizeBytes": 465,
+      "sha256": "39ec4d2c2564836a63f3512dac5298f8afabe8d1fcf0bcf353f6112bd9fe29d4"
+    },
+    {
+      "path": "pyansys_bridge/__init__.py",
+      "sizeBytes": 89,
+      "sha256": "9537ada2d50b28357b4fad313f85fe37f81d905153b4481d6112d8c18102318d"
+    },
+    {
+      "path": "pyansys_bridge/active_learning/__init__.py",
+      "sizeBytes": 440,
+      "sha256": "64da6aabaddd69ce5cca6b2fa8b52f74f73da56837cd1630129b0bcc24c61d56"
+    },
+    {
+      "path": "pyansys_bridge/active_learning/acquisition.py",
+      "sizeBytes": 2464,
+      "sha256": "653bc45ad866fc9fdfe3fcba8b0806a77398c3755c06e2d0763aea8ff12ec215"
+    },
+    {
+      "path": "pyansys_bridge/active_learning/active_learner.py",
+      "sizeBytes": 5451,
+      "sha256": "8553da1d8c4b570f9d97eeba248efdd7972c73a3808816dcf88085b03c60fb98"
+    },
+    {
+      "path": "pyansys_bridge/active_learning/strategy.py",
+      "sizeBytes": 5316,
+      "sha256": "fb0157a823693297af80fb1ab6d61fc45c81fd04ba6a56fc5bcc39fea74d139a"
+    },
+    {
+      "path": "pyansys_bridge/analysis/dpf.py",
+      "sizeBytes": 24822,
+      "sha256": "59dbac0f6817c1d36f947d534d79df0d780c1be2b1d22165cb02d91e1905c0d3"
+    },
+    {
+      "path": "pyansys_bridge/batch/__init__.py",
+      "sizeBytes": 330,
+      "sha256": "e1b3383c05e5f51ce27aec25777bff88b8ff056710fd502ec6a734e3a1f3fad9"
+    },
+    {
+      "path": "pyansys_bridge/batch/batch_analyzer.py",
+      "sizeBytes": 1647,
+      "sha256": "ee55e669df64d9a42c8fd8532d53b2257f4eb5e3725bab1ad2d6fb1eed9998cc"
+    },
+    {
+      "path": "pyansys_bridge/batch/case_runner.py",
+      "sizeBytes": 2129,
+      "sha256": "9a4500f9761155f5e0affa162c50c15cd3f2fefb4ea4e022100ee563e8ed6eed"
+    },
+    {
+      "path": "pyansys_bridge/batch/doe_runner.py",
+      "sizeBytes": 7833,
+      "sha256": "d3f4d7a6f2a48448f3b28ef2e05bfeda7275500ff8227b76880dd2874f2d575f"
+    },
+    {
+      "path": "pyansys_bridge/batch/load_combiner.py",
+      "sizeBytes": 1208,
+      "sha256": "377d990543b95e7f99c2f58ecf3e2db27d454d18bcf9563d2e6e2e6ad75efcab"
+    },
+    {
+      "path": "pyansys_bridge/batch/result_store.py",
+      "sizeBytes": 5745,
+      "sha256": "6421c545ad993ec15ee0cf62d2ea0d6e620845fec3027e3400b43849570ee51f"
+    },
+    {
+      "path": "pyansys_bridge/beifen.py",
+      "sizeBytes": 7197,
+      "sha256": "940f5f01df135663597ed42b985f4bb3cee1fd3caf2c2e69378cfa2f3d84f5ed"
+    },
+    {
+      "path": "pyansys_bridge/config/analysis_config.yaml",
+      "sizeBytes": 5744,
+      "sha256": "bab9bc9e719b4501f19d602268b913eb8bb4cbbaca7fd26e5f163045759f4491"
+    },
+    {
+      "path": "pyansys_bridge/config/settings.py",
+      "sizeBytes": 6260,
+      "sha256": "e4d313256c8a2679968afd68f29ff3ca2fd5676f10e285c14bc6e849987c68fd"
+    },
+    {
+      "path": "pyansys_bridge/core/ansys_command_stream.py",
+      "sizeBytes": 378,
+      "sha256": "26be22d4bf49b9994c4e378d0d9672dbcfa76a2de322179025832e9fae49f07e"
+    },
+    {
+      "path": "pyansys_bridge/core/ansys_damper.py",
+      "sizeBytes": 14883,
+      "sha256": "12842d5328ac9237aad14aabb184fed00fc2be4d39a1d533257e8f4a6e086deb"
+    },
+    {
+      "path": "pyansys_bridge/core/ansys_load_rendering.py",
+      "sizeBytes": 44880,
+      "sha256": "cb690719ec618251b70b57c0e47bf246a7b5e8b06331e56cc3f1df3476ad3804"
+    },
+    {
+      "path": "pyansys_bridge/core/ansys_load_targets.py",
+      "sizeBytes": 9224,
+      "sha256": "7db298d68af0ca88526feb682ead166934a7f1ac24b95502e6dcf2e248fedc57"
+    },
+    {
+      "path": "pyansys_bridge/core/ansys_solver.py",
+      "sizeBytes": 11138,
+      "sha256": "23a4c79de435025867137a4c17ee57593178c70f7ecb51495878655655b362ab"
+    },
+    {
+      "path": "pyansys_bridge/core/apdl_validator.py",
+      "sizeBytes": 6223,
+      "sha256": "fc704d0f723a098b5e38da8569aed9ea4eaa3975bde6277086ba3981c7a684eb"
+    },
+    {
+      "path": "pyansys_bridge/core/command_runner.py",
+      "sizeBytes": 3890,
+      "sha256": "87ec5753f65086cbe0a4e219a77602a5ea59a9f9ac96844b4d18c919eab590ea"
+    },
+    {
+      "path": "pyansys_bridge/core/command_stream.py",
+      "sizeBytes": 26793,
+      "sha256": "bbde65788a1f69cc9d26089c0de41de9f93f53d3e01439c98fcb7bdf2e207361"
+    },
+    {
+      "path": "pyansys_bridge/core/command_stream_solver.py",
+      "sizeBytes": 20606,
+      "sha256": "42b94227f204eeb289c3e0273179fc63f460842ab5bf77557fdb5481b8d9bda9"
+    },
+    {
+      "path": "pyansys_bridge/core/load_application_renderer.py",
+      "sizeBytes": 4517,
+      "sha256": "5f58d47b375e322b969309dc492286918c9962b1185954d3dc070a168698c64c"
+    },
+    {
+      "path": "pyansys_bridge/core/mapdl_manager.py",
+      "sizeBytes": 6391,
+      "sha256": "952c40b8f6621cc390226d4f2299c4c94e0992a861450993cd17cd06d749fcd3"
+    },
+    {
+      "path": "pyansys_bridge/core/mapdl_pool.py",
+      "sizeBytes": 6265,
+      "sha256": "6f5e6cbf3212654c381b164f8fbc721c6f06828f31d6bb812aa0dfa8201ec1fd"
+    },
+    {
+      "path": "pyansys_bridge/core/mock_solver.py",
+      "sizeBytes": 2219,
+      "sha256": "6b843a66ed95852668e2124a27f44dc7947571055ee70af77b346dd8b574d90d"
+    },
+    {
+      "path": "pyansys_bridge/core/opensees_common.py",
+      "sizeBytes": 7478,
+      "sha256": "100452f8dca47bb04847f57a12eef47fbac21ed21a2d60de198a106e2827e6bc"
+    },
+    {
+      "path": "pyansys_bridge/core/opensees_solver.py",
+      "sizeBytes": 13169,
+      "sha256": "012b219b9e7c92f1a72244ae3e49d0f32b000f9d9405c900ae4c9ba7f1f27dbf"
+    },
+    {
+      "path": "pyansys_bridge/core/openseespy_inproc_solver.py",
+      "sizeBytes": 27341,
+      "sha256": "15255d4f4abe51d205a28fc09cbb6e9c4ecdf7460618448fba3a0ccbed32487f"
+    },
+    {
+      "path": "pyansys_bridge/core/postprocessor.py",
+      "sizeBytes": 62277,
+      "sha256": "50d432a47f048bd7312bf0b5cfd62aea11fe41ae1eb88ff6bed222d066137993"
+    },
+    {
+      "path": "pyansys_bridge/core/preprocessor.py",
+      "sizeBytes": 15229,
+      "sha256": "9e7610efa932220d68035cb14c6951bdef93ae2d60c59ee362c4e10245afbcbb"
+    },
+    {
+      "path": "pyansys_bridge/core/progress_sink.py",
+      "sizeBytes": 10389,
+      "sha256": "dbcf947500173f294f834cca0597e72c0b2a96d95db5a145935ce8705a43ecc4"
+    },
+    {
+      "path": "pyansys_bridge/core/result_extractor.py",
+      "sizeBytes": 2693,
+      "sha256": "23e049699d829b59f8bd3f67755ed5eb2ef9c6989bfd645c4f602410d0163231"
+    },
+    {
+      "path": "pyansys_bridge/core/result_summary.py",
+      "sizeBytes": 6732,
+      "sha256": "ad934d74c4487ffdb0a672fd48391d1dde0d3ad0fe6c78cb8aa8090aa9eb3e98"
+    },
+    {
+      "path": "pyansys_bridge/core/solver_factory.py",
+      "sizeBytes": 3257,
+      "sha256": "406f4b3479e79e4f26f53984cd9dfed5a4ca486c7204b1b351548148cb2d77e0"
+    },
+    {
+      "path": "pyansys_bridge/core/solver_interface.py",
+      "sizeBytes": 5236,
+      "sha256": "b2e6c2812a3c04e096cb2e27ac10fd32953de641d565cee92b7ca5cfa9421fc0"
+    },
+    {
+      "path": "pyansys_bridge/core/solver_parity.py",
+      "sizeBytes": 6343,
+      "sha256": "d07510353d9c236cbd0c6ad60cc9dd682d4fab4f5f7f00d0e00947489d02ab1c"
+    },
+    {
+      "path": "pyansys_bridge/core/time_table_renderer.py",
+      "sizeBytes": 10946,
+      "sha256": "9306b354d1c2a6fcc0ac1597714ea4b4f2cc5ac2142f2f8cad32d6336202b278"
+    },
+    {
+      "path": "pyansys_bridge/core/user300_damper.py",
+      "sizeBytes": 6916,
+      "sha256": "e03307e35a83401481c01f2a6cb93ae8cdd77ce0cb763e1f3353fbc21b3bc080"
+    },
+    {
+      "path": "pyansys_bridge/core/workspace.py",
+      "sizeBytes": 2908,
+      "sha256": "124c3620f0b56a778927f39964762b64e67ff7c06e8b4f796d4c63cb08428fcb"
+    },
+    {
+      "path": "pyansys_bridge/load_generation/__init__.py",
+      "sizeBytes": 322,
+      "sha256": "5cbb98a1d7e9dc1046c99ac8e2adc384ddbf549891fcdadabd1c8bac6615db00"
+    },
+    {
+      "path": "pyansys_bridge/load_generation/adapters.py",
+      "sizeBytes": 9843,
+      "sha256": "d40770981fef8fbaf022a185d2acb2920efa60161568c1d5fd1f3ba11a81b24d"
+    },
+    {
+      "path": "pyansys_bridge/load_generation/base.py",
+      "sizeBytes": 1240,
+      "sha256": "93e383c53f3dbf709f324a6388c67537153bc4f6a5e437d9a8afcfeddec4be69"
+    },
+    {
+      "path": "pyansys_bridge/models/__init__.py",
+      "sizeBytes": 1049,
+      "sha256": "4549bebc8fb5ebefb7803c1e79d93553a8a5f80524c54643c465e31f64121225"
+    },
+    {
+      "path": "pyansys_bridge/models/analysis_result.py",
+      "sizeBytes": 1321,
+      "sha256": "4bf7abf2c5488cf9fe93fa12845a0cbfac2b14297b7bae98a324c36605bffaf3"
+    },
+    {
+      "path": "pyansys_bridge/models/bridge_model.py",
+      "sizeBytes": 1557,
+      "sha256": "be823368344a43c538978de50c49b3086b5d3c9157732c0efe4d95e43264684e"
+    },
+    {
+      "path": "pyansys_bridge/models/damper_layout.py",
+      "sizeBytes": 5612,
+      "sha256": "71181f39e5ec6395af0edc11a700a1864625f0da46128ad1130ffd388c68f0a9"
+    },
+    {
+      "path": "pyansys_bridge/models/damper_params.py",
+      "sizeBytes": 1395,
+      "sha256": "a68ae9e27dad36fe5b117d093d01ec8100f6076a987da81205506c75e47cb735"
+    },
+    {
+      "path": "pyansys_bridge/models/load_case.py",
+      "sizeBytes": 25417,
+      "sha256": "3827cc14d1728e83d5ee31b59aaa85fa7de423b7538fd98f62031222be8b10b0"
+    },
+    {
+      "path": "pyansys_bridge/opensees_integration/__init__.py",
+      "sizeBytes": 170,
+      "sha256": "6a266f64721180a27ea7e00eb9a144019c3601cf282eb3dd0ff6922a4a021a8d"
+    },
+    {
+      "path": "pyansys_bridge/opensees_integration/validation.py",
+      "sizeBytes": 1869,
+      "sha256": "56dc580631534ce24c3b00ff5524cd9c6f6ac56c5f020a53193ba801720dbde1"
+    },
+    {
+      "path": "pyansys_bridge/optimization/__init__.py",
+      "sizeBytes": 4670,
+      "sha256": "96cb215afd3c08781fc59113949b32e040bd9c2110efa08c1010548da94d7f57"
+    },
+    {
+      "path": "pyansys_bridge/optimization/config_runner.py",
+      "sizeBytes": 63906,
+      "sha256": "7e3ab3a96299abbafccd9f24daaf1972dc720efc3c4f11c24c909838bffe2cb1"
+    },
+    {
+      "path": "pyansys_bridge/optimization/constraints.py",
+      "sizeBytes": 2363,
+      "sha256": "deca422dae2a0db9a72dca9ac93606bc96725556f3e9605e3f6d6559066768b8"
+    },
+    {
+      "path": "pyansys_bridge/optimization/damper_cost.py",
+      "sizeBytes": 4045,
+      "sha256": "cd458e569c8c605e7d4978bb72734f84c7c77e1d64de179b3fcdb3ab576be21d"
+    },
+    {
+      "path": "pyansys_bridge/optimization/damper_plan.py",
+      "sizeBytes": 2769,
+      "sha256": "5d49eec5f8eff554dfb65ed390412e7392f8f533c4054fe4c8c8be3bdc4bcf4b"
+    },
+    {
+      "path": "pyansys_bridge/optimization/decision.py",
+      "sizeBytes": 10354,
+      "sha256": "d1e44c316cebbe235e96ba080899ec71ccfb86c15b3e25d5d02accbb694f924c"
+    },
+    {
+      "path": "pyansys_bridge/optimization/decision_explainability.py",
+      "sizeBytes": 8596,
+      "sha256": "943a4a3ec9f318114609b18a877c2b229d65e57366e3e573e1b0bbff09743218"
+    },
+    {
+      "path": "pyansys_bridge/optimization/doe_pipeline.py",
+      "sizeBytes": 55464,
+      "sha256": "f03c6ab12c5f41e2bb2451f11b8b2280a0619356fce05cd95bed6d186bcfa018"
+    },
+    {
+      "path": "pyansys_bridge/optimization/fem_review.py",
+      "sizeBytes": 20940,
+      "sha256": "21bd9fde20a2ce5e9f1b3ef8d093761596e213c099fba3897e17f1538825ef30"
+    },
+    {
+      "path": "pyansys_bridge/optimization/nsga2.py",
+      "sizeBytes": 2818,
+      "sha256": "f8c4cc30d6f74d8549bbc201fe13bac23622fcf97c9b25ee29b88aaa74474e60"
+    },
+    {
+      "path": "pyansys_bridge/optimization/objectives.py",
+      "sizeBytes": 4950,
+      "sha256": "6814d1bf739ed2a611b30cedc413a1a7c6cc24bcaa297cc818cdfda4b9de80dd"
+    },
+    {
+      "path": "pyansys_bridge/optimization/pipeline.py",
+      "sizeBytes": 18264,
+      "sha256": "6221abd70bb71c857fc5fc4d840501d14c970d7c7ff150a0dfa112cea2f20c9a"
+    },
+    {
+      "path": "pyansys_bridge/optimization/pymoo_adapter.py",
+      "sizeBytes": 9608,
+      "sha256": "c0a46d5ab152858861b35dda79c9a792c1545676489929df4ed6935970092f80"
+    },
+    {
+      "path": "pyansys_bridge/optimization/review.py",
+      "sizeBytes": 7789,
+      "sha256": "95fcf79ffb5ddc3f6a66495cbd6bb046eef965fb9bd7b4ca47805c79f0876d2a"
+    },
+    {
+      "path": "pyansys_bridge/optimization/robustness.py",
+      "sizeBytes": 8270,
+      "sha256": "c9b5c2758a9e4e79b4d7cbe9ceebb6f4f22ed7dd7ac893713e5ba9cd5e17f780"
+    },
+    {
+      "path": "pyansys_bridge/optimization/workflow.py",
+      "sizeBytes": 18642,
+      "sha256": "61ff377aaa8a717e8507be7e7a43e020a9a3943302e122bf6e8d01bce173c4bb"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/__init__.py",
+      "sizeBytes": 1679,
+      "sha256": "6943b5fea9609aadd030f208a5addb0ec3235bc58634eafee2f2532c6a1c28f4"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/base.py",
+      "sizeBytes": 1072,
+      "sha256": "708182aed53b10d8d44cb2491d5cd8eec7de6ffe0dd9153e8a8bf3a7a09c9a7f"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/dataset.py",
+      "sizeBytes": 3605,
+      "sha256": "6207f9bdbadb7f253d9cc76fa31695a5010ce78789ae56de256939b3748e8ea5"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/doe.py",
+      "sizeBytes": 5183,
+      "sha256": "fdc44347803b66e205a412325c4f6d64c3570b185a138a637fc3dad52f835ec4"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/evaluator.py",
+      "sizeBytes": 5846,
+      "sha256": "93f47ae03aec83a8f7676532e4a6e3134b5d973a47b0484ec80c6a05b15048b7"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/gpr_model.py",
+      "sizeBytes": 3357,
+      "sha256": "4bc548f3c2386fce9eaafbf50b429b4c86d5cd613cd778cbf639356b5f1ff355"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/model_zoo.py",
+      "sizeBytes": 3175,
+      "sha256": "7e9067e3dd2416922ee3a5276ea47d50dcaa8dcfb7a45eb61a405bea078d640f"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/models/__init__.py",
+      "sizeBytes": 73,
+      "sha256": "3e482f14911025d6752d9e1b53d2882d53139d5b3162383e9932dd23215411ac"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/power_law_model.py",
+      "sizeBytes": 3292,
+      "sha256": "03665a2b8c55155a158dd30fc52f27daccf609ce389bd3f7924277b80cdada76"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/rbf_model.py",
+      "sizeBytes": 1912,
+      "sha256": "d0e0de2b5bc4eee4dad082c6db29cdb2bc9470d2ad36dad7538d202c1baec515"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/sampling.py",
+      "sizeBytes": 2057,
+      "sha256": "ec339da41c39f04d931673f6bad1019842371f83c6ba77216f26ed88a9a3b75e"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/selector.py",
+      "sizeBytes": 9157,
+      "sha256": "ec06ffe8293e11b31fe175e1e8d29891893b509bcddf645273dd8456c00d633c"
+    },
+    {
+      "path": "pyansys_bridge/surrogate/sklearn_models.py",
+      "sizeBytes": 10870,
+      "sha256": "c691fe45ef18c1bec036b9a2b3aa04f0f0c35ee6039eee57b17e35cc2db1c6cc"
+    },
+    {
+      "path": "pyansys_bridge/template_registry.py",
+      "sizeBytes": 3523,
+      "sha256": "c771197dc825b3737e164b57788c502d4f74455e9334ec4af7cf173c60bbe97b"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/damper_eddy_current.apdl",
+      "sizeBytes": 83,
+      "sha256": "1ce4995636d2ec552bf164337141d106d3d2f8448d993d302467d34ce661af6e"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/damper_friction.apdl",
+      "sizeBytes": 79,
+      "sha256": "4a888ab60e63b17b9df4d97e9e08d584456a6b5d28ad0bd8ac349d6ca71e7038"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/damper_viscous.apdl",
+      "sizeBytes": 78,
+      "sha256": "122ca3cf239187ea1bebad0a5ab373c7fc14e066f2cbbc9b52d00b59d0183dc4"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/earthquake.apdl",
+      "sizeBytes": 140,
+      "sha256": "1a18b2960e8d19344445cc84f7c581cf53356137a375d06fb31796a5983d3c96"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/gravity.apdl",
+      "sizeBytes": 336,
+      "sha256": "2477dda27587e7d68eb442943165865702de99214bf80501ede1ab7ad5ac3806"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/modal.apdl",
+      "sizeBytes": 286,
+      "sha256": "a5a51d56644e46a3f7299a1421c9f4d3eb70d32c1a1c057140fc27db6256e95e"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/model.apdl",
+      "sizeBytes": 169,
+      "sha256": "1bc78852536f792eec80b2a1ebd1d74f05e166636bf19c622c7c155ef328c759"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/postprocess.apdl",
+      "sizeBytes": 334,
+      "sha256": "3a8df9ae48889b182c9bbe13f83f846f1187ce578d521c72ece0ebcc1845f1cb"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/traffic.apdl",
+      "sizeBytes": 137,
+      "sha256": "e6ffc2e453c00d50c61c5b0f4c4c56d663e3d2159e2cd774654310767f7c96d7"
+    },
+    {
+      "path": "pyansys_bridge/templates/ansys/wind.apdl",
+      "sizeBytes": 134,
+      "sha256": "71a032136c20a2f53cd7ff471d4023a8b8e8cfaffd7e0fec23f465b49b1f87b1"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/damper_eddy_current.pyfrag",
+      "sizeBytes": 118,
+      "sha256": "5803e466d857209ad2a6fc3b5c367fe0c48580293ae297a9aa4a85f145d8cd0e"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/damper_friction.pyfrag",
+      "sizeBytes": 114,
+      "sha256": "e007f18216b7c263979d54ec71708ee4b6032331424752bd84ca02f4fa1b54b7"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/damper_viscous.pyfrag",
+      "sizeBytes": 113,
+      "sha256": "88d345ebaa3f683f1681a969c8d3502baaac757c1c495ec4d93623b38f52864a"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/earthquake.pyfrag",
+      "sizeBytes": 598,
+      "sha256": "2ce4dad675393c3c9672590a3e70817a690e4e948b4e198b63718ea20225fcea"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/gravity.pyfrag",
+      "sizeBytes": 3179,
+      "sha256": "6d4b656e4f18a1c51b38a76c6989ad2515724451d0100e09ed92b2c2e8f6fabe"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/modal.pyfrag",
+      "sizeBytes": 114,
+      "sha256": "09bdda4baa2f99b4a418d6ee99d52a1f6d043dd81b47dfa8f2e83a240acae9d8"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/model.pyfrag",
+      "sizeBytes": 1798,
+      "sha256": "7d43b72c5c7ac6cd08e395a679f877356e69f586c526d26f6540e96f35f596c3"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/postprocess.pyfrag",
+      "sizeBytes": 39463,
+      "sha256": "f5c110550f533724da438afbe42069ac54c5f91b54181b82b280becda8e132c7"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/traffic.pyfrag",
+      "sizeBytes": 3560,
+      "sha256": "3c373d882f64ae991a36a4dd615770e9ec8f9952a05ce936a87ec4f91aaf979b"
+    },
+    {
+      "path": "pyansys_bridge/templates/opensees/wind.pyfrag",
+      "sizeBytes": 3449,
+      "sha256": "80bf5a9f5941f14b8cd679746802df2f4bb63a6322c12a677fdde41d74347166"
+    },
+    {
+      "path": "pyansys_bridge/templates/template_schema.py",
+      "sizeBytes": 7248,
+      "sha256": "ece43ea053468bca0f93108981140f75c7c400243805c4d2a71a69bb4e782711"
+    },
+    {
+      "path": "pytest.ini",
+      "sizeBytes": 837,
+      "sha256": "463e840e7a8452c52ef264b3677133dfa2067c228586882edf7da34733650f18"
+    },
+    {
+      "path": "requirements-opensees.txt",
+      "sizeBytes": 199,
+      "sha256": "2996eaeed7b1ec96c25d67586674312d3334e32aaffaa621d8287a5dddec4b2c"
+    },
+    {
+      "path": "scripts/generate_opensees_user300_calibration.py",
+      "sizeBytes": 8050,
+      "sha256": "a61056c4127d053588db2c980d334e9e7936de78a7640eb38451e298869a55ce"
+    },
+    {
+      "path": "scripts/prepare_bundled_traffic_load.py",
+      "sizeBytes": 6433,
+      "sha256": "1ae2430c9269c1a9998517736b7543da6c9226f586b925f6275593383dc53201"
+    },
+    {
+      "path": "start.ps1",
+      "sizeBytes": 3231,
+      "sha256": "fa10a6af540081568686eccbe8d2a33630ac6a100ebe9e7ac8ccc6336e7e3a47"
+    },
+    {
+      "path": "third_party_sources/opensees_user300/CMakeUserPresets.patch",
+      "sizeBytes": 346,
+      "sha256": "8c99e9f1b8a7862c80eced12c0156581651d02b439ecd168bec25e606c259854"
+    },
+    {
+      "path": "third_party_sources/opensees_user300/User300DamperMaterial.cpp.patch",
+      "sizeBytes": 10216,
+      "sha256": "4599177dfe08248e695151769152e3302c22e1d6c120745a42e7ff9e16758731"
+    },
+    {
+      "path": "third_party_sources/opensees_user300/User300DamperMaterial.h.patch",
+      "sizeBytes": 2205,
+      "sha256": "fa779b1b650b97f5bcbe79df79de8cd6f8ef09f8d2417aa89156b3acd917c2a3"
+    },
+    {
+      "path": "third_party_sources/opensees_user300/tracked.patch",
+      "sizeBytes": 11252,
+      "sha256": "d4fab6cbf4dcee54d3b47d61329a646eed0d394a160f541109fe4aa89558794f"
+    },
+    {
+      "path": "verify_submission.py",
+      "sizeBytes": 5547,
+      "sha256": "cd1f512f0af092f9bf911c6f957ae51a5f3fc67618547b9510285fa5fb1e1e97"
+    }
+  ]
+}
