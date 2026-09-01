@@ -43,4 +43,45 @@ new = (
 if text.count(old) != 1:
     raise SystemExit('prepare: agent_service assertion block not found exactly once')
 text = text.replace(old, new)
+
+# The original migration removed AgentIntent through EngineeringPlannerResult in one regex,
+# which also swallowed _strip_think and _parse_engineering_intent. Retire only the two legacy
+# full-planner models and keep the native engineering parser intact.
+broad_model_removal = """text = regex(
+    text,
+    r"\\nclass AgentIntent\\(BaseModel\\):[\\s\\S]*?(?=\\nclass EngineeringPlannerResult\\(BaseModel\\):)",
+    "\\n",
+    'llm retired AgentIntent models',
+)
+"""
+narrow_model_removal = """text = regex(
+    text,
+    r"\\nclass AgentIntent\\(BaseModel\\):[\\s\\S]*?(?=\\nclass PlannerResult\\(BaseModel\\):)",
+    "\\n",
+    'llm retired AgentIntent model',
+)
+text = regex(
+    text,
+    r"\\nclass PlannerResult\\(BaseModel\\):[\\s\\S]*?(?=\\n_RE_THINK =)",
+    "\\n",
+    'llm retired PlannerResult model',
+)
+"""
+if text.count(broad_model_removal) != 1:
+    raise SystemExit('prepare: broad AgentIntent removal block not found exactly once')
+text = text.replace(broad_model_removal, narrow_model_removal)
+
+# Ensure all migration-only files disappear from the bot commit.
+cleanup_old = """    '.github/workflows/pr3-native-migration-run.yml',
+    'tools/pr3_native_migration.py',
+"""
+cleanup_new = """    '.github/workflows/pr3-native-migration-run.yml',
+    '.github/workflows/pr3-native-migration-run-v2.yml',
+    'tools/pr3_native_migration.py',
+    'tools/pr3_prepare_migration.py',
+"""
+if text.count(cleanup_old) != 1:
+    raise SystemExit('prepare: migration cleanup block not found exactly once')
+text = text.replace(cleanup_old, cleanup_new)
+
 path.write_text(text, encoding='utf-8')
