@@ -56,9 +56,9 @@ def _explicit_load_kind(text: str) -> str | None:
     matches: list[str] = []
     if _contains_any(text, ('地震', 'earthquake', 'seismic')):
         matches.append('EARTHQUAKE')
-    if _contains_any(text, ('风荷载', '风工况', 'wind')):
+    if _contains_any(text, ('风', 'wind')):
         matches.append('WIND')
-    if _contains_any(text, ('车流', '交通荷载', 'traffic')):
+    if _contains_any(text, ('车流', '交通', 'traffic')):
         matches.append('TRAFFIC')
     return matches[0] if len(set(matches)) == 1 else None
 
@@ -67,7 +67,7 @@ def _explicit_damper_type(text: str) -> str | None:
     matches: list[str] = []
     if _contains_any(text, ('粘滞', '黏滞', 'viscous')):
         matches.append('VISCOUS')
-    if _contains_any(text, ('摩擦阻尼', 'friction')):
+    if _contains_any(text, ('摩擦', 'friction')):
         matches.append('FRICTION')
     if _contains_any(text, ('电涡流', '涡流阻尼', 'eddy current')):
         matches.append('EDDY_CURRENT')
@@ -85,7 +85,7 @@ def _explicit_layout(text: str) -> str | None:
 
 def _explicit_profile(text: str) -> str | None:
     lowered = text.casefold()
-    if any(token in lowered for token in ('full', '完整优化', '全流程优化')):
+    if any(token in lowered for token in ('full', '完整', '全流程')):
         return 'FULL'
     if any(token in lowered for token in ('custom', '自定义优化')):
         return 'CUSTOM'
@@ -213,6 +213,7 @@ class EngineeringProjectContextService:
             updates['load_kind'] = workspace['loadKind']
             sources['loadKind'] = 'PROJECT_WORKSPACE'
         elif explicit_load is not None:
+            updates['load_kind'] = explicit_load
             sources['loadKind'] = 'USER_SPECIFIED'
 
         explicit_damper = _explicit_damper_type(user_content)
@@ -224,6 +225,7 @@ class EngineeringProjectContextService:
             updates['damper_type'] = workspace['damperType']
             sources['damperType'] = 'PROJECT_WORKSPACE'
         elif explicit_damper is not None:
+            updates['damper_type'] = explicit_damper
             sources['damperType'] = 'USER_SPECIFIED'
 
         explicit_layout = _explicit_layout(user_content)
@@ -231,6 +233,7 @@ class EngineeringProjectContextService:
             updates['selected_layout_id'] = workspace['selectedLayoutId']
             sources['selectedLayoutId'] = 'PROJECT_WORKSPACE'
         elif explicit_layout is not None:
+            updates['selected_layout_id'] = explicit_layout
             sources['selectedLayoutId'] = 'USER_SPECIFIED'
 
         explicit_responses = _explicit_response_ids(user_content)
@@ -249,11 +252,12 @@ class EngineeringProjectContextService:
             updates['optimization_profile'] = workspace['optimizationProfile']
             sources['optimizationProfile'] = 'PROJECT_WORKSPACE'
         elif explicit_profile is not None:
+            updates['optimization_profile'] = explicit_profile
             sources['optimizationProfile'] = 'USER_SPECIFIED'
 
         # 自定义 FEM 模型当前只在 ANALYSIS 合同中可执行。其他任务仍把模型引用
         # 作为 Project 上下文供选择历史结果，不把它强行灌入不支持的执行合同。
-        explicit_artifact = bool(re.search(r'\bart_[A-Za-z0-9_-]+\b', user_content))
+        explicit_artifact = bool(re.search(r'art_[A-Za-z0-9_-]+', user_content))
         if (
             not explicit_artifact
             and workspace.get('modelArtifactId')
@@ -271,6 +275,16 @@ class EngineeringProjectContextService:
             updates['missing_fields'] = [
                 slot for slot in intent.missing_fields if slot not in inherited_slots
             ]
+        # build_engineering_contract treats an explicitly supplied fieldSources mapping as
+        # authoritative, so memory resolution must return a complete provenance baseline.
+        sources.setdefault('solver', 'DEFAULT')
+        sources.setdefault('loadKind', 'DEFAULT')
+        sources.setdefault('responseIds', 'DEFAULT')
+        sources.setdefault('budget', 'DEFAULT')
+        if getattr(intent, 'selected_layout_id', None) or workspace.get('selectedLayoutId'):
+            sources.setdefault('selectedLayoutId', 'DEFAULT')
+        if getattr(intent, 'task_type', None) == 'DAMPER_OPTIMIZATION':
+            sources.setdefault('optimizationProfile', 'DEFAULT')
         resolved = intent.model_copy(update=updates) if updates else intent
         return resolved, sources
 
@@ -366,6 +380,18 @@ class EngineeringProjectContextService:
         )
         if compatible:
             score += 5
+        raw_summary = run.get('resultSummary') if isinstance(run.get('resultSummary'), dict) else {}
+        compact_summary = {
+            key: raw_summary.get(key)
+            for key in (
+                'evidenceMode', 'objectives', 'baselineObjectives', 'recommendedObjectives',
+                'responseComparison', 'validationStatus', 'reviewStatus',
+                'finalRecommendationStatus',
+            )
+            if raw_summary.get(key) is not None
+        }
+        if raw_summary.get('message'):
+            compact_summary['message'] = str(raw_summary['message'])[:500]
         return {
             'runId': run_id,
             'sessionId': run.get('sessionId'),
@@ -384,7 +410,7 @@ class EngineeringProjectContextService:
             'loadSha256': contract.get('loadSha256'),
             'artifactIds': list(run.get('artifactIds') or []),
             'reportArtifactId': run.get('reportArtifactId'),
-            'resultSummary': run.get('resultSummary'),
+            'resultSummary': compact_summary,
             'compatibleWithWorkspace': compatible,
             'relevanceScore': score,
             'updatedAt': run.get('updatedAt') or run.get('createdAt'),
