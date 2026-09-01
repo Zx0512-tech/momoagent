@@ -264,6 +264,13 @@ class EngineeringProjectContextService:
         elif explicit_artifact:
             sources['modelArtifactId'] = 'USER_SPECIFIED'
 
+        inherited_slots = {
+            key for key, source in sources.items() if source == 'PROJECT_WORKSPACE'
+        }
+        if inherited_slots and getattr(intent, 'missing_fields', None):
+            updates['missing_fields'] = [
+                slot for slot in intent.missing_fields if slot not in inherited_slots
+            ]
         resolved = intent.model_copy(update=updates) if updates else intent
         return resolved, sources
 

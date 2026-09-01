@@ -51,6 +51,7 @@ from app.services.agent_llm import (
     message_time_budget,
 )
 from app.services.agent_repository import AgentRepository, DEFAULT_OWNER, run_state_lock
+from app.services.agent_project_context import engineering_project_context_service
 from app.services.load_import_service import load_import_service
 from app.services.load_artifact_service import load_artifact_service
 from app.services.load_mapping_inference import (
@@ -481,6 +482,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
         load_import: dict[str, Any] | None,
         route_evidence: dict[str, Any] | None = None,
         intent_override: Any | None = None,
+        field_sources_override: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         agent_runtime = None
         if intent_override is not None:
@@ -493,6 +495,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
                 contract = orchestration_handler_or_generic(contract_task).build_contract_from_intent(
                     intent,
                     load_import=load_import,
+                    field_sources=field_sources_override,
                 )
             if requested_task == 'ANALYSIS':
                 agent_runtime = {
@@ -2518,6 +2521,10 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
     def _decorate_run(self, run: dict[str, Any]) -> dict[str, Any]:
         repository = self.repository()
         self._sync_workflow_runtime(repository, run)
+        try:
+            engineering_project_context_service.write_back_verified_run(run)
+        except Exception:
+            logger.warning('Project Workspace 记忆写回失败，不影响运行读取', exc_info=True)
         approval = repository.get_approval(run['pendingApprovalId']) if run.get('pendingApprovalId') else None
         list_tool_calls = getattr(repository, 'list_tool_calls', None)
         tool_calls = list_tool_calls(run['runId']) if callable(list_tool_calls) else []
