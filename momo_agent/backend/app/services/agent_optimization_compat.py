@@ -36,42 +36,57 @@ def legacy_full_request_active() -> bool:
     return bool(_LEGACY_FULL_REQUEST.get())
 
 
-def normalize_legacy_full_workflow_start(payload: Any) -> Any:
-    """把旧 workflow.start FULL 参数转换为 canonical 工程意图。
+def _legacy_full_engineering_intent(
+    summary: str = '按完整优化 Profile 执行阻尼器参数优化。',
+    *,
+    solver: str = 'ANSYS',
+    load_kind: str = 'EARTHQUAKE',
+    requires_real_fem: bool = True,
+) -> Any:
+    """把旧的一键 FULL 预设表示成新的 canonical 工程意图。
 
-    这里只给旧预设补默认值；显式工程配置仍优先由新的 DAMPER_OPTIMIZATION
-    意图承载。FULL Profile 本身不再意味着 ANSYS/地震，这些只是旧别名在字段
-    缺省时的兼容默认值。
+    旧别名的 ANSYS/地震等字段只是兼容默认值；FULL Profile 本身不绑定求解器或
+    工况。显式 DAMPER_OPTIMIZATION 始终按用户工程配置独立选择这些字段。
     """
+    from app.services.agent_engineering import EngineeringIntent
+
+    return EngineeringIntent.model_validate({
+        'taskType': CANONICAL_OPTIMIZATION_TASK,
+        'solver': solver,
+        'damperType': 'VISCOUS',
+        'damperTypes': [],
+        'loadKind': load_kind,
+        'selectedLayoutId': 'TWO_PER_TOWER',
+        'responseIds': list(LEGACY_FULL_RESPONSE_IDS),
+        'cases': [],
+        'maxConcurrentCases': 4,
+        'modelArtifactId': None,
+        'responseNodes': [],
+        'responseElementIds': [],
+        'responseDirection': None,
+        'budgetProfile': 'STANDARD',
+        'optimizationProfile': 'FULL',
+        'requiresRealFem': requires_real_fem,
+        'missingFields': [],
+        'summary': summary,
+    })
+
+
+def normalize_legacy_full_workflow_start(payload: Any) -> Any:
+    """把旧 workflow.start FULL 参数转换为 canonical 工程意图。"""
     if not isinstance(payload, dict) or payload.get('taskType') != LEGACY_FULL_TASK:
         return payload
     full = payload.get('fullOptimizationIntent')
     full = full if isinstance(full, dict) else {}
-    solver = full.get('solver') or 'ANSYS'
-    load_kind = full.get('scenario') or 'EARTHQUAKE'
-    summary = str(full.get('summary') or '按完整优化 Profile 执行阻尼器参数优化。')
+    intent = _legacy_full_engineering_intent(
+        str(full.get('summary') or '按完整优化 Profile 执行阻尼器参数优化。'),
+        solver=str(full.get('solver') or 'ANSYS'),
+        load_kind=str(full.get('scenario') or 'EARTHQUAKE'),
+        requires_real_fem=bool(full.get('requiresRealFem', True)),
+    )
     return {
         'taskType': CANONICAL_OPTIMIZATION_TASK,
-        'engineeringIntent': {
-            'taskType': CANONICAL_OPTIMIZATION_TASK,
-            'solver': solver,
-            'damperType': 'VISCOUS',
-            'damperTypes': [],
-            'loadKind': load_kind,
-            'selectedLayoutId': 'TWO_PER_TOWER',
-            'responseIds': list(LEGACY_FULL_RESPONSE_IDS),
-            'cases': [],
-            'maxConcurrentCases': 4,
-            'modelArtifactId': None,
-            'responseNodes': [],
-            'responseElementIds': [],
-            'responseDirection': None,
-            'budgetProfile': 'STANDARD',
-            'optimizationProfile': 'FULL',
-            'requiresRealFem': bool(full.get('requiresRealFem', True)),
-            'missingFields': [],
-            'summary': summary,
-        },
+        'engineeringIntent': intent.model_dump(by_alias=True),
     }
 
 
@@ -120,10 +135,14 @@ def _build_optimization_contract(
     load_artifact_id: str | None = None,
     load_sha256: str | None = None,
 ) -> dict[str, Any]:
+    """兼容旧的简化 intent，同时冻结 Profile 与解析后的 Policy。"""
     from app.services.agent_engineering import build_engineering_contract
 
     profile = _profile_for_intent(intent)
-    intent.optimization_profile = profile
+    try:
+        intent.optimization_profile = profile
+    except Exception:
+        pass
     sources = dict(field_sources or {})
     sources.setdefault(
         'optimizationProfile',
@@ -131,13 +150,16 @@ def _build_optimization_contract(
             'USER_SPECIFIED' if profile != 'STANDARD' else 'DEFAULT'
         ),
     )
+    response_ids = list(getattr(intent, 'response_ids', []) or [])
     contract = build_engineering_contract(
         task_type=CANONICAL_OPTIMIZATION_TASK,
-        solver=intent.solver,
-        damper_type=intent.damper_type,
-        response_ids=list(intent.response_ids),
-        selected_layout_id=intent.selected_layout_id or 'TWO_PER_TOWER',
-        load_kind=intent.load_kind or 'EARTHQUAKE',
+        solver=getattr(intent, 'solver', None),
+        damper_type=getattr(intent, 'damper_type', None),
+        response_ids=response_ids,
+        selected_layout_id=(
+            getattr(intent, 'selected_layout_id', None) or 'TWO_PER_TOWER'
+        ),
+        load_kind=getattr(intent, 'load_kind', None) or 'EARTHQUAKE',
         optimization_profile=profile,
         field_sources=sources or None,
         load_artifact_id=load_artifact_id,
@@ -321,7 +343,7 @@ def _install_task_handler_profile_propagation() -> None:
 
 
 def _install_conversation_entry_normalizer() -> None:
-    """显式 taskType=FULL 的新消息在进入编排前降级为兼容别名。"""
+    """显式 FULL 是固定兼容预设：无需 LLM，直接创建 canonical 工程运行。"""
     from app.services.agent_conversation import AgentConversationMixin
 
     original = AgentConversationMixin._dispatch_message
@@ -341,10 +363,37 @@ def _install_conversation_entry_normalizer() -> None:
     ) -> dict[str, Any]:
         dispatch_token = _IN_MESSAGE_DISPATCH.set(True)
         legacy_token = _LEGACY_FULL_REQUEST.set(task_type == LEGACY_FULL_TASK)
-        canonical_task = (
-            CANONICAL_OPTIMIZATION_TASK if task_type == LEGACY_FULL_TASK else task_type
-        )
         try:
+            if task_type == LEGACY_FULL_TASK:
+                intent = _legacy_full_engineering_intent(
+                    summary=(content.strip() or '按完整优化 Profile 执行阻尼器参数优化。'),
+                )
+                result = self._create_engineering_run(
+                    repository,
+                    session,
+                    content,
+                    now,
+                    requested_task=CANONICAL_OPTIMIZATION_TASK,
+                    load_import=load_import,
+                    route_evidence={
+                        'plannerMode': 'COMPAT_ALIAS',
+                        'requestedTask': LEGACY_FULL_TASK,
+                        'resolvedTask': CANONICAL_OPTIMIZATION_TASK,
+                        'optimizationProfile': 'FULL',
+                        'reason': (
+                            '旧 FULL_OPTIMIZATION 输入别名已规范化为 '
+                            'DAMPER_OPTIMIZATION + FULL Profile。'
+                        ),
+                    },
+                    intent_override=intent,
+                )
+                stored = repository.get_run(result.get('runId'))
+                if stored is not None:
+                    stored['plannerMode'] = 'COMPAT_ALIAS'
+                    repository.save_run(stored)
+                    return self._decorate_run(stored)
+                result['plannerMode'] = 'COMPAT_ALIAS'
+                return result
             return original(
                 self,
                 repository,
@@ -352,7 +401,7 @@ def _install_conversation_entry_normalizer() -> None:
                 content,
                 now,
                 load_import,
-                canonical_task,
+                task_type,
                 event_sink=event_sink,
             )
         finally:
