@@ -20,6 +20,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Disambiguate duplicated harness catalog fixtures
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('momo_agent/backend/tests/test_agent_harness.py')
+          text = path.read_text(encoding='utf-8')
+          old = "        'result.compare',\n        'result.correlate',"
+          new = "        'result.compare',\n        'result.compare_runs',\n        'result.correlate',"
+          count = text.count(old)
+          if count != 2:
+              raise SystemExit(f'expected two harness catalog fixtures, got {count}')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
       - name: Apply fail-closed PR6 integration
         run: python .github/pr6_apply.py
       - name: Check Python syntax and whitespace
