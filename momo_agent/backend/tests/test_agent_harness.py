@@ -146,8 +146,8 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
     assert 'FullOptimizationStartIntent' not in workflow_start['inputSchema']['$defs']
     assert 'optimizationProfile' in intent_properties
     assert 'FULL' in str(intent_properties['optimizationProfile'])
-    assert 'OpenSeesPy' in start_properties['taskType']['description']
-    assert 'DAMPER_OPTIMIZATION' in start_properties['taskType']['description']
+    assert 'DAMPER_OPTIMIZATION' in str(start_properties['taskType'])
+    assert 'FULL_OPTIMIZATION' not in str(start_properties['taskType'])
     assert engineering_compare.idempotency_key_source == 'SERVER_DERIVED'
     assert all('幂等键由 Harness' not in item['description'] for item in first)
     assert set(inquiry_compare['inputSchema']['properties']) == {'artifactId', 'columns'}
@@ -1090,28 +1090,24 @@ def test_harness_start_freezes_workflow_and_records_tool_call(monkeypatch) -> No
     assert native_result['role'] == 'TOOL'
 
 
-def test_harness_rejects_solver_rewrite_and_repairs_to_opensees_optimization(monkeypatch) -> None:
-    service = AgentService()
-    repository = _Repository()
-    monkeypatch.setenv('MOMO_AGENT_RUNTIME', 'WORKFLOW_HARNESS')
-    monkeypatch.setattr(service, 'repository', lambda: repository)
-    calls: list[dict] = []
-
-    def run_harness_turn(**kwargs):
-        calls.append(kwargs)
-        if len(calls) == 1:
-            arguments = {
-                'taskType': 'FULL_OPTIMIZATION',
-                'fullOptimizationIntent': {
-                    'taskType': 'FULL_OPTIMIZATION',
-                    'solver': 'ANSYS',
-                    'scenario': 'EARTHQUAKE',
-                    'useVerifiedTemplateLoads': True,
-                    'requiresRealFem': True,
-                    'summary': '使用 ANSYS 执行完整优化。',
-                },
-            }
-        else:
+                arguments = {
+                    'taskType': 'DAMPER_OPTIMIZATION',
+                    'engineeringIntent': {
+                        'taskType': 'DAMPER_OPTIMIZATION',
+                        'solver': 'ANSYS',
+                        'damperType': 'VISCOUS',
+                        'loadKind': 'EARTHQUAKE',
+                        'selectedLayoutId': 'TWO_PER_TOWER',
+                        'responseIds': [
+                            'max_girder_end_displacement',
+                            'max_tower_base_shear',
+                            'max_tower_base_moment',
+                        ],
+                        'optimizationProfile': 'FULL',
+                        'missingFields': [],
+                        'summary': '使用 ANSYS 执行完整优化。',
+                    },
+                }
             arguments = {
                 'taskType': 'DAMPER_OPTIMIZATION',
                 'engineeringIntent': {

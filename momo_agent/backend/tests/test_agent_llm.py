@@ -139,6 +139,7 @@ def test_llm_planner_prompt_freezes_supported_intent_values() -> None:
 
     system_prompt = planner._engineering_payload(
         '执行完整阻尼优化', requested_task='DAMPER_OPTIMIZATION', has_file=False,
+        attachment_summary=None,
     )['messages'][0]['content']
 
     assert 'DAMPER_OPTIMIZATION' in system_prompt
