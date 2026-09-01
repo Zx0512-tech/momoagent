@@ -15,16 +15,23 @@ from app.services.agent_run_comparison import (
 from app.services.platform_store import platform_store
 
 
-def _run(run_id: str, session_id: str = 'ags_a', *, solver: str = 'ANSYS') -> dict:
+def _run(
+    run_id: str,
+    session_id: str = 'ags_a',
+    *,
+    solver: str = 'ANSYS',
+    owner: str = 'local',
+) -> dict:
     return {
         'runId': run_id,
         'sessionId': session_id,
-        'ownerId': 'local',
+        'ownerId': owner,
         'goal': run_id,
         'taskType': 'ANALYSIS',
         'status': 'SUCCEEDED',
         'currentStage': 'COMPLETED',
         'workflowContract': {
+            'model': 'STbridge',
             'solver': solver,
             'loadKind': 'EARTHQUAKE',
             'modelSha256': 'a' * 64,
@@ -68,7 +75,14 @@ def _setup(tmp_path, monkeypatch):
     return repository
 
 
-def _snapshot(run: dict, value: float, *, solver: str | None = None, model_sha: str | None = 'a' * 64, load_sha: str | None = 'b' * 64):
+def _snapshot(
+    run: dict,
+    value: float,
+    *,
+    solver: str | None = None,
+    model_sha: str | None = 'a' * 64,
+    load_sha: str | None = 'b' * 64,
+):
     return {
         'runId': run['runId'],
         'taskType': run['taskType'],
@@ -76,8 +90,10 @@ def _snapshot(run: dict, value: float, *, solver: str | None = None, model_sha: 
         'loadKind': 'EARTHQUAKE',
         'modelArtifactId': None,
         'modelSha256': model_sha,
+        'modelIdentity': f'SHA256:{model_sha}' if model_sha else None,
         'loadArtifactId': None,
         'loadSha256': load_sha,
+        'loadIdentity': f'SHA256:{load_sha}' if load_sha else None,
         'responseIds': ['max_tower_base_shear'],
         'reportArtifactId': run['reportArtifactId'],
         'metrics': {
@@ -173,7 +189,7 @@ def test_different_model_sha_blocks_delta_and_ranking(tmp_path, monkeypatch) -> 
     assert result['rankings'] == []
 
 
-def test_missing_sha_is_limited_and_does_not_claim_improvement(tmp_path, monkeypatch) -> None:
+def test_missing_identity_is_limited_and_does_not_claim_improvement(tmp_path, monkeypatch) -> None:
     repository = _setup(tmp_path, monkeypatch)
     left, right = _run('agr_a'), _run('agr_b', 'ags_b')
     repository.save_run(left)
@@ -199,6 +215,31 @@ def test_missing_sha_is_limited_and_does_not_claim_improvement(tmp_path, monkeyp
     assert result['comparisons'][0]['metrics'] == {}
 
 
+def test_registered_default_stbridge_identity_allows_direct_comparison() -> None:
+    service = CrossRunComparisonService()
+    left = _run('agr_a')
+    right = _run('agr_b', 'ags_b')
+    for run in (left, right):
+        run['workflowContract'].pop('modelSha256', None)
+        run['workflowContract'].pop('loadSha256', None)
+    left_snapshot = service._snapshot(
+        left,
+        selector={'runId': 'agr_a'},
+        metric_ids=[],
+        catalog_loader=lambda _run: {'entries': []},
+    )
+    right_snapshot = service._snapshot(
+        right,
+        selector={'runId': 'agr_b'},
+        metric_ids=[],
+        catalog_loader=lambda _run: {'entries': []},
+    )
+
+    assert left_snapshot['modelIdentity'] == 'REGISTERED_MODEL:STbridge'
+    assert left_snapshot['loadIdentity'] == 'REGISTERED_DEFAULT_LOAD:EARTHQUAKE'
+    assert service._compatibility(left_snapshot, right_snapshot) == DIRECT
+
+
 def test_project_scope_rejects_other_project_run(tmp_path, monkeypatch) -> None:
     repository = _setup(tmp_path, monkeypatch)
     repository.save_run(_run('agr_a'))
@@ -210,6 +251,27 @@ def test_project_scope_rejects_other_project_run(tmp_path, monkeypatch) -> None:
             repository=repository,
             session_id='ags_a',
             targets=[{'runId': 'agr_a'}, {'runId': 'agr_other'}],
+            owner='local',
+            catalog_loader=lambda _run: None,
+        )
+
+
+def test_owner_scope_rejects_foreign_run_before_unbound_project_fallback(tmp_path, monkeypatch) -> None:
+    repository = _setup(tmp_path, monkeypatch)
+    repository.save_run(_run('agr_a'))
+    foreign = _run('agr_foreign', 'ags_other', owner='someone_else')
+    repository.save_run(foreign)
+    service = CrossRunComparisonService()
+
+    monkeypatch.setattr(
+        'app.services.agent_run_comparison.engineering_project_context_service.filter_runs_to_project',
+        lambda runs, **_: list(runs),
+    )
+    with pytest.raises(RunComparisonError, match='owner'):
+        service.compare(
+            repository=repository,
+            session_id='ags_a',
+            targets=[{'runId': 'agr_a'}, {'runId': 'agr_foreign'}],
             owner='local',
             catalog_loader=lambda _run: None,
         )
@@ -238,5 +300,5 @@ def test_diagnostic_run_is_not_a_formal_comparison_source(tmp_path, monkeypatch)
     repository.save_run(run)
     service = CrossRunComparisonService()
 
-    with pytest.raises(RunComparisonError, match='SUCCEEDED \+ REAL_FEM'):
+    with pytest.raises(RunComparisonError, match='SUCCEEDED \\+ REAL_FEM'):
         service._required_run(repository, 'agr_diag')
