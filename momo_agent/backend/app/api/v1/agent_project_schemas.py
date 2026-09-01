@@ -20,7 +20,7 @@ class EngineeringWorkspacePatch(ProjectModel):
     model_file_name: str | None = None
     solver: Literal['ANSYS', 'OPENSEESPY_INPROC'] | None = None
     load_kind: Literal['EARTHQUAKE', 'WIND', 'TRAFFIC', 'GENERIC_NODAL'] | None = None
-    damper_type: Literal['VISCOUS', 'FRICTION', 'EDDY'] | None = None
+    damper_type: Literal['VISCOUS', 'FRICTION', 'EDDY_CURRENT'] | None = None
     selected_layout_id: str | None = None
     response_ids: list[str] | None = Field(default=None, max_length=32)
     optimization_profile: Literal['STANDARD', 'FULL', 'CUSTOM'] | None = None
