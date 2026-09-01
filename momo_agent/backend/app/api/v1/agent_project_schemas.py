@@ -18,8 +18,11 @@ class ProjectModel(BaseModel):
 class EngineeringWorkspacePatch(ProjectModel):
     model_artifact_id: str | None = None
     model_file_name: str | None = None
+    model_sha256: str | None = Field(default=None, min_length=64, max_length=64)
     solver: Literal['ANSYS', 'OPENSEESPY_INPROC'] | None = None
     load_kind: Literal['EARTHQUAKE', 'WIND', 'TRAFFIC', 'GENERIC_NODAL'] | None = None
+    load_artifact_id: str | None = None
+    load_sha256: str | None = Field(default=None, min_length=64, max_length=64)
     damper_type: Literal['VISCOUS', 'FRICTION', 'EDDY_CURRENT'] | None = None
     selected_layout_id: str | None = None
     response_ids: list[str] | None = Field(default=None, max_length=32)
