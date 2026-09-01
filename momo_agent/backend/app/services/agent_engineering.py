@@ -41,14 +41,66 @@ COMPARISON_LOAD_KINDS: dict[str, tuple[str, ...]] = {
     # 车流比选与风同口径：等峰值反算 C 只依赖各求解器自己的 USER300 标定证据。
     'TRAFFIC': ('ANSYS', 'OPENSEESPY_INPROC'),
 }
-STANDARD_BUDGET = {
-    'doeDesignCount': DOE_INITIAL_DEFAULT,
-    'surrogateCv': 10,
-    'maxActiveLearningIterations': DOE_ACTIVE_LEARNING_MAX_ITERATIONS,
-    'candidateCount': 728,
-    'maxReviewIterations': 1,
-    'maxFemRelativeError': 0.05,
+
+OptimizationProfile = Literal['STANDARD', 'FULL', 'CUSTOM']
+
+
+class OptimizationProfilePolicy(BaseModel):
+    """阻尼器优化强度的冻结策略；与求解器、荷载和阻尼器工程配置正交。"""
+
+    model_config = ConfigDict(populate_by_name=True, extra='forbid', frozen=True)
+
+    profile: OptimizationProfile
+    doe_design_count: int = Field(alias='doeDesignCount', ge=1)
+    surrogate_cv: int = Field(alias='surrogateCv', ge=2)
+    max_active_learning_iterations: int = Field(alias='maxActiveLearningIterations', ge=0)
+    candidate_count: int = Field(alias='candidateCount', ge=1)
+    max_review_iterations: int = Field(alias='maxReviewIterations', ge=0)
+    max_fem_relative_error: float = Field(alias='maxFemRelativeError', gt=0.0, le=1.0)
+    pareto_enabled: bool = Field(default=True, alias='paretoEnabled')
+    decision_method: Literal['ENTROPY_TOPSIS'] = Field(default='ENTROPY_TOPSIS', alias='decisionMethod')
+    final_fem_validation: bool = Field(default=True, alias='finalFemValidation')
+    customizable: bool = False
+
+    def budget(self) -> dict[str, Any]:
+        """返回与现有优化执行器兼容的预算字段，不把 Profile 元数据混入求解参数。"""
+        return {
+            'doeDesignCount': self.doe_design_count,
+            'surrogateCv': self.surrogate_cv,
+            'maxActiveLearningIterations': self.max_active_learning_iterations,
+            'candidateCount': self.candidate_count,
+            'maxReviewIterations': self.max_review_iterations,
+            'maxFemRelativeError': self.max_fem_relative_error,
+        }
+
+
+# PR1 只建立 Profile 单一真源，不改变任何真实执行预算：STANDARD 与 FULL 当前都
+# 映射到既有 baseline-first 参数。PR2/PR3 再负责 FULL 兼容迁移和执行分支合并。
+OPTIMIZATION_PROFILE_POLICIES: dict[str, OptimizationProfilePolicy] = {
+    profile: OptimizationProfilePolicy(
+        profile=profile,
+        doeDesignCount=DOE_INITIAL_DEFAULT,
+        surrogateCv=10,
+        maxActiveLearningIterations=DOE_ACTIVE_LEARNING_MAX_ITERATIONS,
+        candidateCount=728,
+        maxReviewIterations=1,
+        maxFemRelativeError=0.05,
+        customizable=profile == 'CUSTOM',
+    )
+    for profile in ('STANDARD', 'FULL', 'CUSTOM')
 }
+
+
+def resolve_optimization_profile(profile: str | None) -> OptimizationProfilePolicy:
+    normalized = str(profile or 'STANDARD').strip().upper()
+    try:
+        return OPTIMIZATION_PROFILE_POLICIES[normalized]
+    except KeyError as exc:
+        raise ValueError(f'Unsupported optimization profile: {profile}') from exc
+
+
+# 向后兼容旧调用方：预算值仍由同一个 Profile Policy 派生，不再另维护第二份常量。
+STANDARD_BUDGET = resolve_optimization_profile('STANDARD').budget()
 COMPARISON_PROFILE = {
     'comparisonBasis': 'EQUAL_PEAK_FORCE',
     'forceCapN': 4_000_000.0,
@@ -114,6 +166,12 @@ SLOT_SPECS: dict[str, dict[str, Any]] = {
         'level': 'SUGGESTED',
         'label': '关注响应量',
         'default': None,
+    },
+    'optimizationProfile': {
+        'level': 'DEFAULTED',
+        'label': '优化强度',
+        'options': tuple(OPTIMIZATION_PROFILE_POLICIES),
+        'default': 'STANDARD',
     },
     'budget': {
         'level': 'DEFAULTED',
@@ -204,6 +262,11 @@ class EngineeringIntent(BaseModel):
         description='节点响应输出方向；用户未指定保持 null（默认 X 向）。',
     )
     budget_profile: Literal['STANDARD'] = Field(default='STANDARD', alias='budgetProfile')
+    optimization_profile: OptimizationProfile = Field(
+        default='STANDARD',
+        alias='optimizationProfile',
+        description='阻尼器优化强度；与求解器、荷载、阻尼器和布置配置相互独立。',
+    )
     requires_real_fem: bool = Field(default=True, alias='requiresRealFem')
     missing_fields: list[str] = Field(default_factory=list, alias='missingFields')
     summary: str = Field(min_length=1, max_length=500)
@@ -286,6 +349,7 @@ def build_engineering_contract(
     response_ids: list[str],
     selected_layout_id: str | None = 'TWO_PER_TOWER',
     load_kind: str = 'EARTHQUAKE',
+    optimization_profile: OptimizationProfile = 'STANDARD',
     field_sources: dict[str, str] | None = None,
     load_artifact_id: str | None = None,
     load_sha256: str | None = None,
@@ -302,6 +366,11 @@ def build_engineering_contract(
         raise ValueError(f'Unsupported engineering layout: {selected_layout_id}')
     if load_kind not in {'EARTHQUAKE', 'WIND', 'TRAFFIC', 'GENERIC_NODAL'}:
         raise ValueError(f'Unsupported load kind: {load_kind}')
+    profile_policy = (
+        resolve_optimization_profile(optimization_profile)
+        if task_type == 'DAMPER_OPTIMIZATION'
+        else None
+    )
     unknown_responses = set(response_ids) - RESPONSE_CATALOG
     if unknown_responses:
         raise ValueError(f'Unsupported responses: {sorted(unknown_responses)}')
@@ -334,16 +403,16 @@ def build_engineering_contract(
         budget = {'realSolveCount': 1, 'executionTimeoutS': 7200}
         execution_estimate = {'mode': 'SINGLE_ANALYSIS', 'realSolveCount': 1}
     else:
-        budget = dict(STANDARD_BUDGET)
-        minimum_real_solves = int(STANDARD_BUDGET['doeDesignCount']) + DOE_FIXED_REAL_SOLVE_OVERHEAD
+        budget = profile_policy.budget() if profile_policy is not None else dict(STANDARD_BUDGET)
+        minimum_real_solves = int(budget['doeDesignCount']) + DOE_FIXED_REAL_SOLVE_OVERHEAD
         maximum_real_solves = minimum_real_solves + DOE_ACTIVE_LEARNING_MAX_ADDITIONAL
         execution_estimate = {
             'mode': 'PARAMETER_OPTIMIZATION',
             'realSolveCount': maximum_real_solves,
             'estimatedRealSolvesMin': minimum_real_solves,
             'estimatedRealSolvesMax': maximum_real_solves,
-            'doeDesignCount': STANDARD_BUDGET['doeDesignCount'],
-            'candidateCount': STANDARD_BUDGET['candidateCount'],
+            'doeDesignCount': budget['doeDesignCount'],
+            'candidateCount': budget['candidateCount'],
         }
     field_source_defaults = {
         'solver': 'USER_SPECIFIED',
@@ -353,7 +422,9 @@ def build_engineering_contract(
     }
     if selected_layout_id is not None:
         field_source_defaults['selectedLayoutId'] = 'DEFAULT'
-    return {
+    if profile_policy is not None:
+        field_source_defaults['optimizationProfile'] = 'DEFAULT'
+    contract = {
         'version': 1,
         'model': f'USER_FEM:{model_artifact_id}' if model_artifact_id else 'STbridge',
         'taskType': task_type,
@@ -374,6 +445,10 @@ def build_engineering_contract(
         'loadSha256': load_sha256,
         'fieldSources': dict(field_sources or field_source_defaults),
     }
+    if profile_policy is not None:
+        contract['optimizationProfile'] = profile_policy.profile
+        contract['optimizationPolicy'] = profile_policy.model_dump(by_alias=True)
+    return contract
 
 
 def design_equal_peak_force_cases(damper_types: list[str]) -> list[dict[str, Any]]:
