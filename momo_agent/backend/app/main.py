@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.routes import router
+from app.api.v1.agent_project_router import router as agent_project_router
 from app.api.v1.agent_router import router as agent_router
 from app.api.v1.router import router as v1_router
 from app.agents.tools import ToolExecutionError
@@ -51,6 +52,7 @@ app.add_middleware(
 app.include_router(router, prefix=settings.api_prefix)
 app.include_router(v1_router, prefix=f"{settings.api_prefix}/v1")
 app.include_router(agent_router, prefix=f"{settings.api_prefix}/v1")
+app.include_router(agent_project_router, prefix=f"{settings.api_prefix}/v1")
 PLATFORM_UI_DIST = Path(__file__).resolve().parents[3] / 'platform-ui' / 'dist'
 
 
