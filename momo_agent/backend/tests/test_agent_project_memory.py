@@ -4,6 +4,7 @@ from app.services.agent_engineering import EngineeringIntent
 from app.services.agent_project_context import EngineeringProjectContextService
 from app.services.agent_project_repository import EngineeringProjectRepository
 from app.services.agent_repository import AgentRepository
+from app.services.agent_service import AgentService
 from app.services.platform_store import platform_store
 
 
@@ -209,3 +210,76 @@ def test_bound_project_filters_owner_global_runs(tmp_path, monkeypatch) -> None:
     )
 
     assert [item['runId'] for item in scoped] == ['agr_a']
+
+
+def test_reading_old_successful_run_does_not_rewrite_workspace(tmp_path, monkeypatch) -> None:
+    repository, project_repository = _setup(tmp_path, monkeypatch)
+    old_run = _run(
+        'agr_old',
+        'ags_a',
+        solver='OPENSEESPY_INPROC',
+        profile='STANDARD',
+    )
+    repository.save_run(old_run)
+
+    AgentService()._decorate_run(old_run)
+
+    persisted = project_repository.get_project('agp_memory')
+    assert persisted is not None
+    assert persisted['workspaceRevision'] == 1
+    assert persisted['workspace']['solver'] == 'ANSYS'
+    assert persisted['workspace']['optimizationProfile'] == 'FULL'
+
+
+def test_finalization_materializes_once_and_marker_blocks_stale_rewrite(tmp_path, monkeypatch) -> None:
+    repository, project_repository = _setup(tmp_path, monkeypatch)
+    run = _run(
+        'agr_final',
+        'ags_a',
+        solver='OPENSEESPY_INPROC',
+        profile='STANDARD',
+    )
+    repository.save_run(run)
+    service = AgentService()
+
+    service._materialize_project_memory_once(repository, run)
+
+    first = project_repository.get_project('agp_memory')
+    assert first is not None
+    assert first['workspaceRevision'] == 2
+    assert first['workspace']['solver'] == 'OPENSEESPY_INPROC'
+    stored = repository.get_run('agr_final')
+    assert stored is not None
+    assert stored['projectMemoryMaterialization']['projectId'] == 'agp_memory'
+    assert stored['projectMemoryMaterialization']['workspaceRevision'] == 2
+
+    project_repository.update_workspace(
+        'agp_memory',
+        {'solver': 'ANSYS', 'optimizationProfile': 'FULL'},
+        updated_at='2026-09-01T01:00:00Z',
+    )
+    current = project_repository.get_project('agp_memory')
+    assert current is not None
+    assert current['workspaceRevision'] == 3
+
+    service._materialize_project_memory_once(repository, stored)
+
+    after_reopen = project_repository.get_project('agp_memory')
+    assert after_reopen is not None
+    assert after_reopen['workspaceRevision'] == 3
+    assert after_reopen['workspace']['solver'] == 'ANSYS'
+    assert after_reopen['workspace']['optimizationProfile'] == 'FULL'
+
+
+def test_materialization_requires_persisted_report(tmp_path, monkeypatch) -> None:
+    repository, project_repository = _setup(tmp_path, monkeypatch)
+    run = _run('agr_no_report', 'ags_a', solver='OPENSEESPY_INPROC')
+    run.pop('reportArtifactId')
+    repository.save_run(run)
+
+    AgentService()._materialize_project_memory_once(repository, run)
+
+    persisted = project_repository.get_project('agp_memory')
+    assert persisted is not None
+    assert persisted['workspaceRevision'] == 1
+    assert 'projectMemoryMaterialization' not in (repository.get_run('agr_no_report') or {})
