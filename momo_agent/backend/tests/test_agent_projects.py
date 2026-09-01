@@ -1,0 +1,89 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+from fastapi import HTTPException
+from pydantic import ValidationError
+
+from app.api.v1.agent_project_schemas import EngineeringWorkspacePatch
+from app.main import app
+from app.services.agent_project_service import EngineeringProjectService
+from app.services.agent_service import agent_service
+from app.services.platform_store import platform_store
+
+
+@pytest.fixture(autouse=True)
+def isolated_project_state(tmp_path: Path):
+    original_state_path = platform_store.state_path
+    platform_store.state_path = tmp_path / 'engineering_projects.sqlite3'
+    try:
+        yield
+    finally:
+        platform_store.state_path = original_state_path
+
+
+def test_project_workspace_persists_and_groups_sessions() -> None:
+    service = EngineeringProjectService()
+    project = service.create_project(
+        'STbridge 参数优化',
+        description='统一承载模型、工况和 Agent run。',
+        workspace={
+            'solver': 'OPENSEESPY_INPROC',
+            'loadKind': 'WIND',
+            'optimizationProfile': 'FULL',
+        },
+    )
+
+    session = service.create_session(project['projectId'], '风致响应优化')
+    loaded = service.get_project(project['projectId'])
+
+    assert session['projectId'] == project['projectId']
+    assert loaded['sessionCount'] == 1
+    assert loaded['runCount'] == 0
+    assert loaded['sessions'][0]['sessionId'] == session['sessionId']
+    assert loaded['workspace']['solver'] == 'OPENSEESPY_INPROC'
+    assert loaded['workspace']['loadKind'] == 'WIND'
+    assert loaded['workspace']['optimizationProfile'] == 'FULL'
+    assert loaded['workspaceRevision'] == 1
+
+    updated = service.update_workspace(
+        project['projectId'],
+        {'modelFileName': 'STbridge.txt', 'selectedLayoutId': 'TWO_PER_TOWER'},
+    )
+    reloaded = EngineeringProjectService().get_project(project['projectId'])
+
+    assert updated['workspaceRevision'] == 2
+    assert reloaded['workspace']['solver'] == 'OPENSEESPY_INPROC'
+    assert reloaded['workspace']['modelFileName'] == 'STbridge.txt'
+    assert reloaded['workspace']['selectedLayoutId'] == 'TWO_PER_TOWER'
+
+
+def test_existing_session_can_attach_once_but_not_to_two_projects() -> None:
+    service = EngineeringProjectService()
+    first = service.create_project('工程 A')
+    second = service.create_project('工程 B')
+    session = agent_service.create_session('已有会话')
+
+    attached = service.attach_session(first['projectId'], session['sessionId'])
+    assert attached['attached'] is True
+    assert service.project_for_session(session['sessionId'])['projectId'] == first['projectId']
+
+    with pytest.raises(HTTPException) as exc_info:
+        service.attach_session(second['projectId'], session['sessionId'])
+    assert exc_info.value.status_code == 409
+    assert exc_info.value.detail['code'] == 'SESSION_ALREADY_BOUND'
+
+
+def test_workspace_schema_is_strict_and_project_routes_are_registered() -> None:
+    with pytest.raises(ValidationError):
+        EngineeringWorkspacePatch.model_validate({'solver': 'UNKNOWN'})
+    with pytest.raises(ValidationError):
+        EngineeringWorkspacePatch.model_validate({'optimizationProfile': 'FULL', 'extraField': True})
+
+    paths = {route.path for route in app.routes}
+    assert '/api/v1/agent/projects' in paths
+    assert '/api/v1/agent/projects/{project_id}' in paths
+    assert '/api/v1/agent/projects/{project_id}/workspace' in paths
+    assert '/api/v1/agent/projects/{project_id}/sessions' in paths
+    assert '/api/v1/agent/projects/{project_id}/sessions/{session_id}' in paths
