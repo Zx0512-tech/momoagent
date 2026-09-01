@@ -1,0 +1,30 @@
+name: PR3 Repair Harness Test
+
+on:
+  push:
+    branches:
+      - refactor/unify-optimization-execution
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: ${{ !contains(github.event.head_commit.message, '[pr3-harness-repaired]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/unify-optimization-execution
+          fetch-depth: 0
+      - name: Repair damaged test function
+        run: python tools/pr3_repair_harness_test.py
+      - name: Verify test module compiles
+        run: python -m py_compile momo_agent/backend/tests/test_agent_harness.py
+      - name: Commit repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "test: repair canonical solver rewrite regression [pr3-harness-repaired]"
+          git push origin HEAD:refactor/unify-optimization-execution
