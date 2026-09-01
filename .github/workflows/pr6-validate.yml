@@ -1,0 +1,84 @@
+name: PR6 Stacked Validation
+
+on:
+  push:
+    branches:
+      - feat/cross-run-result-comparison
+
+permissions:
+  contents: write
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/cross-run-result-comparison
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-opensees.txt
+      - name: Install backend dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-opensees.txt && python -m pip install ruff==0.16.4
+      - name: Ruff correctness
+        run: python -m ruff check momo_agent/backend/app momo_agent/backend/tests --select E9,F63,F7,F82
+      - name: PR6 diff whitespace
+        run: git diff --check origin/feat/engineering-project-memory...HEAD
+      - name: PR6 focused tests
+        working-directory: momo_agent/backend
+        run: python -m pytest -q tests/test_agent_run_comparison.py tests/test_agent_run_comparison_targets.py tests/test_agent_harness.py
+      - name: Backend fast regression
+        working-directory: momo_agent/backend
+        run: >-
+          python -m pytest tests
+          -m "not requires_ansys and not requires_opensees and not requires_both_solvers and not slow"
+          -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: platform-ui
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/cross-run-result-comparison
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: platform-ui/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Bundle budget
+        run: npm run check:bundle
+
+  cleanup:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/cross-run-result-comparison
+          fetch-depth: 0
+      - name: Remove stacked validation workflow
+        run: rm .github/workflows/pr6-validate.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "chore: remove PR6 stacked validation workflow"
+          git push origin HEAD:feat/cross-run-result-comparison
