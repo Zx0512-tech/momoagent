@@ -15,8 +15,13 @@ from app.api.v1.agent_schemas import (
     LoadMappingRequest,
 )
 from app.services.agent_service import agent_service
+from app.services.agent_optimization_compat import install_full_optimization_profile_compat
 from app.services.load_artifact_service import load_artifact_service
 
+
+# PR2 compatibility boundary: new FULL_OPTIMIZATION requests are canonicalized before
+# orchestration; persisted legacy FULL runs remain readable/recoverable in the old branches.
+install_full_optimization_profile_compat()
 
 router = APIRouter()
 

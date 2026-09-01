@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from pathlib import Path
+from typing import Any, Callable
 
 import pytest
 
@@ -68,6 +69,57 @@ def isolate_llm_env(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPa
         'MOMO_LLM_HARNESS_MAX_TOKENS',
     ):
         monkeypatch.delenv(name, raising=False)
+
+
+@pytest.fixture(autouse=True)
+def preserve_historical_full_execution_contract(
+    request: pytest.FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """旧 FULL API 回归模块继续直接验证历史执行分支。
+
+    PR2 把生产中的“新建 FULL”定义为 DAMPER_OPTIMIZATION + FULL Profile；但旧
+    数据库 run 的恢复/审批/反射仍依赖历史 FULL 分支，不能因为入口迁移就丢掉这批
+    回归覆盖。该模块原本已被明确列为 LEGACY runtime，这里只让它绕过新入口别名，
+    不影响生产代码或 PR2 新增的 canonical API 测试。
+    """
+    if request.node.path.name != 'test_agent_full_optimization_api.py':
+        return
+
+    from app.services.agent_conversation import AgentConversationMixin
+
+    migrated_dispatch = AgentConversationMixin._dispatch_message
+
+    def historical_dispatch(
+        self: Any,
+        repository: Any,
+        session: dict[str, Any],
+        content: str,
+        now: str,
+        load_import: dict[str, Any] | None,
+        task_type: str,
+        *,
+        event_sink: Callable[[dict[str, Any]], None] | None = None,
+    ) -> dict[str, Any]:
+        if task_type == 'FULL_OPTIMIZATION':
+            return self._create_full_optimization_run(
+                repository,
+                session,
+                content,
+                now,
+            )
+        return migrated_dispatch(
+            self,
+            repository,
+            session,
+            content,
+            now,
+            load_import,
+            task_type,
+            event_sink=event_sink,
+        )
+
+    monkeypatch.setattr(AgentConversationMixin, '_dispatch_message', historical_dispatch)
 
 
 @pytest.fixture(autouse=True)
