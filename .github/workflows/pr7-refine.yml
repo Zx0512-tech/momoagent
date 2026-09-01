@@ -1,0 +1,42 @@
+name: PR7 refine
+
+on:
+  push:
+    branches: [feat/chat-first-engineering-workflow]
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply fail-closed refinement
+        run: python scripts/pr7_refine.py
+      - name: Sanity checks
+        run: |
+          python -m py_compile momo_agent/backend/app/services/agent_task_proposal.py momo_agent/backend/tests/test_agent_task_proposal.py
+          git diff --check
+      - name: Commit refinement
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add momo_agent/backend/app/services/agent_task_proposal.py \
+                  momo_agent/backend/tests/test_agent_task_proposal.py \
+                  platform-ui/src/api/agentApi.ts \
+                  platform-ui/src/pages/chat/cards/TaskProposalCard.tsx
+          git commit -m 'fix: gate task proposal confirmation on preflight'
+          git push
+      - name: Remove one-shot refinement files
+        run: |
+          git rm scripts/pr7_refine.py .github/workflows/pr7-refine.yml
+          git commit -m 'chore: remove PR7 refinement helper'
+          git push
