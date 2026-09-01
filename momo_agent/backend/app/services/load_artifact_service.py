@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 from hashlib import sha256
 from pathlib import Path, PurePath
@@ -261,8 +262,6 @@ class LoadArtifactService:
                     'message': '内置车流 mapping 条目数与矩阵列数不一致',
                 },
             )
-        # mapping 的 source_column 必须与矩阵列顺序严格双射，否则节点与时程会错位，
-        # 而错位在量纲上完全看不出来。这里在登记阶段就钉死。
         expected_columns = list(range(1, len(node_columns) + 1))
         if [int(item['source_column']) for item in node_mappings] != expected_columns:
             raise HTTPException(
@@ -287,8 +286,6 @@ class LoadArtifactService:
             'source': 'BUNDLED_PROJECT_DATA',
             'loadKind': 'TRAFFIC',
             'time': {'column': 'time_s', 'unit': 's'},
-            # 单条通道描述的是整个矩阵：applicationType 用 NODAL_FORCE_MATRIX
-            # 与风的单通道 NODAL_FORCE 区分开，审批门按这个值判定走矩阵校验。
             'channels': [{
                 'valueColumn': 'node_fy_N_matrix',
                 'applicationType': 'NODAL_FORCE_MATRIX',
@@ -319,7 +316,6 @@ class LoadArtifactService:
             'targetNodes': target_nodes,
             'unit': 'N',
             'component': AGENT_TRAFFIC_FORCE_COMPONENT,
-            # 逐节点独立时程，求解侧不得再做等权分配或求和。
             'distribution': 'PER_NODE_INDEPENDENT_TIME_HISTORY',
         }
         standard_artifact = platform_store.register_artifact(
@@ -343,9 +339,6 @@ class LoadArtifactService:
             content=mapping_content,
             run_id=run_id,
         )
-        # mapping 制品的 ID/SHA 要跟着 mapping 字典走：审批门只接收 mapping 与
-        # 标准制品两个入参，把它挂在这里就能一路流到 frozen_action，
-        # 不必给四个 Agent 的 prepare_approval 都加一个新形参。
         mapping['pointMappingArtifactId'] = mapping_artifact.artifact_id
         mapping['pointMappingSha256'] = mapping_artifact.sha256
         report_content = json.dumps(
@@ -378,8 +371,6 @@ class LoadArtifactService:
 
     @staticmethod
     def mime_type(file_name: str) -> str:
-        # PEER NGA 记录（.AT1/.AT2）是纯文本，按 text/plain 登记。缺了这两个
-        # 后缀会在上传时 KeyError，而 inspect 已经能解析它们。
         return {
             '.csv': 'text/csv',
             '.txt': 'text/plain',
@@ -501,7 +492,6 @@ def inspect_traffic_matrix_csv(content: bytes) -> tuple[list[str], int, float, f
             },
         )
     time_step_s = times[1] - times[0]
-    # 容差口径与 _apply_agent_standard_*_load 一致，避免登记放行、执行侧再拒。
     tolerance = max(abs(time_step_s), 1.0) * 1.0e-9
     if any(
         abs((current - previous) - time_step_s) > tolerance
