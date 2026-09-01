@@ -2357,7 +2357,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             })
         elif action in {'RUN_ENGINEERING_WORKFLOW', 'RUN_FULL_OPTIMIZATION', 'RUN_DAMPER_COMPARISON', 'RUN_DAMPER_PARAMETER_SWEEP'}:
             prefix, title = {
-                'RUN_ENGINEERING_WORKFLOW': ('FULL_OPTIMIZATION', '创建工程优化任务'),
+                'RUN_ENGINEERING_WORKFLOW': ('DAMPER_OPTIMIZATION', '创建工程优化任务'),
                 'RUN_FULL_OPTIMIZATION': ('FULL_OPTIMIZATION', '创建完整优化任务'),
                 'RUN_DAMPER_COMPARISON': ('DAMPER_COMPARISON', '创建双工况阻尼器对比任务'),
                 'RUN_DAMPER_PARAMETER_SWEEP': ('DAMPER_PARAMETER_SWEEP', '创建阻尼器参数批量任务'),

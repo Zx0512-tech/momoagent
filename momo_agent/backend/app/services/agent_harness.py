@@ -527,9 +527,9 @@ def _initial_runtime_cursor(
     elif status == 'WAITING_APPROVAL':
         target = 'WAITING_APPROVAL'
     elif status == 'WAITING_JOB':
-        target = 'BASELINE' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'}  # historical snapshot only else 'EXECUTION'
+        target = 'BASELINE' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'} else 'EXECUTION'  # legacy FULL snapshots only
     elif status == 'REVIEWING':
-        target = 'REVIEW' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'}  # historical snapshot only else 'EVIDENCE_REVIEW'
+        target = 'REVIEW' if normalized_task in {'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION'} else 'EVIDENCE_REVIEW'  # legacy FULL snapshots only
     elif status in {'SUCCEEDED', 'COMPLETED_DIAGNOSTIC'}:
         target = 'COMPLETED'
     elif status == 'CANCELLED':
