@@ -1,0 +1,41 @@
+name: PR5 Apply Memory Integration
+
+on:
+  push:
+    branches: [feat/engineering-project-memory]
+    paths:
+      - scripts/pr5_apply_memory_integration.py
+      - .github/workflows/pr5-apply-memory.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/engineering-project-memory
+          fetch-depth: 0
+
+      - name: Apply fail-closed PR5 integration patch
+        run: python scripts/pr5_apply_memory_integration.py
+
+      - name: Syntax and whitespace checks
+        run: |
+          python -m compileall -q momo_agent/backend/app/services
+          git diff --check
+
+      - name: Remove one-shot migration helpers
+        run: |
+          rm scripts/pr5_apply_memory_integration.py
+          rm .github/workflows/pr5-apply-memory.yml
+
+      - name: Commit integrated memory pipeline
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: integrate project memory into workflow harness"
+          git push origin HEAD:feat/engineering-project-memory
