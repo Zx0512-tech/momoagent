@@ -1,0 +1,37 @@
+name: PR5 Refine Memory Resolver
+
+on:
+  push:
+    branches: [feat/engineering-project-memory]
+    paths:
+      - scripts/pr5_refine_memory.py
+      - .github/workflows/pr5-refine-memory.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/engineering-project-memory
+          fetch-depth: 0
+      - name: Apply fail-closed refinements
+        run: python scripts/pr5_refine_memory.py
+      - name: Check syntax and whitespace
+        run: |
+          python -m compileall -q momo_agent/backend/app/services/agent_project_context.py
+          git diff --check
+      - name: Remove one-shot helpers
+        run: |
+          rm scripts/pr5_refine_memory.py
+          rm .github/workflows/pr5-refine-memory.yml
+      - name: Commit refinements
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: tighten project memory precedence and context size"
+          git push origin HEAD:feat/engineering-project-memory
