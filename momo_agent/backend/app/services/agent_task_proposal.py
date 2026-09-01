@@ -16,7 +16,7 @@ ProposalSource = Literal[
     'SYSTEM_DEFAULT',
     'UNKNOWN',
 ]
-ProposalState = Literal['NEEDS_CLARIFICATION', 'NEEDS_INPUT', 'READY_FOR_CONFIRMATION', 'BLOCKED']
+ProposalState = Literal['NEEDS_CLARIFICATION', 'NEEDS_INPUT', 'PLANNING', 'READY_FOR_CONFIRMATION', 'BLOCKED']
 
 
 class EngineeringProposalField(BaseModel):
@@ -176,8 +176,10 @@ def build_engineering_task_proposal(run: dict[str, Any]) -> dict[str, Any]:
         proposal_state = 'BLOCKED'
     elif str(run.get('status') or '') in {'WAITING_MAPPING', 'LOAD_STANDARDIZATION'}:
         proposal_state = 'NEEDS_INPUT'
-    else:
+    elif preflight_passed is True or run.get('pendingApprovalId') or str(run.get('status') or '') == 'WAITING_APPROVAL':
         proposal_state = 'READY_FOR_CONFIRMATION'
+    else:
+        proposal_state = 'PLANNING'
 
     warnings: list[str] = []
     if inherited_fields:

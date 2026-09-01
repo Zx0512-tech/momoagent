@@ -12,6 +12,7 @@ const taskLabels: Record<string, string> = {
 const stateLabels: Record<EngineeringTaskProposal["proposalState"], string> = {
   NEEDS_CLARIFICATION: "待补充信息",
   NEEDS_INPUT: "待确认输入",
+  PLANNING: "正在生成受控计划",
   READY_FOR_CONFIRMATION: "待执行确认",
   BLOCKED: "预检阻断"
 };

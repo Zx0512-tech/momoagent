@@ -187,7 +187,7 @@ export interface EngineeringTaskProposal {
   proposalId: string;
   taskType: string;
   summary: string;
-  proposalState: "NEEDS_CLARIFICATION" | "NEEDS_INPUT" | "READY_FOR_CONFIRMATION" | "BLOCKED";
+  proposalState: "NEEDS_CLARIFICATION" | "NEEDS_INPUT" | "PLANNING" | "READY_FOR_CONFIRMATION" | "BLOCKED";
   fields: EngineeringProposalField[];
   unresolvedFields: string[];
   inheritedFields: string[];

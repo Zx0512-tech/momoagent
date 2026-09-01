@@ -99,3 +99,5 @@ def test_proposal_is_stable_for_same_resolved_contract() -> None:
     first = build_engineering_task_proposal(run)
     second = build_engineering_task_proposal(run)
     assert first['proposalId'] == second['proposalId']
+    assert first['proposalState'] == 'PLANNING'
+    assert first['readyForApproval'] is False
