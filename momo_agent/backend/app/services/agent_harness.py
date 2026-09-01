@@ -41,6 +41,7 @@ from app.agents.workflows import (
     workflow_definition,
 )
 from app.services.agent_repository import AgentRepository
+from app.services.agent_project_context import engineering_project_context_service
 from app.services.agent_engineering import EngineeringIntent
 from app.services.agent_llm import HarnessToolCall, numbers_are_grounded, record_message_event
 from app.services.platform_store import gen_id, platform_store, utc_now
@@ -1232,12 +1233,24 @@ class WorkflowHarnessMixin:
             content,
         )
         workflow_state = self._workflow_state_from_run(run)
+        project_context = engineering_project_context_service.build(
+            repository=repository,
+            session_id=session['sessionId'],
+            owner=str(session.get('ownerId') or 'local'),
+            query=content,
+            requested_task=str(run.get('taskType') or ''),
+        )
+        turn_context = (
+            {'engineeringProjectContext': project_context} if project_context else None
+        )
+        memory_field_sources: dict[str, str] = {}
         for correction_attempt in range(3):
             turn = self.planner.run_harness_turn(
                 messages=history,
                 user_content=content,
                 workflow_state=workflow_state,
                 tools=harness_tool_catalog(),
+                turn_context=turn_context,
             )
             call = turn.tool_calls[0] if turn.tool_calls else None
             if call is None or call.name != 'workflow.start':
@@ -1255,7 +1268,13 @@ class WorkflowHarnessMixin:
                     raise ValueError('澄清回复的 taskType 与原 run 不匹配')
                 if start.engineering_intent is None:
                     raise ValueError('澄清回复缺少 engineeringIntent')
-                intent_for_plan = start.engineering_intent
+                intent_for_plan, memory_field_sources = engineering_project_context_service.resolve_intent(
+                    start.engineering_intent,
+                    project_context=project_context,
+                    user_content=content,
+                    prior_user_content=str(run.get('goal') or ''),
+                )
+                start = start.model_copy(update={'engineering_intent': intent_for_plan})
                 task_spec = engineering_task_spec(str(run.get('taskType')))
                 if task_spec is None:
                     raise ValueError(f'未登记的工程任务类型: {run.get("taskType")}')
@@ -1312,6 +1331,7 @@ class WorkflowHarnessMixin:
             load_import,
             intent_override=intent_for_plan,
             planner_mode_override='LLM_TOOL_CALL',
+            field_sources_override=memory_field_sources,
         )
         # 旧澄清实现会更新业务 status，但不会推进 Harness 游标；仅在这次
         # 澄清成功提交后重新建立一次初始游标，后续读取仍只认游标本身。
@@ -1372,12 +1392,24 @@ class WorkflowHarnessMixin:
             workflow_state,
             content,
         )
+        project_context = engineering_project_context_service.build(
+            repository=repository,
+            session_id=session['sessionId'],
+            owner=str(session.get('ownerId') or 'local'),
+            query=content,
+            requested_task=requested_task,
+        )
+        turn_context = (
+            {'engineeringProjectContext': project_context} if project_context else None
+        )
+        memory_field_sources: dict[str, str] = {}
         for correction_attempt in range(3):
             turn = self.planner.run_harness_turn(
                 messages=messages,
                 user_content=content,
                 workflow_state=workflow_state,
                 tools=harness_step_tool_catalog(workflow_state['allowedTools']),
+                turn_context=turn_context,
             )
             if not turn.tool_calls:
                 if turn.content and turn.content.strip():
@@ -1453,6 +1485,15 @@ class WorkflowHarnessMixin:
                 continue
             try:
                 start = WorkflowStartInput.model_validate(call.arguments)
+                if start.engineering_intent is not None:
+                    resolved_intent, memory_field_sources = (
+                        engineering_project_context_service.resolve_intent(
+                            start.engineering_intent,
+                            project_context=project_context,
+                            user_content=content,
+                        )
+                    )
+                    start = start.model_copy(update={'engineering_intent': resolved_intent})
                 semantic_error = self._workflow_start_error(start, user_content=content)
                 if semantic_error:
                     raise ValueError(semantic_error)
@@ -1506,6 +1547,10 @@ class WorkflowHarnessMixin:
             'routeMode': 'LLM_TOOL_CALL',
             'resolvedTask': task_type,
             'reason': '模型通过 workflow.start 选择已登记 Python 工作流。',
+            **({
+                'projectId': project_context['project']['projectId'],
+                'workspaceRevision': project_context['project']['workspaceRevision'],
+            } if project_context else {}),
         }
         if task_type == 'RESULT_INQUIRY':
             if inquirable_run is None:
@@ -1537,6 +1582,7 @@ class WorkflowHarnessMixin:
                 load_import=load_import,
                 route_evidence=route_evidence,
                 intent_override=intent,
+                field_sources_override=memory_field_sources,
             )
         run_id = str(result['runId'])
         stored = repository.get_run(run_id) or dict(result)

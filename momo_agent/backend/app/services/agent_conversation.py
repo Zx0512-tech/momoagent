@@ -23,6 +23,7 @@ from app.services.agent_engineering import (
 from app.services.agent_figure_service import AgentFigureService
 from app.services.agent_llm import ApprovalReplyIntent, NarrativeResult
 from app.services.agent_repository import AgentRepository, run_state_lock
+from app.services.agent_project_context import engineering_project_context_service
 from app.services.platform_store import gen_id, platform_store, utc_now
 from app.services.result_inquiry import ResultInquiryError, ResultInquiryService
 
@@ -183,6 +184,7 @@ class AgentConversationMixin:
                 global_runs = self._find_all_inquirable_runs(
                     repository,
                     str(session.get('ownerId') or 'local'),
+                    session_id=session['sessionId'],
                 )
                 inquirable = global_runs[0] if global_runs else None
             # 结果查询与新求解的判定统一交给 LLM 路由（workflow.start），
@@ -486,6 +488,8 @@ class AgentConversationMixin:
     def _find_all_inquirable_runs(
         repository: AgentRepository,
         owner: str | None = None,
+        *,
+        session_id: str | None = None,
     ) -> list[dict[str, Any]]:
         """返回可安全查询的终态工程结果；给出 owner 时只返回其名下运行。"""
         list_all_runs = getattr(repository, 'list_all_runs', None)
@@ -498,6 +502,12 @@ class AgentConversationMixin:
             and run.get('status') in {'SUCCEEDED', 'COMPLETED_DIAGNOSTIC'}
             and (owner is None or str(run.get('ownerId') or 'local') == owner)
         ]
+        if session_id:
+            runs = engineering_project_context_service.filter_runs_to_project(
+                runs,
+                session_id=session_id,
+                owner=str(owner or 'local'),
+            )
         return sorted(
             runs,
             key=lambda run: str(run.get('updatedAt') or run.get('createdAt') or ''),
@@ -586,6 +596,7 @@ class AgentConversationMixin:
         available_runs = self._find_all_inquirable_runs(
             repository,
             str(source_run.get('ownerId') or 'local'),
+            session_id=str(source_run.get('sessionId') or ''),
         )
         if not any(run.get('runId') == source_run.get('runId') for run in available_runs):
             available_runs.insert(0, source_run)
@@ -1243,6 +1254,7 @@ class AgentConversationMixin:
         *,
         intent_override: Any | None = None,
         planner_mode_override: str | None = None,
+        field_sources_override: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         requested_task = str(run.get('taskType') or '')
         if requested_task not in ENGINEERING_TASK_TYPES:
@@ -1305,6 +1317,7 @@ class AgentConversationMixin:
                         'responseIds': 'USER_SPECIFIED' if intent.response_ids else 'DEFAULT',
                         'budget': 'DEFAULT',
                         'selectedLayoutId': 'USER_SPECIFIED' if intent.selected_layout_id else 'DEFAULT',
+                        **(field_sources_override or {}),
                     },
                 )
             elif contract_task == 'DAMPER_PARAMETER_SWEEP':
@@ -1315,6 +1328,7 @@ class AgentConversationMixin:
                     selected_layout_id=intent.selected_layout_id or 'TWO_PER_TOWER',
                     load_kind=intent.load_kind or 'EARTHQUAKE',
                     max_concurrent_cases=intent.max_concurrent_cases,
+                    field_sources=field_sources_override,
                 )
             else:
                 contract = build_engineering_contract(
@@ -1330,6 +1344,7 @@ class AgentConversationMixin:
                         'responseIds': 'USER_SPECIFIED' if intent.response_ids else 'DEFAULT',
                         'budget': 'DEFAULT',
                         **({'selectedLayoutId': 'USER_SPECIFIED' if intent.selected_layout_id else 'DEFAULT'} if intent.damper_type else {}),
+                        **(field_sources_override or {}),
                     },
                 )
         run.update({
