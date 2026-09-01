@@ -53,7 +53,6 @@ def isolate_llm_env(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPa
     # 生产默认运行时是 Harness；仅旧兼容接口回归模块显式保留 LEGACY。
     legacy_modules = {
         'test_agent_damper_comparison_api.py',
-        'test_agent_full_optimization_api.py',
         'test_agent_llm.py',
         'test_agent_load_api.py',
         'test_result_inquiry.py',

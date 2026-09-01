@@ -122,23 +122,6 @@ class RealExecutionRegistry:
                 unlockRequirements=(),
             ),
             CapabilityDescriptor(
-                jobType='FULL_OPTIMIZATION',
-                mode='CONTROLLED_AGENT',
-                status='LIVE',
-                handler='agent.optimization.full',
-                # 真实门 is_supported_full_optimization_intent 只认 ANSYS + EARTHQUAKE，
-                # 此前广告 OpenSeesPy 属于宽报：目录说支持、建作业阶段直接判 UNSUPPORTED。
-                solvers=('ANSYS',),
-                scenarios=('EARTHQUAKE',),
-                solverScenarios={'ANSYS': ('EARTHQUAKE',)},
-                inputArtifacts=('MODEL', 'LOAD_CASE'),
-                outputArtifacts=('CSV_TABLE', 'OPTIMIZATION_REPORT', 'OUTPUT_MANIFEST'),
-                supportsCancel=True,
-                supportsResume=False,
-                reason='全流程优化目前仅放行已验证 ANSYS 地震与运营联合基准链。',
-                unlockRequirements=(),
-            ),
-            CapabilityDescriptor(
                 jobType='RESULT_INQUIRY',
                 mode='CONTROLLED_AGENT',
                 status='LIVE',
@@ -281,7 +264,6 @@ class RealExecutionRegistry:
             'ANALYSIS',
             'DAMPER_COMPARISON',
             'DAMPER_OPTIMIZATION',
-            'FULL_OPTIMIZATION',
             'RESULT_INQUIRY',
         } and source in {'AGENT', 'CONTROLLED_AGENT', 'WORKFLOW_HARNESS'}:
             return self._find(job_type, 'CONTROLLED_AGENT')
