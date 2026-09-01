@@ -50,10 +50,15 @@ def test_registry_keeps_controlled_live_and_standalone_fail_closed() -> None:
 
 
 def test_registry_resolves_agent_only_capabilities_to_controlled_handlers() -> None:
-    for job_type in ('ANALYSIS', 'DAMPER_COMPARISON', 'DAMPER_OPTIMIZATION', 'FULL_OPTIMIZATION', 'RESULT_INQUIRY'):
+    for job_type in ('ANALYSIS', 'DAMPER_COMPARISON', 'DAMPER_OPTIMIZATION', 'RESULT_INQUIRY'):
         capability = real_execution_registry.resolve(job_type, {'source': 'AGENT'})
         assert capability.mode == 'CONTROLLED_AGENT'
         assert capability.status == 'LIVE'
+
+    retired = real_execution_registry.resolve('FULL_OPTIMIZATION', {'source': 'AGENT'})
+    assert retired.mode == 'PLATFORM_API'
+    assert retired.status == 'DISABLED'
+    assert retired.handler == 'unregistered'
 
 
 def test_capability_api_exposes_handler_status_and_unlock_requirements() -> None:

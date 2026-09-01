@@ -2329,7 +2329,15 @@ class WorkflowHarnessMixin:
         run: dict[str, Any],
         task_type: str,
     ) -> None:
-        workflow_type = 'RESULT_INQUIRY' if task_type == 'INQUIRY' else task_type
+        # Historical persisted FULL runs may predate workflow snapshots.  Project them
+        # onto the canonical optimization workflow at read/resume time only; FULL is
+        # intentionally absent from WorkflowStartInput and the workflow registry.
+        if task_type == 'INQUIRY':
+            workflow_type = 'RESULT_INQUIRY'
+        elif task_type == 'FULL_OPTIMIZATION':
+            workflow_type = 'DAMPER_OPTIMIZATION'
+        else:
+            workflow_type = task_type
         frozen = freeze_workflow(workflow_definition(workflow_type))
         current_step, completed = _initial_runtime_cursor(run, frozen['workflowSnapshot'], workflow_type)
         run.update({

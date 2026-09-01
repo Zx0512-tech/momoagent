@@ -2423,7 +2423,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             self._agent_for('DAMPER_COMPARISON'),
             job,
         )
-    def _reflect_full_optimization(
+    def _reflect_optimization(
         self,
         job: dict[str, Any],
         *,
@@ -2434,7 +2434,7 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             job,
             run=run,
         )
-    def _register_full_optimization_report(
+    def _register_optimization_report(
         self,
         run: dict[str, Any],
         job: dict[str, Any],

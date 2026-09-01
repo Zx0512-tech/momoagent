@@ -143,10 +143,11 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
     assert 'OpenSees' in intent_properties['solver']['description']
     assert '塔底内力' in intent_properties['responseIds']['description']
     start_properties = workflow_start['inputSchema']['properties']
-    full_intent = workflow_start['inputSchema']['$defs']['FullOptimizationStartIntent']['properties']
+    assert 'FullOptimizationStartIntent' not in workflow_start['inputSchema']['$defs']
+    assert 'optimizationProfile' in intent_properties
+    assert 'FULL' in str(intent_properties['optimizationProfile'])
     assert 'OpenSeesPy' in start_properties['taskType']['description']
     assert 'DAMPER_OPTIMIZATION' in start_properties['taskType']['description']
-    assert 'OpenSeesPy' in full_intent['solver']['description']
     assert engineering_compare.idempotency_key_source == 'SERVER_DERIVED'
     assert all('幂等键由 Harness' not in item['description'] for item in first)
     assert set(inquiry_compare['inputSchema']['properties']) == {'artifactId', 'columns'}
@@ -173,14 +174,14 @@ def test_persistent_loop_job_completion_stops_after_real_execution_step(
     run = {
         'runId': 'agr_persistent_job',
         'sessionId': 'ags_harness',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_JOB',
         'currentStep': 'BASELINE',
         'completedSteps': ['REQUIREMENTS', 'PREFLIGHT', 'WAITING_APPROVAL'],
         'stepAttempt': 1,
         'jobId': 'job_persistent',
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
     AgentService._authorize_approved_execution(
@@ -218,7 +219,7 @@ def test_persistent_loop_asks_model_for_one_current_step_tool_and_persists_progr
     run = {
         'runId': 'agr_persistent_turn',
         'sessionId': 'ags_harness',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_JOB',
         'currentStep': 'DOE',
@@ -236,7 +237,7 @@ def test_persistent_loop_asks_model_for_one_current_step_tool_and_persists_progr
             'lastToolCallId': 'call_baseline',
             'updatedAt': '2026-08-11T00:00:00Z',
         },
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
 
@@ -293,7 +294,7 @@ def test_persistent_loop_stops_after_three_model_turn_failures(
     run = {
         'runId': 'agr_persistent_failure',
         'sessionId': 'ags_harness',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_JOB',
         'currentStep': 'DOE',
@@ -310,7 +311,7 @@ def test_persistent_loop_stops_after_three_model_turn_failures(
             'externalJobId': 'job_persistent_failure',
             'updatedAt': '2026-08-12T00:00:00Z',
         },
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
     calls = 0
@@ -1138,13 +1139,6 @@ def test_harness_rejects_solver_rewrite_and_repairs_to_opensees_optimization(mon
         )
 
     service.planner = SimpleNamespace(run_harness_turn=run_harness_turn)
-    monkeypatch.setattr(
-        service,
-        '_create_full_optimization_run',
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(
-            AssertionError('显式 OpenSeesPy 请求不得进入 ANSYS FULL_OPTIMIZATION')
-        ),
-    )
     captured: dict[str, object] = {}
 
     def create_engineering(_repository, _session, content, now, **kwargs):
@@ -1504,7 +1498,7 @@ def test_decorating_invalid_persisted_cursor_migrates_to_snapshot_initial_step(m
         'taskType': 'FULL_OPTIMIZATION',
         'status': 'WAITING_JOB',
         'runtimeMode': 'WORKFLOW_HARNESS',
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
         'currentStep': 'EXECUTION',
         'completedSteps': ['REQUIREMENTS'],
     }
@@ -1640,14 +1634,14 @@ def test_job_completion_does_not_fast_forward_without_artifact_evidence() -> Non
     repository = _Repository()
     run = {
         'runId': 'agr_gate_evidence',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_JOB',
         'currentStep': 'BASELINE',
         'completedSteps': ['REQUIREMENTS', 'PREFLIGHT', 'WAITING_APPROVAL'],
         'stepAttempt': 1,
         'jobId': 'job_without_artifact',
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
 
@@ -1667,7 +1661,6 @@ def test_approved_execution_gate_accepts_all_engineering_workflows() -> None:
         'ANALYSIS': ('EXECUTION', ['REQUIREMENTS', 'LOAD_PREPARATION', 'PREFLIGHT']),
         'DAMPER_COMPARISON': ('EXECUTION', ['REQUIREMENTS', 'CALIBRATION', 'PREFLIGHT']),
         'DAMPER_OPTIMIZATION': ('BASELINE', ['REQUIREMENTS', 'PREFLIGHT']),
-        'FULL_OPTIMIZATION': ('BASELINE', ['REQUIREMENTS', 'PREFLIGHT']),
     }
     for task_type, (expected_step, completed) in cases.items():
         repository = _Repository()
@@ -1698,13 +1691,13 @@ def test_approved_optimization_rejects_invalid_frozen_doe_budget(doe_count: obje
     repository = _Repository()
     run = {
         'runId': f'agr_invalid_doe_{doe_count}',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_APPROVAL',
         'currentStep': 'WAITING_APPROVAL',
         'completedSteps': ['REQUIREMENTS', 'PREFLIGHT'],
         'stepAttempt': 1,
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
 
@@ -1765,14 +1758,14 @@ def test_python_job_completion_records_internal_optimization_stage_traces() -> N
     repository = _Repository()
     run = {
         'runId': 'agr_optimization_job',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_JOB',
         'currentStep': 'BASELINE',
         'completedSteps': ['REQUIREMENTS', 'PREFLIGHT', 'WAITING_APPROVAL'],
         'stepAttempt': 1,
         'jobId': 'job_optimization',
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
 
@@ -1794,14 +1787,14 @@ def test_python_job_stage_traces_follow_registered_contracts_and_risks() -> None
     repository = _Repository()
     run = {
         'runId': 'agr_optimization_trace_contract',
-        'taskType': 'FULL_OPTIMIZATION',
+        'taskType': 'DAMPER_OPTIMIZATION',
         'runtimeMode': 'WORKFLOW_HARNESS',
         'status': 'WAITING_JOB',
         'currentStep': 'BASELINE',
         'completedSteps': ['REQUIREMENTS', 'PREFLIGHT', 'WAITING_APPROVAL'],
         'stepAttempt': 1,
         'jobId': 'job_optimization_trace_contract',
-        **freeze_workflow(workflow_definition('FULL_OPTIMIZATION')),
+        **freeze_workflow(workflow_definition('DAMPER_OPTIMIZATION')),
     }
     repository.save_run(run)
 
