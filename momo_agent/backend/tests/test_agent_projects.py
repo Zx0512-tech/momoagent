@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from fastapi import HTTPException
+from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from app.api.v1.agent_project_schemas import EngineeringWorkspacePatch
@@ -73,6 +74,57 @@ def test_existing_session_can_attach_once_but_not_to_two_projects() -> None:
         service.attach_session(second['projectId'], session['sessionId'])
     assert exc_info.value.status_code == 409
     assert exc_info.value.detail['code'] == 'SESSION_ALREADY_BOUND'
+
+
+def test_project_workspace_http_api_round_trip() -> None:
+    client = TestClient(app)
+    created = client.post(
+        '/api/v1/agent/projects',
+        json={
+            'name': '桥梁工程 Workspace',
+            'workspace': {
+                'solver': 'ANSYS',
+                'loadKind': 'EARTHQUAKE',
+                'damperType': 'VISCOUS',
+                'optimizationProfile': 'STANDARD',
+            },
+        },
+    )
+    assert created.status_code == 200
+    project = created.json()
+    project_id = project['projectId']
+    assert project['workspaceRevision'] == 1
+
+    session_response = client.post(
+        f'/api/v1/agent/projects/{project_id}/sessions',
+        json={'title': '工程项目内会话'},
+    )
+    assert session_response.status_code == 200
+    session_id = session_response.json()['sessionId']
+
+    updated = client.put(
+        f'/api/v1/agent/projects/{project_id}/workspace',
+        json={
+            'solver': 'OPENSEESPY_INPROC',
+            'loadKind': 'WIND',
+            'optimizationProfile': 'FULL',
+        },
+    )
+    assert updated.status_code == 200
+    assert updated.json()['workspaceRevision'] == 2
+
+    loaded = client.get(f'/api/v1/agent/projects/{project_id}')
+    assert loaded.status_code == 200
+    body = loaded.json()
+    assert body['workspace']['solver'] == 'OPENSEESPY_INPROC'
+    assert body['workspace']['loadKind'] == 'WIND'
+    assert body['workspace']['optimizationProfile'] == 'FULL'
+    assert body['sessionCount'] == 1
+    assert body['sessions'][0]['sessionId'] == session_id
+
+    listed = client.get('/api/v1/agent/projects')
+    assert listed.status_code == 200
+    assert [item['projectId'] for item in listed.json()['data']] == [project_id]
 
 
 def test_workspace_schema_is_strict_and_project_routes_are_registered() -> None:
