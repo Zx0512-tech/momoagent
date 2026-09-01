@@ -84,6 +84,7 @@ def _snapshot(
     load_sha: str | None = 'b' * 64,
 ):
     return {
+        'targetKey': run['runId'],
         'runId': run['runId'],
         'taskType': run['taskType'],
         'solver': solver or run['workflowContract']['solver'],

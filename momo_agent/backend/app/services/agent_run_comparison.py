@@ -83,8 +83,12 @@ class CrossRunComparisonService:
                     continue
                 compatibility = self._compatibility(baseline, item)
                 comparisons.append({
+                    'baselineTargetKey': baseline['targetKey'],
+                    'targetKey': item['targetKey'],
                     'baselineRunId': baseline['runId'],
                     'runId': item['runId'],
+                    **({'caseId': item['caseId']} if item.get('caseId') else {}),
+                    **({'candidateRank': item['candidateRank']} if item.get('candidateRank') else {}),
                     'compatibility': compatibility,
                     'metrics': self._deltas(
                         baseline,
@@ -209,8 +213,15 @@ class CrossRunComparisonService:
         load_sha = contract.get('loadSha256')
         default_model = contract.get('model') == 'STbridge' and not (contract.get('modelArtifactId') or intent.get('modelArtifactId'))
         default_load = not contract.get('loadArtifactId') and str(contract.get('loadKind') or intent.get('loadKind') or '') in {'EARTHQUAKE', 'WIND', 'TRAFFIC'}
+        run_id = str(run.get('runId') or '')
+        target_key = run_id
+        if selector_meta.get('caseId'):
+            target_key = f'{run_id}#case:{selector_meta["caseId"]}'
+        elif selector_meta.get('candidateRank'):
+            target_key = f'{run_id}#rank:{selector_meta["candidateRank"]}'
         return {
-            'runId': str(run.get('runId') or ''),
+            'targetKey': target_key,
+            'runId': run_id,
             'taskType': task_type,
             'solver': contract.get('solver') or intent.get('solver'),
             'loadKind': contract.get('loadKind') or intent.get('loadKind'),
@@ -452,7 +463,14 @@ class CrossRunComparisonService:
                 'metricId': metric_id,
                 'direction': 'LOWER_IS_BETTER',
                 'rows': [
-                    {'rank': rank, 'runId': item['runId'], 'value': item['metrics'][metric_id]['value']}
+                    {
+                        'rank': rank,
+                        'targetKey': item['targetKey'],
+                        'runId': item['runId'],
+                        **({'caseId': item['caseId']} if item.get('caseId') else {}),
+                        **({'candidateRank': item['candidateRank']} if item.get('candidateRank') else {}),
+                        'value': item['metrics'][metric_id]['value'],
+                    }
                     for rank, item in enumerate(ordered, start=1)
                 ],
             })

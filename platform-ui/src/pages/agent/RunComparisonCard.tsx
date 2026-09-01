@@ -18,7 +18,7 @@ export const RunComparisonCard = ({ comparison }: { comparison: RunComparisonRes
   const deltas = new Map(
     comparison.comparisons.flatMap(item =>
       Object.entries(item.metrics).map(([metricId, metric]) => [
-        `${item.runId}:${metricId}`,
+        `${item.targetKey}:${metricId}`,
         metric
       ] as const)
     )
@@ -38,7 +38,7 @@ export const RunComparisonCard = ({ comparison }: { comparison: RunComparisonRes
           </tr>
         </thead>
         <tbody>
-          {comparison.runs.map(item => <tr key={`${item.runId}:${item.caseId ?? ""}:${item.candidateRank ?? ""}`}>
+          {comparison.runs.map(item => <tr key={item.targetKey}>
             <td style={styles.cell}>
               <code>{item.runId}</code>
               {item.caseId && <div style={styles.meta}>case {item.caseId}</div>}
@@ -46,7 +46,7 @@ export const RunComparisonCard = ({ comparison }: { comparison: RunComparisonRes
             </td>
             {comparison.metricIds.map(metricId => {
               const metric = item.metrics[metricId];
-              const delta = deltas.get(`${item.runId}:${metricId}`);
+              const delta = deltas.get(`${item.targetKey}:${metricId}`);
               return <td key={metricId} style={styles.cell}>
                 <div>{formatValue(metric?.value)} {metric?.unit ?? ""}</div>
                 {delta?.relativeChangePercent !== null && delta?.relativeChangePercent !== undefined && (

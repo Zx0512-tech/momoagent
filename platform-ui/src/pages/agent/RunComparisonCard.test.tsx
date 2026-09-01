@@ -15,6 +15,7 @@ describe("RunComparisonCard", () => {
       metricIds: ["max_tower_base_shear"],
       runs: [
         {
+          targetKey: "agr_base",
           runId: "agr_base",
           taskType: "ANALYSIS",
           solver: "ANSYS",
@@ -34,6 +35,7 @@ describe("RunComparisonCard", () => {
           }
         },
         {
+          targetKey: "agr_candidate",
           runId: "agr_candidate",
           taskType: "ANALYSIS",
           solver: "ANSYS",
@@ -54,6 +56,8 @@ describe("RunComparisonCard", () => {
         }
       ],
       comparisons: [{
+        baselineTargetKey: "agr_base",
+        targetKey: "agr_candidate",
         baselineRunId: "agr_base",
         runId: "agr_candidate",
         compatibility: "DIRECT",

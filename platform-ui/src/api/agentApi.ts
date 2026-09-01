@@ -290,6 +290,7 @@ export interface RunComparisonMetric {
 }
 
 export interface RunComparisonRun {
+  targetKey: string;
   runId: string;
   taskType: string;
   solver?: string | null;
@@ -318,8 +319,12 @@ export interface RunComparisonDelta {
 }
 
 export interface RunComparisonPair {
+  baselineTargetKey: string;
+  targetKey: string;
   baselineRunId: string;
   runId: string;
+  caseId?: string;
+  candidateRank?: number;
   compatibility: RunComparisonCompatibility;
   metrics: Record<string, RunComparisonDelta>;
 }
@@ -336,7 +341,7 @@ export interface RunComparisonResult {
   rankings: Array<{
     metricId: string;
     direction: string;
-    rows: Array<{ rank: number; runId: string; value: number }>;
+    rows: Array<{ rank: number; targetKey: string; runId: string; caseId?: string; candidateRank?: number; value: number }>;
   }>;
   warnings: string[];
   interpretationLimit: string;
