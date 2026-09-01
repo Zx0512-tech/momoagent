@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { agentApi, type AgentRun } from "../../api/agentApi";
+import RunComparisonCard from "./RunComparisonCard";
 
 const DEFAULT_OPTIMIZATION_GOAL = "执行完整阻尼优化";
 
@@ -126,6 +127,7 @@ const FullOptimizationPanel = ({ loadToolActive, onLoadTool }: FullOptimizationP
             </>
           )}
           {run.resultSummary?.message && <p>{run.resultSummary.message}</p>}
+          {run.resultSummary?.inquiryRunComparison && <RunComparisonCard comparison={run.resultSummary.inquiryRunComparison} />}
         </section>
       )}
 

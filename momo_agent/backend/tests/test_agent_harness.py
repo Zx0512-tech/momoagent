@@ -118,6 +118,7 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
         'result.at_time',
         'result.columns',
         'result.compare',
+        'result.compare_runs',
         'result.correlate',
         'result.peak',
         'result.sweep_cases',
@@ -126,6 +127,7 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
         'workflow.start',
     ]
     assert 'result.compare' in names
+    assert 'result.compare_runs' in names
     assert 'result.peak' in names
     assert 'result.delta' not in names
     assert 'result.ratio' not in names
@@ -137,6 +139,7 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
     assert first[names.index('approval.decide')]['inputSchema']['required'] == ['decision']
     workflow_start = first[names.index('workflow.start')]
     inquiry_compare = first[names.index('result.compare')]
+    cross_run_compare = first[names.index('result.compare_runs')]
     engineering_compare = _HARNESS_TOOL_SPECS['comparison.compare']
     assert workflow_start['idempotencyKeySource'] == 'SERVER_DERIVED'
     intent_properties = workflow_start['inputSchema']['$defs']['EngineeringIntent']['properties']
@@ -153,6 +156,9 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
     assert set(inquiry_compare['inputSchema']['properties']) == {'artifactId', 'columns'}
     assert set(inquiry_compare['inputSchema']['required']) == {'artifactId', 'columns'}
     assert 'CSV' in inquiry_compare['description']
+    assert set(cross_run_compare['inputSchema']['properties']) == {'targets', 'baselineRunId', 'metricIds'}
+    assert cross_run_compare['inputSchema']['properties']['targets']['maxItems'] == 8
+    assert 'Project' in cross_run_compare['description']
     engineering_schema = engineering_compare.input_model.model_json_schema(by_alias=True)
     assert set(engineering_schema['properties']) == {'runId', 'jobId'}
     assert set(engineering_schema['required']) == {'runId', 'jobId'}
@@ -2178,6 +2184,7 @@ def test_native_result_inquiry_exposes_only_query_step_tools(monkeypatch) -> Non
         'result.at_time',
         'result.columns',
         'result.compare',
+        'result.compare_runs',
         'result.correlate',
         'result.peak',
         'result.sweep_cases',

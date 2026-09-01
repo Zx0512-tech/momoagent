@@ -49,6 +49,8 @@ class CrossRunComparisonService:
         run_ids = [item['runId'] for item in normalized_targets]
         runs = [self._required_run(repository, run_id) for run_id in run_ids]
         resolved_owner = str(owner or DEFAULT_OWNER)
+        if any(str(run.get('ownerId') or resolved_owner) != resolved_owner for run in runs):
+            raise RunComparisonError('比较对象不属于当前 owner。')
         scoped = engineering_project_context_service.filter_runs_to_project(
             runs,
             session_id=session_id,
@@ -203,15 +205,21 @@ class CrossRunComparisonService:
 
         contract = run.get('workflowContract') if isinstance(run.get('workflowContract'), dict) else {}
         intent = run.get('intent') if isinstance(run.get('intent'), dict) else {}
+        model_sha = contract.get('modelSha256')
+        load_sha = contract.get('loadSha256')
+        default_model = contract.get('model') == 'STbridge' and not (contract.get('modelArtifactId') or intent.get('modelArtifactId'))
+        default_load = not contract.get('loadArtifactId') and str(contract.get('loadKind') or intent.get('loadKind') or '') in {'EARTHQUAKE', 'WIND', 'TRAFFIC'}
         return {
             'runId': str(run.get('runId') or ''),
             'taskType': task_type,
             'solver': contract.get('solver') or intent.get('solver'),
             'loadKind': contract.get('loadKind') or intent.get('loadKind'),
             'modelArtifactId': contract.get('modelArtifactId') or intent.get('modelArtifactId'),
-            'modelSha256': contract.get('modelSha256'),
+            'modelSha256': model_sha,
+            'modelIdentity': (f'SHA256:{model_sha}' if model_sha else 'REGISTERED_MODEL:STbridge' if default_model else None),
             'loadArtifactId': contract.get('loadArtifactId'),
-            'loadSha256': contract.get('loadSha256'),
+            'loadSha256': load_sha,
+            'loadIdentity': (f'SHA256:{load_sha}' if load_sha else f'REGISTERED_DEFAULT_LOAD:{contract.get("loadKind") or intent.get("loadKind")}' if default_load else None),
             'responseIds': list(contract.get('responseIds') or intent.get('responseIds') or []),
             'reportArtifactId': run.get('reportArtifactId'),
             **selector_meta,
@@ -379,8 +387,8 @@ class CrossRunComparisonService:
     def _compatibility(self, left: dict[str, Any], right: dict[str, Any]) -> str:
         if left.get('loadKind') and right.get('loadKind') and left['loadKind'] != right['loadKind']:
             return NOT_COMPARABLE
-        model = self._identity_state(left.get('modelSha256'), right.get('modelSha256'))
-        load = self._identity_state(left.get('loadSha256'), right.get('loadSha256'))
+        model = self._identity_state(left.get('modelIdentity'), right.get('modelIdentity'))
+        load = self._identity_state(left.get('loadIdentity'), right.get('loadIdentity'))
         if model == 'DIFFERENT' or load == 'DIFFERENT':
             return NOT_COMPARABLE
         if model != 'SAME' or load != 'SAME':
@@ -466,10 +474,10 @@ class CrossRunComparisonService:
             warnings.append('模型或荷载 SHA256 不完整：仅展示登记值，不生成改善率或方案排名。')
         elif overall == NOT_COMPARABLE:
             warnings.append('模型、荷载或工况不一致：这些 Run 不允许直接做性能排序。')
-        if any(not item.get('modelSha256') for item in snapshots):
-            warnings.append('至少一个 Run 缺少 modelSha256。')
-        if any(not item.get('loadSha256') for item in snapshots):
-            warnings.append('至少一个 Run 缺少 loadSha256。')
+        if any(not item.get('modelIdentity') for item in snapshots):
+            warnings.append('至少一个 Run 缺少可核验的模型身份。')
+        if any(not item.get('loadIdentity') for item in snapshots):
+            warnings.append('至少一个 Run 缺少可核验的荷载身份。')
         return list(dict.fromkeys(warnings))
 
 

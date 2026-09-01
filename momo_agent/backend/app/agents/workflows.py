@@ -212,13 +212,13 @@ def _optimization_workflow() -> WorkflowDefinition:
 def _inquiry_workflow() -> WorkflowDefinition:
     return WorkflowDefinition(
         workflowId='result_inquiry',
-        version='1.0.0',
+        version='1.1.0',
         initialStep='LOCATE_RESULT',
         terminalSteps=('COMPLETED', 'FAILED'),
         steps=(
             _step('LOCATE_RESULT', '定位终态结果', ('result.find_recent',), next_step='INSPECT_CATALOG'),
             _step('INSPECT_CATALOG', '查看数据目录', ('result.columns',), prerequisites=('LOCATE_RESULT',), next_step='QUERY'),
-            _step('QUERY', '查询只读结果', ('result.columns', 'result.peak', 'result.at_time', 'result.correlate', 'result.compare', 'result.topsis', 'result.sweep_cases'), prerequisites=('INSPECT_CATALOG',), next_step='EVIDENCE_REVIEW'),
+            _step('QUERY', '查询只读结果', ('result.columns', 'result.peak', 'result.at_time', 'result.correlate', 'result.compare', 'result.compare_runs', 'result.topsis', 'result.sweep_cases'), prerequisites=('INSPECT_CATALOG',), next_step='EVIDENCE_REVIEW'),
             _step('EVIDENCE_REVIEW', '核对证据', ('evidence.verify',), prerequisites=('QUERY',), next_step='REPORT'),
             _step('REPORT', '回答追问', ('workflow.complete',), prerequisites=('EVIDENCE_REVIEW',), next_step='COMPLETED'),
             _step('COMPLETED', '完成', (), gate='terminal'),
