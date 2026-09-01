@@ -41,10 +41,10 @@ jobs:
         # test markers are corrected; the production evidence gate remains unchanged.
         run: >-
           python -m pytest tests
-          -m "not requires_ansys and not requires_opensees and not slow"
+          -m "not requires_ansys and not requires_opensees and not requires_both_solvers and not slow"
           --deselect tests/test_agent_load_api.py::test_analysis_freezes_real_solver_job_after_load_mapping
           --deselect tests/test_agent_load_api.py::test_analysis_without_upload_freezes_bundled_earthquake_artifact
-          --maxfail=1 -q
+          -q
 
   frontend-quality:
     name: Frontend lint, test, build
