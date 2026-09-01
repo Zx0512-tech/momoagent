@@ -14,7 +14,7 @@ class EngineeringTaskSpec:
     """
 
     task_type: str
-    # _agents() 注册表中的键；FULL_OPTIMIZATION 复用 DAMPER_OPTIMIZATION 的 Agent。
+    # _agents() 注册表中的键。
     agent_key: str
     # 证据报告制品文件名。
     report_file_name: str
@@ -47,14 +47,6 @@ _SPECS: dict[str, EngineeringTaskSpec] = {
         ),
         EngineeringTaskSpec(
             task_type='DAMPER_OPTIMIZATION',
-            agent_key='DAMPER_OPTIMIZATION',
-            report_file_name='full_optimization_evidence_report.json',
-            plan_tool='optimization.prepare_plan',
-            solver_run_tool='optimization.run_baseline',
-            post_job_target_step='REVIEW',
-        ),
-        EngineeringTaskSpec(
-            task_type='FULL_OPTIMIZATION',
             agent_key='DAMPER_OPTIMIZATION',
             report_file_name='full_optimization_evidence_report.json',
             plan_tool='optimization.prepare_plan',
