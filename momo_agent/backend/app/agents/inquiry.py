@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import ConfigDict, Field
 
@@ -188,6 +188,42 @@ class ResultDerivedOutput(StrictToolModel):
     relative_change_percent: float | None = Field(alias='relativeChangePercent')
     ratio: float | None
     sample_count: int = Field(alias='sampleCount')
+    interpretation_limit: str = Field(alias='interpretationLimit')
+
+
+class ResultRunTarget(StrictToolModel):
+    model_config = ConfigDict(extra='forbid', populate_by_name=True)
+
+    run_id: str = Field(alias='runId', pattern=r'^[A-Za-z0-9_-]{1,128}$')
+    case_id: str | None = Field(default=None, alias='caseId', min_length=1, max_length=128)
+    candidate_rank: int | None = Field(default=None, alias='candidateRank', ge=1, le=50)
+
+
+class ResultCompareRunsInput(StrictToolModel):
+    model_config = ConfigDict(extra='forbid', populate_by_name=True)
+
+    targets: list[ResultRunTarget] = Field(min_length=2, max_length=8)
+    baseline_run_id: str | None = Field(
+        default=None,
+        alias='baselineRunId',
+        pattern=r'^[A-Za-z0-9_-]{1,128}$',
+    )
+    metric_ids: list[str] = Field(default_factory=list, alias='metricIds', max_length=16)
+
+
+class ResultCompareRunsOutput(StrictToolModel):
+    model_config = ConfigDict(extra='forbid', populate_by_name=True)
+
+    schema_version: str = Field(alias='schemaVersion')
+    session_id: str = Field(alias='sessionId')
+    project_id: str | None = Field(default=None, alias='projectId')
+    baseline_run_id: str | None = Field(default=None, alias='baselineRunId')
+    compatibility: Literal['DIRECT', 'CROSS_SOLVER', 'LIMITED', 'NOT_COMPARABLE']
+    metric_ids: list[str] = Field(alias='metricIds')
+    runs: list[dict[str, Any]]
+    comparisons: list[dict[str, Any]]
+    rankings: list[dict[str, Any]]
+    warnings: list[str]
     interpretation_limit: str = Field(alias='interpretationLimit')
 
 

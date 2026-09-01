@@ -26,6 +26,8 @@ from app.agents.inquiry import (
     ResultAtTimeInput,
     ResultColumnsInput,
     ResultCorrelateInput,
+    ResultCompareRunsInput,
+    ResultCompareRunsOutput,
     ResultDerivedInput,
     ResultPeakInput,
     ResultSweepCasesInput,
@@ -46,6 +48,7 @@ from app.services.agent_engineering import EngineeringIntent
 from app.services.agent_llm import HarnessToolCall, numbers_are_grounded, record_message_event
 from app.services.platform_store import gen_id, platform_store, utc_now
 from app.services.result_inquiry import ResultInquiryService
+from app.services.agent_run_comparison import RunComparisonError, cross_run_comparison_service
 
 
 logger = get_platform_logger('agent_harness')
@@ -323,6 +326,10 @@ _HARNESS_TOOL_SPECS: dict[str, HarnessToolSpec] = {
         '当用户需要比较同一已登记 CSV 两列绝对峰值时使用；一次返回差值、比值和相对变化，columns[0] 为基准。',
         ResultDerivedInput,
     ),
+    'result.compare_runs': HarnessToolSpec(
+        '当用户需要比较 2–8 个同一 Project 的 SUCCEEDED + REAL_FEM 历史 Run 时使用；服务端先校验模型/荷载身份和单位，再计算基线差值、相对变化与允许的排名。跨求解器只用于一致性验证，不把差异解释为方案优劣。',
+        ResultCompareRunsInput,
+    ),
     'result.topsis': HarnessToolSpec(
         '当用户询问已完成优化的 TOPSIS 排名或前 N 个候选时使用；只读取登记的优化摘要。多个优化结果并存时，必须根据 availableResults 与 catalogsByRunId 中的工况、模型、阻尼器、更新时间和 runId 匹配用户语义，不能默认选最近结果。',
         ResultTopsisInput,
@@ -346,6 +353,7 @@ _MODEL_INVOCABLE_TOOLS: frozenset[str] = frozenset({
     'result.at_time',
     'result.columns',
     'result.compare',
+    'result.compare_runs',
     'result.correlate',
     'result.peak',
     'result.sweep_cases',
@@ -1884,16 +1892,39 @@ class WorkflowHarnessMixin:
                         repeated_no_progress=repeated_no_progress,
                         tool_call=WorkflowToolCall(name=call.name, arguments=call.arguments),
                     )
-                    artifact_id = call.arguments.get('artifact_id') or call.arguments.get('artifactId')
-                    if artifact_id not in set(artifacts.values()):
-                        raise ToolExecutionError(
-                            'ARTIFACT_NOT_REGISTERED',
-                            '结果追问只能读取当前结果目录登记的只读制品。',
-                        )
-                    output = tools.call(call.name, call.arguments).model_dump(by_alias=True, mode='json')
-                    effective_arguments = _HARNESS_TOOL_SPECS[call.name].input_model.model_validate(
-                        call.arguments,
-                    ).model_dump(by_alias=True, mode='json')
+                    if call.name == 'result.compare_runs':
+                        try:
+                            validated = ResultCompareRunsInput.model_validate(call.arguments)
+                            effective_arguments = validated.model_dump(by_alias=True, mode='json')
+                            comparison = cross_run_comparison_service.compare(
+                                repository=repository,
+                                session_id=session['sessionId'],
+                                targets=effective_arguments['targets'],
+                                baseline_run_id=effective_arguments.get('baselineRunId'),
+                                metric_ids=effective_arguments.get('metricIds') or None,
+                                owner=str(session.get('ownerId') or 'local'),
+                                catalog_loader=self._load_result_catalog,
+                            )
+                            output = ResultCompareRunsOutput.model_validate(comparison).model_dump(
+                                by_alias=True,
+                                mode='json',
+                            )
+                        except (RunComparisonError, ValidationError) as exc:
+                            raise ToolExecutionError(
+                                'RUN_COMPARISON_INVALID',
+                                str(exc),
+                            ) from exc
+                    else:
+                        artifact_id = call.arguments.get('artifact_id') or call.arguments.get('artifactId')
+                        if artifact_id not in set(artifacts.values()):
+                            raise ToolExecutionError(
+                                'ARTIFACT_NOT_REGISTERED',
+                                '结果追问只能读取当前结果目录登记的只读制品。',
+                            )
+                        output = tools.call(call.name, call.arguments).model_dump(by_alias=True, mode='json')
+                        effective_arguments = _HARNESS_TOOL_SPECS[call.name].input_model.model_validate(
+                            call.arguments,
+                        ).model_dump(by_alias=True, mode='json')
                 except ToolExecutionError as exc:
                     return self._fail_native_inquiry(
                         repository,
@@ -1912,13 +1943,15 @@ class WorkflowHarnessMixin:
                 inquiry_metrics = self._structured_inquiry_metrics(query_results)
                 inquiry_topsis = self._structured_inquiry_topsis(query_results)
                 inquiry_topsis_weights = self._structured_inquiry_topsis_weights(query_results)
+                inquiry_run_comparison = self._structured_inquiry_run_comparison(query_results)
                 run.update({
                     'resultSummary': {
                         'inquiryMetrics': inquiry_metrics,
                         'inquiryTopsis': inquiry_topsis,
                         **({'inquiryTopsisWeights': inquiry_topsis_weights} if inquiry_topsis_weights else {}),
+                        **({'inquiryRunComparison': inquiry_run_comparison} if inquiry_run_comparison else {}),
                         'queryProgress': {
-                            'completed': len(inquiry_metrics) + len(inquiry_topsis),
+                            'completed': len(inquiry_metrics) + len(inquiry_topsis) + (1 if inquiry_run_comparison else 0),
                             'message': (
                                 f'已读取 {len(inquiry_metrics)} 项结果指标'
                                 if inquiry_metrics
@@ -2201,9 +2234,10 @@ class WorkflowHarnessMixin:
         inquiry_metrics = self._structured_inquiry_metrics(query_results)
         inquiry_topsis = self._structured_inquiry_topsis(query_results)
         inquiry_topsis_weights = self._structured_inquiry_topsis_weights(query_results)
+        inquiry_run_comparison = self._structured_inquiry_run_comparison(query_results)
         visible_message = (
             self._deterministic_inquiry_answer(query_results)
-            if inquiry_metrics or inquiry_topsis
+            if inquiry_metrics or inquiry_topsis or inquiry_run_comparison
             else answer
         )
         run.update({
@@ -2222,8 +2256,9 @@ class WorkflowHarnessMixin:
                 'inquiryMetrics': inquiry_metrics,
                 'inquiryTopsis': inquiry_topsis,
                 **({'inquiryTopsisWeights': inquiry_topsis_weights} if inquiry_topsis_weights else {}),
+                **({'inquiryRunComparison': inquiry_run_comparison} if inquiry_run_comparison else {}),
                 'queryProgress': {
-                    'completed': len(inquiry_metrics) + len(inquiry_topsis),
+                    'completed': len(inquiry_metrics) + len(inquiry_topsis) + (1 if inquiry_run_comparison else 0),
                     'message': f'已读取 {len(inquiry_metrics) + len(inquiry_topsis)} 项结果指标',
                 },
             },
@@ -2249,11 +2284,24 @@ class WorkflowHarnessMixin:
     @staticmethod
     def _deterministic_inquiry_answer(query_results: list[dict[str, Any]]) -> str:
         """模型叙述未通过数字门时，只返回简短且不暴露内部校验的说明。"""
+        comparison = WorkflowHarnessMixin._structured_inquiry_run_comparison(query_results)
+        if comparison:
+            return (
+                f'已完成 {len(comparison.get("runs") or [])} 个工程对象的跨 Run 比较；'
+                f'可比性为 {comparison.get("compatibility")}，数值均来自已登记工程证据。'
+            )
         topsis = WorkflowHarnessMixin._structured_inquiry_topsis(query_results)
         if topsis:
             return f'已读取 TOPSIS 前 {len(topsis)} 项候选，排名和数值均来自已登记的优化摘要。'
         count = len(WorkflowHarnessMixin._structured_inquiry_metrics(query_results))
         return f'已读取 {count} 项结果指标，数值均来自已登记的只读结果文件。'
+
+    @staticmethod
+    def _structured_inquiry_run_comparison(query_results: list[dict[str, Any]]) -> dict[str, Any] | None:
+        for item in reversed(query_results):
+            if item.get('tool') == 'result.compare_runs' and isinstance(item.get('output'), dict):
+                return dict(item['output'])
+        return None
 
     @staticmethod
     def _structured_inquiry_topsis(query_results: list[dict[str, Any]]) -> list[dict[str, Any]]:
