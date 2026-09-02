@@ -7,7 +7,7 @@ from fastapi import APIRouter
 from app.api.v1.agent_project_schemas import (
     EngineeringProjectCreateRequest,
     EngineeringProjectSessionCreateRequest,
-    EngineeringWorkspacePatch,
+    EngineeringWorkspaceUpdateRequest,
 )
 from app.services.agent_project_evidence import engineering_project_evidence_service
 from app.services.agent_project_service import engineering_project_service
@@ -48,11 +48,12 @@ def get_engineering_project_evidence(project_id: str) -> dict[str, Any]:
 @router.put('/agent/projects/{project_id}/workspace')
 def update_engineering_workspace(
     project_id: str,
-    payload: EngineeringWorkspacePatch,
+    payload: EngineeringWorkspaceUpdateRequest,
 ) -> dict[str, Any]:
     return engineering_project_service.update_workspace(
         project_id,
-        payload.model_dump(by_alias=True, exclude_unset=True),
+        payload.patch.model_dump(by_alias=True, exclude_unset=True),
+        expected_revision=payload.expected_revision,
     )
 
 
