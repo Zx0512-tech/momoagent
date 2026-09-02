@@ -187,10 +187,12 @@ def test_harness_payload_keeps_static_prefix_and_sorted_tool_definitions() -> No
     assert first['chat_template_kwargs'] == {'enable_thinking': True}
     assert first['max_tokens'] == 4096
     assert '结合完整对话历史' in first['messages'][0]['content']
-    assert json.loads(first['messages'][-1]['content']) == {
-        'workflowState': {'currentStep': 'PREFLIGHT'},
-        'userContent': '执行分析',
-    }
+    first_runtime_payload = json.loads(first['messages'][-1]['content'])
+    assert first_runtime_payload['userContent'] == '执行分析'
+    assert first_runtime_payload['runtimeContext']['workflowState'] == {'currentStep': 'PREFLIGHT'}
+    assert [item['capabilityId'] for item in first_runtime_payload['runtimeContext']['availableCapabilities']] == [
+        'analysis.prepare', 'solver.execute',
+    ]
 
 
 def test_harness_payload_appends_result_context_after_user_content_for_cache() -> None:
@@ -212,9 +214,11 @@ def test_harness_payload_appends_result_context_after_user_content_for_cache() -
     assert roles == ['system', 'user', 'user', 'assistant', 'user']
     assert all(role != 'system' for role in roles[1:])
     final_payload = json.loads(payload['messages'][-1]['content'])
-    assert list(final_payload) == ['workflowState', 'userContent', 'resultInquiryContext']
+    assert list(final_payload) == ['runtimeContext', 'userContent']
+    runtime_context = final_payload['runtimeContext']
     assert final_payload['userContent'] == '分别给出所有统计量的峰值'
-    assert final_payload['resultInquiryContext']['sourceRunId'] == 'agr_1'
+    assert runtime_context['resultInquiryContext']['sourceRunId'] == 'agr_1'
+    assert runtime_context['scope'] == 'TURN_SNAPSHOT'
 
 
 def test_harness_thinking_can_be_explicitly_disabled_for_provider_compatibility(monkeypatch) -> None:

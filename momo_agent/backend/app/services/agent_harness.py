@@ -49,6 +49,14 @@ from app.services.agent_llm import HarnessToolCall, numbers_are_grounded, record
 from app.services.platform_store import gen_id, platform_store, utc_now
 from app.services.result_inquiry import ResultInquiryService
 from app.services.agent_run_comparison import RunComparisonError, cross_run_comparison_service
+from app.capabilities.runtime import (
+    CapabilityDispatcher,
+    CapabilityRegistry,
+    EngineeringCapability,
+    EvidencePolicy,
+)
+from app.capabilities.context import build_runtime_turn_payload
+from app.capabilities.retention import build_compression_state_anchor
 
 
 logger = get_platform_logger('agent_harness')
@@ -363,6 +371,47 @@ _MODEL_INVOCABLE_TOOLS: frozenset[str] = frozenset({
 })
 
 
+_CAPABILITY_POLICY_OVERRIDES: dict[str, dict[str, Any]] = {
+    'result.peak': {
+        'prerequisites': ('REGISTERED_RESULT',),
+        'evidence_policy': EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+    },
+    'result.compare_runs': {
+        'prerequisites': ('PROJECT_BOUND', 'VERIFIED_RESULT_AVAILABLE'),
+        'evidence_policy': EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+    },
+    'analysis.run': {
+        'prerequisites': ('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        'evidence_policy': EvidencePolicy.REAL_FEM_REQUIRED,
+    },
+}
+
+
+def _build_capability_registry() -> CapabilityRegistry:
+    registry = CapabilityRegistry()
+    for capability_id, spec in sorted(_HARNESS_TOOL_SPECS.items()):
+        overrides = _CAPABILITY_POLICY_OVERRIDES.get(capability_id, {})
+        registry.register(EngineeringCapability(
+            capability_id=capability_id,
+            description=spec.description,
+            input_model=spec.input_model,
+            risk=spec.risk,
+            requires_approval=spec.requires_approval,
+            idempotency_key_source=spec.idempotency_key_source,
+            prerequisites=tuple(overrides.get('prerequisites') or ()),
+            evidence_policy=overrides.get('evidence_policy', EvidencePolicy.NONE),
+        ))
+    return registry
+
+
+_CAPABILITY_REGISTRY = _build_capability_registry()
+_CAPABILITY_DISPATCHER = CapabilityDispatcher(_CAPABILITY_REGISTRY)
+
+
+def harness_capability_registry() -> CapabilityRegistry:
+    return _CAPABILITY_REGISTRY
+
+
 # 工具目录是静态数据的纯函数：workflow 定义与 Pydantic JSON Schema 每轮
 # 重建纯属浪费。首次构建后缓存，出口返回深拷贝防调用方原地改写。
 _TOOL_CATALOG_CACHE: dict[Any, list[dict[str, Any]]] = {}
@@ -407,19 +456,7 @@ def _build_harness_tool_catalog() -> list[dict[str, Any]]:
         raise RuntimeError(
             f'工具目录与工作流定义不一致: missing={missing}, extra={extra}, unknown={unknown}',
         )
-    return [
-        {
-            'name': name,
-            'description': _HARNESS_TOOL_SPECS[name].description,
-            'inputSchema': _HARNESS_TOOL_SPECS[name].input_model.model_json_schema(by_alias=True),
-            **(
-                {'idempotencyKeySource': _HARNESS_TOOL_SPECS[name].idempotency_key_source}
-                if _HARNESS_TOOL_SPECS[name].idempotency_key_source
-                else {}
-            ),
-        }
-        for name in sorted(_MODEL_INVOCABLE_TOOLS)
-    ]
+    return _CAPABILITY_REGISTRY.tool_schemas(sorted(_MODEL_INVOCABLE_TOOLS))
 
 
 def harness_step_tool_catalog(allowed_tools: list[str] | tuple[str, ...]) -> list[dict[str, Any]]:
@@ -443,19 +480,7 @@ def _build_harness_step_tool_catalog(
             '冻结工作流引用了未登记工具。',
             details={'tools': unknown},
         )
-    return [
-        {
-            'name': name,
-            'description': _HARNESS_TOOL_SPECS[name].description,
-            'inputSchema': _HARNESS_TOOL_SPECS[name].input_model.model_json_schema(by_alias=True),
-            **(
-                {'idempotencyKeySource': _HARNESS_TOOL_SPECS[name].idempotency_key_source}
-                if _HARNESS_TOOL_SPECS[name].idempotency_key_source
-                else {}
-            ),
-        }
-        for name in sorted(dict.fromkeys(allowed_tools))
-    ]
+    return _CAPABILITY_REGISTRY.tool_schemas(tuple(dict.fromkeys(allowed_tools)))
 
 
 def _bootstrap_definition() -> WorkflowDefinition:
@@ -802,15 +827,27 @@ class WorkflowHarnessMixin:
             logger.warning('上下文压缩不可用，回退历史截断: %s', exc)
             return summary_messages + self._bounded_harness_history(uncovered)
 
+        previous_epoch = int(state.get('cacheEpoch') or 0) if state else 0
+        cache_epoch = previous_epoch + 1
+        active_run = None
+        if workflow_state and workflow_state.get('runId'):
+            active_run = repository.get_run(str(workflow_state['runId']))
+        state_anchor = build_compression_state_anchor(
+            workflow_state=workflow_state,
+            run=active_run,
+        )
         record_message_event('CONTEXT_COMPRESSION', {
             'foldedMessageCount': folded_item_end,
             'foldedChars': len(folded_text),
             'summaryChars': len(summary),
+            'cacheEpoch': cache_epoch,
         })
         previous_covered = int(state.get('coveredMessageCount') or 0) if state else 0
         previous_source_chars = int(state.get('sourceChars') or 0) if state else 0
         new_state = {
-            'version': 1,
+            'version': 2,
+            'cacheEpoch': cache_epoch,
+            'stateAnchor': state_anchor,
             'summary': summary,
             'coveredThroughMessageId': covered_message_id,
             'coveredMessageCount': previous_covered + folded_item_end,
@@ -857,6 +894,8 @@ class WorkflowHarnessMixin:
                 'contextCompression': {
                     'note': '以下是较早对话历史的定向摘要，原始消息已按上下文预算折叠；如需精确数字请重新查询已登记制品。',
                     'summary': str(state.get('summary') or ''),
+                    'stateAnchor': state.get('stateAnchor') or {},
+                    'cacheEpoch': state.get('cacheEpoch') or 1,
                     'coveredMessageCount': state.get('coveredMessageCount'),
                 },
             }, ensure_ascii=False, separators=(',', ':')),
@@ -980,6 +1019,11 @@ class WorkflowHarnessMixin:
             workflow_state,
             content,
         )
+        capability_tools = harness_step_tool_catalog(['workflow.observe'])
+        self._persist_harness_runtime_snapshot(
+            repository, session['sessionId'], workflow_state=workflow_state, content=content,
+            tools=capability_tools, turn_context=None,
+        )
         turn_history = list(base_history)
         turn = None
         call = None
@@ -988,7 +1032,7 @@ class WorkflowHarnessMixin:
                 messages=turn_history,
                 user_content=content,
                 workflow_state=workflow_state,
-                tools=harness_tool_catalog(),
+                tools=capability_tools,
             )
             if len(turn.tool_calls) == 1 and turn.tool_calls[0].name == 'workflow.observe':
                 call = turn.tool_calls[0]
@@ -1100,7 +1144,7 @@ class WorkflowHarnessMixin:
             messages=transcript,
             user_content='请直接根据刚才的观察结果回答最初问题；不得重新启动任务或重复询问已冻结参数。',
             workflow_state=current_state,
-            tools=harness_tool_catalog(),
+            tools=capability_tools,
         )
         reply = str(final_turn.content or '').strip()
         if final_turn.tool_calls or not reply:
@@ -1130,11 +1174,16 @@ class WorkflowHarnessMixin:
             self._workflow_state_from_run(run),
             content,
         )
+        capability_tools = harness_step_tool_catalog(['approval.decide'])
+        self._persist_harness_runtime_snapshot(
+            repository, session['sessionId'], workflow_state=workflow_state, content=content,
+            tools=capability_tools, turn_context=None,
+        )
         turn = self.planner.run_harness_turn(
             messages=history,
             user_content=content,
             workflow_state=self._workflow_state_from_run(run),
-            tools=harness_tool_catalog(),
+            tools=capability_tools,
         )
         call = turn.tool_calls[0] if turn.tool_calls else None
         if call is None or call.name != 'approval.decide':
@@ -1251,13 +1300,18 @@ class WorkflowHarnessMixin:
         turn_context = (
             {'engineeringProjectContext': project_context} if project_context else None
         )
+        capability_tools = harness_step_tool_catalog(['workflow.start'])
+        self._persist_harness_runtime_snapshot(
+            repository, session['sessionId'], workflow_state=workflow_state, content=content,
+            tools=capability_tools, turn_context=turn_context,
+        )
         memory_field_sources: dict[str, str] = {}
         for correction_attempt in range(3):
             turn = self.planner.run_harness_turn(
                 messages=history,
                 user_content=content,
                 workflow_state=workflow_state,
-                tools=harness_tool_catalog(),
+                tools=capability_tools,
                 turn_context=turn_context,
             )
             call = turn.tool_calls[0] if turn.tool_calls else None
@@ -1410,13 +1464,18 @@ class WorkflowHarnessMixin:
         turn_context = (
             {'engineeringProjectContext': project_context} if project_context else None
         )
+        capability_tools = harness_step_tool_catalog(workflow_state['allowedTools'])
+        self._persist_harness_runtime_snapshot(
+            repository, session['sessionId'], workflow_state=workflow_state, content=content,
+            tools=capability_tools, turn_context=turn_context,
+        )
         memory_field_sources: dict[str, str] = {}
         for correction_attempt in range(3):
             turn = self.planner.run_harness_turn(
                 messages=messages,
                 user_content=content,
                 workflow_state=workflow_state,
-                tools=harness_step_tool_catalog(workflow_state['allowedTools']),
+                tools=capability_tools,
                 turn_context=turn_context,
             )
             if not turn.tool_calls:
@@ -2078,11 +2137,46 @@ class WorkflowHarnessMixin:
         return message
 
     @staticmethod
-    def _harness_user_content(workflow_state: dict[str, Any], content: str) -> str:
-        return json.dumps({
-            'workflowState': workflow_state,
-            'userContent': str(content or '')[:4000],
-        }, ensure_ascii=False, separators=(',', ':'))
+    def _harness_user_content(
+        workflow_state: dict[str, Any],
+        content: str,
+        *,
+        turn_context: dict[str, Any] | None = None,
+        tools: list[dict[str, Any]] | None = None,
+    ) -> str:
+        return json.dumps(
+            build_runtime_turn_payload(
+                workflow_state=workflow_state,
+                user_content=content,
+                tools=list(tools or []),
+                turn_context=turn_context,
+            ),
+            ensure_ascii=False,
+            separators=(',', ':'),
+        )
+
+    def _persist_harness_runtime_snapshot(
+        self,
+        repository: AgentRepository,
+        session_id: str,
+        *,
+        workflow_state: dict[str, Any],
+        content: str,
+        tools: list[dict[str, Any]],
+        turn_context: dict[str, Any] | None = None,
+    ) -> None:
+        messages = repository.list_messages(session_id)
+        if not messages or str(messages[-1].get('role') or '').upper() != 'USER':
+            return
+        messages[-1]['harnessContent'] = self._harness_user_content(
+            workflow_state,
+            content,
+            turn_context=turn_context,
+            tools=tools,
+        )
+        save_message = getattr(repository, 'save_message', None)
+        if callable(save_message):
+            save_message(messages[-1])
 
     @staticmethod
     def _native_history_blocks(projected: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
