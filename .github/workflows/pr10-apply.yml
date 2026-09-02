@@ -1,0 +1,68 @@
+name: PR10 Apply Project Workspace UI
+
+on:
+  push:
+    branches:
+      - feat/project-workspace-ui
+    paths:
+      - .github/workflows/pr10-apply.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/project-workspace-ui
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: platform-ui/package-lock.json
+
+      - name: Apply deterministic migration
+        run: python scripts/pr10_apply.py
+
+      - name: Install frontend dependencies
+        working-directory: platform-ui
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: platform-ui
+        run: npm test
+
+      - name: Lint frontend
+        working-directory: platform-ui
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: platform-ui
+        run: npm run build
+
+      - name: Check bundle budget
+        working-directory: platform-ui
+        run: npm run check:bundle
+
+      - name: Check whitespace
+        run: git diff --check
+
+      - name: Commit product changes and remove migration helper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add platform-ui/src/App.tsx \
+                  platform-ui/src/api/agentApi.ts \
+                  platform-ui/src/components/layout/Sidebar.tsx \
+                  platform-ui/src/pages/chat/ChatPage.tsx \
+                  platform-ui/src/pages/projects/ProjectWorkspacePage.tsx \
+                  platform-ui/src/pages/projects/projectWorkspaceModel.ts \
+                  platform-ui/src/pages/projects/projectWorkspaceModel.test.ts
+          git commit -m "feat: add project workspace UI"
+          git rm scripts/pr10_apply.py .github/workflows/pr10-apply.yml
+          git commit -m "chore: remove PR10 migration helper"
+          git push origin HEAD:feat/project-workspace-ui
