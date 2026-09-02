@@ -20,13 +20,21 @@ class DemoInput(BaseModel):
     run_id: str = Field(alias='runId')
 
 
-def test_capability_registry_uses_input_model_as_tool_schema_truth() -> None:
-    registry = CapabilityRegistry()
-    registry.register(EngineeringCapability(
+def _demo_capability() -> EngineeringCapability:
+    return EngineeringCapability(
         capability_id='result.demo',
         description='demo',
         input_model=DemoInput,
-    ))
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=(),
+        evidence_policy=EvidencePolicy.NONE,
+    )
+
+
+def test_capability_registry_uses_input_model_as_tool_schema_truth() -> None:
+    registry = CapabilityRegistry()
+    registry.register(_demo_capability())
     schema = registry.tool_schemas(['result.demo'])[0]
     assert schema['inputSchema'] == DemoInput.model_json_schema(by_alias=True)
     assert schema['capability']['capabilityId'] == 'result.demo'
@@ -35,9 +43,7 @@ def test_capability_registry_uses_input_model_as_tool_schema_truth() -> None:
 
 def test_capability_registry_fails_closed_for_duplicates_and_unknown_ids() -> None:
     registry = CapabilityRegistry()
-    capability = EngineeringCapability(
-        capability_id='result.demo', description='demo', input_model=DemoInput,
-    )
+    capability = _demo_capability()
     registry.register(capability)
     with pytest.raises(ValueError):
         registry.register(capability)
@@ -48,9 +54,7 @@ def test_capability_registry_fails_closed_for_duplicates_and_unknown_ids() -> No
 
 def test_dispatcher_enforces_stage_before_validation() -> None:
     registry = CapabilityRegistry()
-    registry.register(EngineeringCapability(
-        capability_id='result.demo', description='demo', input_model=DemoInput,
-    ))
+    registry.register(_demo_capability())
     dispatcher = CapabilityDispatcher(registry)
     with pytest.raises(ToolExecutionError) as exc:
         dispatcher.authorize_and_validate(
