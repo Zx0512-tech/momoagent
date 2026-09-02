@@ -16,6 +16,7 @@ import { agentApi, type AgentResultArtifact, type AgentRun } from "../../../api/
 import { CHART_COLORS } from "../../../theme/chart";
 import { cardStyles, InfoItem } from "./cardStyles";
 import { TimeseriesSection } from "./TimeseriesSection";
+import RunComparisonCard from "../../agent/RunComparisonCard";
 
 /**
  * 结果卡：展示真实求解结论。
@@ -231,6 +232,7 @@ export const ResultCard = ({ run }: { run: AgentRun }) => {
   const inquiryMetrics = summary.inquiryMetrics ?? [];
   const inquiryTopsis = summary.inquiryTopsis ?? [];
   const inquiryTopsisWeights = summary.inquiryTopsisWeights;
+  const inquiryRunComparison = summary.inquiryRunComparison;
   const isInquiry = run.taskType === "INQUIRY";
   const isParameterSweep = run.taskType === "DAMPER_PARAMETER_SWEEP";
   const inquiryPending = isInquiry && run.status === "PLANNING";
@@ -351,6 +353,10 @@ export const ResultCard = ({ run }: { run: AgentRun }) => {
             </tbody>
           </table>
         </div>
+      )}
+
+      {isInquiry && inquiryRunComparison && (
+        <RunComparisonCard comparison={inquiryRunComparison} />
       )}
 
       {isInquiry && !inquiryPending && summary.message && (
