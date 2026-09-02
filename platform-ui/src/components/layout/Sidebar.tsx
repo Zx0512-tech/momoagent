@@ -10,6 +10,7 @@ import {
   Sliders,
   FolderOpen,
   FolderKanban,
+  ShieldCheck,
   Wrench,
   Bot,
   ChevronLeft,
@@ -28,6 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     { name: "总览主面板", path: "/", icon: LayoutDashboard },
     { name: "工程智能体", path: "/agent", icon: Bot },
     { name: "工程项目", path: "/projects", icon: FolderKanban },
+    { name: "工程证据中心", path: "/evidence", icon: ShieldCheck },
     { name: "阻尼器基准配置", path: "/damper-base", icon: Wrench },
     { name: "试验设计", path: "/experiment-design", icon: FlaskConical },
     { name: "荷载配置", path: "/loads", icon: Zap },
@@ -47,8 +49,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
       <div style={styles.menuContainer}>
         {menuItems.map(item => {
           // Check if current path matches
-          const isActive = item.path === "/" 
-            ? location.pathname === "/" 
+          const isActive = item.path === "/"
+            ? location.pathname === "/"
             : location.pathname.startsWith(item.path);
 
           return (
