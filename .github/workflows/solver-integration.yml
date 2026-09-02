@@ -1,0 +1,119 @@
+name: Solver integration
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'pyansys_bridge/**'
+      - 'bridge_models/**'
+      - 'momo_agent/backend/app/services/real_execution/**'
+      - 'momo_agent/backend/app/services/agent_**'
+      - '.github/workflows/solver-integration.yml'
+  workflow_dispatch:
+    inputs:
+      solver:
+        description: Real solver smoke to run
+        required: true
+        default: opensees
+        type: choice
+        options:
+          - opensees
+          - ansys
+          - both
+
+permissions:
+  contents: read
+
+concurrency:
+  group: solver-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  opensees-runtime-smoke:
+    name: OpenSees real runtime smoke
+    if: ${{ (github.event_name == 'pull_request' && vars.MOMO_SOLVER_RUNNER_ENABLED == 'true') || (github.event_name == 'workflow_dispatch' && (inputs.solver == 'opensees' || inputs.solver == 'both')) }}
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Require Python 3.13 runtime
+        shell: pwsh
+        run: |
+          $version = python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"
+          if ($version.Trim() -ne '3.13') {
+            throw "OpenSees bundled runtime requires Python 3.13, found $version"
+          }
+
+      - name: Verify bundled OpenSees USER300 runtime
+        shell: pwsh
+        run: python bridge_models/stbridge_opensees/verify_user300_openseespy_runtime.py
+
+      - name: Run real STbridge gravity-modal golden smoke
+        shell: pwsh
+        run: |
+          python -c "import sys; sys.path.insert(0, r'bridge_models/stbridge_opensees'); from baseline_verified.stbridge_baseline_openseespy_gravity_modal import run_modal; result=run_modal(3); print(result); assert len(result['frequencies']) == 3; assert all(v > 0 for v in result['frequencies']); assert all(result['frequencies'][i] < result['frequencies'][i+1] for i in range(2))"
+
+  ansys-runtime-smoke:
+    name: ANSYS MAPDL runtime smoke
+    if: ${{ (github.event_name == 'pull_request' && vars.MOMO_ANSYS_RUNNER_ENABLED == 'true') || (github.event_name == 'workflow_dispatch' && (inputs.solver == 'ansys' || inputs.solver == 'both')) }}
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve MAPDL executable
+        id: mapdl
+        shell: pwsh
+        run: |
+          $candidate = $env:MOMO_MAPDL_EXECUTABLE
+          if (-not $candidate) { $candidate = 'MAPDL.exe' }
+          $command = Get-Command $candidate -ErrorAction SilentlyContinue
+          if (-not $command) { throw "MAPDL executable not found: $candidate" }
+          "path=$($command.Source)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Execute minimal MAPDL batch solve
+        shell: pwsh
+        run: |
+          $work = Join-Path $env:RUNNER_TEMP "momo-mapdl-smoke"
+          New-Item -ItemType Directory -Force -Path $work | Out-Null
+          $input = Join-Path $work "smoke.inp"
+          $output = Join-Path $work "ansys.out"
+          @'
+          /BATCH
+          /PREP7
+          ET,1,LINK180
+          R,1,1.0
+          MP,EX,1,2.0E11
+          N,1,0,0,0
+          N,2,1,0,0
+          E,1,2
+          D,1,ALL,0
+          D,2,UY,0
+          D,2,UZ,0
+          /SOLU
+          ANTYPE,STATIC
+          F,2,FX,1000
+          SOLVE
+          FINISH
+          /POST1
+          SET,LAST
+          *GET,UX2,NODE,2,U,X
+          *STATUS,UX2
+          FINISH
+          /EXIT,NOSAVE
+          '@ | Set-Content -Path $input -Encoding ascii
+          & '${{ steps.mapdl.outputs.path }}' -b -i $input -o $output -j momo_ci -dir $work
+          if ($LASTEXITCODE -ne 0) { Get-Content $output; throw "MAPDL exited with $LASTEXITCODE" }
+          if (Select-String -Path $output -Pattern "\*\*\* ERROR \*\*\*" -Quiet) {
+            Get-Content $output
+            throw "MAPDL smoke output contains an ANSYS error"
+          }
+          if (-not (Select-String -Path $output -Pattern "ANSYS SOLVE" -Quiet)) {
+            Get-Content $output
+            throw "MAPDL smoke output did not reach the SOLVE command"
+          }

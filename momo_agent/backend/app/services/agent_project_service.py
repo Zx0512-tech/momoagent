@@ -4,7 +4,10 @@ from typing import Any
 
 from fastapi import HTTPException
 
-from app.services.agent_project_repository import EngineeringProjectRepository
+from app.services.agent_project_repository import (
+    EngineeringProjectRepository,
+    WorkspaceRevisionConflict,
+)
 from app.services.agent_repository import DEFAULT_OWNER
 from app.services.agent_service import agent_service
 from app.services.platform_store import gen_id, platform_store, utc_now
@@ -27,11 +30,7 @@ DEFAULT_ENGINEERING_WORKSPACE: dict[str, Any] = {
 
 
 class EngineeringProjectService:
-    """工程 Project/Workspace 聚合服务。
-
-    PR4 只负责持久化工程上下文并把既有 Agent session/run 组织到 Project 下。
-    Workspace 尚不自动注入 Agent planner；跨 run context 消费由后续 PR5 完成。
-    """
+    """Engineering Project / Workspace aggregate service."""
 
     def repository(self) -> EngineeringProjectRepository:
         return EngineeringProjectRepository(platform_store.state_path)
@@ -117,13 +116,30 @@ class EngineeringProjectService:
         project_id: str,
         patch: dict[str, Any],
         owner: str = DEFAULT_OWNER,
+        *,
+        expected_revision: int | None = None,
     ) -> dict[str, Any]:
         self._required_project(project_id, owner)
-        updated = self.repository().update_workspace(
-            project_id,
-            patch,
-            updated_at=utc_now(),
-        )
+        try:
+            updated = self.repository().update_workspace(
+                project_id,
+                patch,
+                updated_at=utc_now(),
+                expected_revision=expected_revision,
+            )
+        except WorkspaceRevisionConflict as exc:
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    'code': 'WORKSPACE_REVISION_CONFLICT',
+                    'message': (
+                        f'Workspace 已被其他操作更新：请求基于 revision {exc.expected}，'
+                        f'当前为 revision {exc.current}。请刷新后重新确认修改。'
+                    ),
+                    'expectedRevision': exc.expected,
+                    'currentRevision': exc.current,
+                },
+            ) from exc
         if updated is None:
             raise HTTPException(
                 status_code=404,
@@ -185,7 +201,6 @@ class EngineeringProjectService:
         session_id: str,
         owner: str = DEFAULT_OWNER,
     ) -> dict[str, Any] | None:
-        """PR5 的稳定读取入口：当前只查询，不向 planner 注入。"""
         return self.repository().project_for_session(session_id, owner=owner)
 
     def _project_summary(self, project: dict[str, Any]) -> dict[str, Any]:
@@ -193,9 +208,10 @@ class EngineeringProjectService:
         session_ids = [str(item) for item in project.get('sessionIds') or []]
         run_count = 0
         visible_sessions = 0
+        owner = str(project.get('ownerId') or DEFAULT_OWNER)
         for session_id in session_ids:
             session = agent_repository.get_session(session_id)
-            if session is None:
+            if session is None or str(session.get('ownerId') or DEFAULT_OWNER) != owner:
                 continue
             visible_sessions += 1
             run_count += len(agent_repository.list_runs(session_id))

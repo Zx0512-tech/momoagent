@@ -29,6 +29,11 @@ class EngineeringWorkspacePatch(ProjectModel):
     optimization_profile: Literal['STANDARD', 'FULL', 'CUSTOM'] | None = None
 
 
+class EngineeringWorkspaceUpdateRequest(ProjectModel):
+    expected_revision: int = Field(ge=1)
+    patch: EngineeringWorkspacePatch
+
+
 class EngineeringProjectCreateRequest(ProjectModel):
     name: str = Field(min_length=1, max_length=120)
     description: str = Field(default='', max_length=1000)
