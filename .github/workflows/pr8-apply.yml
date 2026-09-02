@@ -23,6 +23,6 @@ jobs:
         with:
           python-version: '3.13'
       - name: Install backend dependencies
-        run: pip install -r momo_agent/backend/requirements-opensees.txt
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-opensees.txt
       - name: Apply and validate PR8
         run: python .github/pr8_apply.py
