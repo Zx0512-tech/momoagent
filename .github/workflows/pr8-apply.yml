@@ -1,0 +1,28 @@
+name: PR8 one-shot migration
+
+on:
+  push:
+    branches:
+      - feat/engineering-capability-runtime
+    paths:
+      - .github/pr8_apply.py
+      - .github/workflows/pr8-apply.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install backend dependencies
+        run: pip install -r momo_agent/backend/requirements-opensees.txt
+      - name: Apply and validate PR8
+        run: python .github/pr8_apply.py
