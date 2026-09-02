@@ -3306,26 +3306,40 @@ class WorkflowHarnessMixin:
             workflow_state=workflow_state,
             query=loop_instruction,
         )
+        is_review_step = current in {'EVIDENCE_REVIEW', 'REVIEW'}
+        execution_source = 'LLM_PERSISTENT_LOOP'
         try:
-            turn = self.planner.run_harness_turn(
-                messages=messages,
-                user_content=loop_instruction,
-                workflow_state=workflow_state,
-                tools=harness_step_tool_catalog(allowed_tools),
-            )
-            if len(turn.tool_calls) != 1:
-                raise ToolExecutionError(
-                    'HARNESS_SINGLE_TOOL_REQUIRED',
-                    '持久化循环每轮必须且只能调用一个当前步骤工具。',
-                    details={'currentStep': current, 'allowedTools': allowed_tools},
+            try:
+                turn = self.planner.run_harness_turn(
+                    messages=messages,
+                    user_content=loop_instruction,
+                    workflow_state=workflow_state,
+                    tools=harness_step_tool_catalog(allowed_tools),
                 )
-            call = turn.tool_calls[0]
-            if call.name not in allowed_tools:
-                raise ToolExecutionError(
-                    'WORKFLOW_STEP_VIOLATION',
-                    f'步骤 {current} 不允许调用工具 {call.name}',
-                    details={'currentStep': current, 'allowedTools': allowed_tools},
+            except LLMUnavailableError:
+                # 冻结审查步骤只有一个既定的只读工具；仍经能力和工作流双重校验。
+                if not is_review_step or len(allowed_tools) != 1:
+                    raise
+                call = HarnessToolCall(
+                    toolCallId=f'{call_id}:review-fallback',
+                    name=allowed_tools[0],
+                    arguments={'runId': str(run['runId'])},
                 )
+                execution_source = 'PYTHON_REVIEW_FALLBACK'
+            else:
+                if len(turn.tool_calls) != 1:
+                    raise ToolExecutionError(
+                        'HARNESS_SINGLE_TOOL_REQUIRED',
+                        '持久化循环每轮必须且只能调用一个当前步骤工具。',
+                        details={'currentStep': current, 'allowedTools': allowed_tools},
+                    )
+                call = turn.tool_calls[0]
+                if call.name not in allowed_tools:
+                    raise ToolExecutionError(
+                        'WORKFLOW_STEP_VIOLATION',
+                        f'步骤 {current} 不允许调用工具 {call.name}',
+                        details={'currentStep': current, 'allowedTools': allowed_tools},
+                    )
             capability = _CAPABILITY_REGISTRY.require(call.name)
             runtime_approval = (
                 'WAITING_APPROVAL' in (run.get('completedSteps') or [])
@@ -3359,7 +3373,6 @@ class WorkflowHarnessMixin:
                     idempotencyKey=idempotency_key,
                 ),
             )
-            is_review_step = current in {'EVIDENCE_REVIEW', 'REVIEW'}
 
             def stage_handler(_payload: BaseModel) -> dict[str, Any]:
                 if is_review_step:
@@ -3446,7 +3459,9 @@ class WorkflowHarnessMixin:
         )
         repository.save_tool_call({
             'toolCallId': call_id,
-            'modelToolCallId': call.tool_call_id,
+            'modelToolCallId': (
+                call.tool_call_id if execution_source == 'LLM_PERSISTENT_LOOP' else None
+            ),
             'runId': run['runId'],
             'stepId': current,
             'toolName': call.name,
@@ -3458,7 +3473,7 @@ class WorkflowHarnessMixin:
             'risk': capability.risk.value,
             'approved': runtime_approval if capability.requires_approval else False,
             'authorized': True,
-            'executionSource': 'LLM_PERSISTENT_LOOP',
+            'executionSource': execution_source,
             'jobId': run.get('jobId'),
             **({'idempotencyKey': idempotency_key} if idempotency_key else {}),
             **(

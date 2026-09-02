@@ -440,6 +440,69 @@ def test_persistent_loop_runs_deterministic_review_only_after_model_selects_revi
     assert run['harnessLoop']['wakeReason'] == 'RECOVERED_COMMITTED_TOOL'
 
 
+def test_persistent_loop_runs_review_when_llm_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """冻结审查步骤只能调唯一审查工具，不能因模型短暂故障丢失真实结果。"""
+    monkeypatch.setenv('MOMO_AGENT_PERSISTENT_LOOP', 'true')
+    repository = _Repository()
+    run = {
+        'runId': 'agr_persistent_review_fallback',
+        'sessionId': 'ags_harness',
+        'taskType': 'ANALYSIS',
+        'runtimeMode': 'WORKFLOW_HARNESS',
+        'status': 'WAITING_JOB',
+        'currentStep': 'EVIDENCE_REVIEW',
+        'completedSteps': [
+            'REQUIREMENTS', 'LOAD_PREPARATION', 'PREFLIGHT', 'WAITING_APPROVAL',
+            'EXECUTION', 'RESULT_EXTRACTION',
+        ],
+        'stepAttempt': 1,
+        'jobId': 'job_persistent_review_fallback',
+        'harnessLoop': {'status': 'READY', 'revision': 2},
+        **freeze_workflow(workflow_definition('ANALYSIS')),
+    }
+    repository.save_run(run)
+    service = AgentService()
+    service.planner = SimpleNamespace(
+        run_harness_turn=lambda **_kwargs: (_ for _ in ()).throw(
+            LLMUnavailableError('HARNESS', 'LLM_SERVER_ERROR'),
+        ),
+    )
+    reviews: list[dict] = []
+
+    def review(payload: dict, **_kwargs: object) -> SimpleNamespace:
+        reviews.append(payload)
+        return SimpleNamespace(
+            accepted=True,
+            run_status='COMPLETED',
+            evidence_mode='VERIFIED',
+            checks={'resultCatalogPresent': True},
+            message='真实证据完整。',
+            extra={},
+        )
+
+    monkeypatch.setattr(service, '_agent_for', lambda _task_type: SimpleNamespace(review=review))
+
+    progressed = service._resume_persistent_job_stage(
+        repository,
+        run,
+        artifact_ids=['art_result'],
+        job_payload={'status': 'SUCCEEDED', 'artifacts': []},
+    )
+
+    assert progressed is True
+    assert len(reviews) == 1
+    assert run['currentStep'] == 'REPORT'
+    assert run['harnessLoop']['modelFailureCount'] == 0
+    trace = repository.get_tool_call('agr_persistent_review_fallback:loop:EVIDENCE_REVIEW')
+    assert trace is not None
+    assert trace['toolName'] == 'analysis.review'
+    assert trace['modelToolCallId'] is None
+    assert trace['executionSource'] == 'PYTHON_REVIEW_FALLBACK'
+    assert trace['compactResult']['accepted'] is True
+
+
 def test_comparison_stage_uses_its_own_job_contract() -> None:
     snapshot = freeze_workflow(workflow_definition('DAMPER_COMPARISON'))['workflowSnapshot']
     comparison_step = next(item for item in snapshot['steps'] if item['stepId'] == 'COMPARISON')

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "project": "MOMO Competition Submission",
-  "generatedAt": "2026-09-02T13:07:41.452Z",
+  "generatedAt": "2026-09-02T15:02:55.882Z",
   "fileCount": 573,
-  "totalSizeBytes": 41699632,
+  "totalSizeBytes": 41702744,
   "files": [
     {
       "path": ".env.example",
@@ -837,8 +837,8 @@
     },
     {
       "path": "momo_agent/backend/app/services/agent_harness.py",
-      "sizeBytes": 164466,
-      "sha256": "74207fd1dc0bb522ca36d5eb79b45bfa0b77c9fc291476280e17f3e7a48dc317"
+      "sizeBytes": 165230,
+      "sha256": "5d76113b77e6b5a53741ac950d7592d29ebd09dbf4eee40ae44e07b267bef6d7"
     },
     {
       "path": "momo_agent/backend/app/services/agent_llm.py",
@@ -1112,8 +1112,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_agent_harness.py",
-      "sizeBytes": 105879,
-      "sha256": "87082f5482004557d063c53908fa3b5e678b3cc518240af43450b1e49989c086"
+      "sizeBytes": 108227,
+      "sha256": "fee11ab5750ecfec05e3461c7fde3ab7903ff5dbd89d88602c2db3780a670455"
     },
     {
       "path": "momo_agent/backend/tests/test_agent_llm.py",
