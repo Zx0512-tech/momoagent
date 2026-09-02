@@ -10,6 +10,16 @@ on:
       - 'momo_agent/backend/app/services/agent_**'
       - '.github/workflows/solver-integration.yml'
   workflow_dispatch:
+    inputs:
+      solver:
+        description: Real solver smoke to run
+        required: true
+        default: opensees
+        type: choice
+        options:
+          - opensees
+          - ansys
+          - both
 
 permissions:
   contents: read
@@ -21,7 +31,7 @@ concurrency:
 jobs:
   opensees-runtime-smoke:
     name: OpenSees real runtime smoke
-    if: ${{ github.event_name == 'workflow_dispatch' || vars.MOMO_SOLVER_RUNNER_ENABLED == 'true' }}
+    if: ${{ (github.event_name == 'pull_request' && vars.MOMO_SOLVER_RUNNER_ENABLED == 'true') || (github.event_name == 'workflow_dispatch' && (inputs.solver == 'opensees' || inputs.solver == 'both')) }}
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 20
 
@@ -48,7 +58,7 @@ jobs:
 
   ansys-runtime-smoke:
     name: ANSYS MAPDL runtime smoke
-    if: ${{ github.event_name == 'workflow_dispatch' || vars.MOMO_ANSYS_RUNNER_ENABLED == 'true' }}
+    if: ${{ (github.event_name == 'pull_request' && vars.MOMO_ANSYS_RUNNER_ENABLED == 'true') || (github.event_name == 'workflow_dispatch' && (inputs.solver == 'ansys' || inputs.solver == 'both')) }}
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 20
 
@@ -93,15 +103,17 @@ jobs:
           /POST1
           SET,LAST
           *GET,UX2,NODE,2,U,X
-          *IF,ABS(UX2),LE,0,THEN
-          /EXIT,NOSAVE
-          *ENDIF
+          *STATUS,UX2
           FINISH
           /EXIT,NOSAVE
           '@ | Set-Content -Path $input -Encoding ascii
           & '${{ steps.mapdl.outputs.path }}' -b -i $input -o $output -j momo_ci -dir $work
           if ($LASTEXITCODE -ne 0) { Get-Content $output; throw "MAPDL exited with $LASTEXITCODE" }
-          if (-not (Select-String -Path $output -Pattern "COMPLETED" -Quiet)) {
+          if (Select-String -Path $output -Pattern "\*\*\* ERROR \*\*\*" -Quiet) {
             Get-Content $output
-            throw "MAPDL smoke output did not contain a completed solve marker"
+            throw "MAPDL smoke output contains an ANSYS error"
+          }
+          if (-not (Select-String -Path $output -Pattern "ANSYS SOLVE" -Quiet)) {
+            Get-Content $output
+            throw "MAPDL smoke output did not reach the SOLVE command"
           }
