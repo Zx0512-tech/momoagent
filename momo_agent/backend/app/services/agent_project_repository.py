@@ -222,12 +222,16 @@ class EngineeringProjectRepository:
         if not project_id:
             return payload
         rows = connection.execute(
-            'SELECT session_id FROM agent_project_sessions WHERE project_id = ? '
-            'ORDER BY created_at, session_id',
+            'SELECT session_id FROM agent_project_sessions WHERE project_id = ? ORDER BY created_at, session_id',
             (project_id,),
         ).fetchall()
+        related = [str(row[0]) for row in rows]
+        related_set = set(related)
+        legacy_order = [str(item) for item in payload.get('sessionIds') or []]
+        ordered = [session_id for session_id in legacy_order if session_id in related_set]
+        ordered.extend(session_id for session_id in related if session_id not in set(ordered))
         hydrated = dict(payload)
-        hydrated['sessionIds'] = [str(row[0]) for row in rows]
+        hydrated['sessionIds'] = ordered
         return hydrated
 
     @staticmethod
@@ -238,6 +242,7 @@ class EngineeringProjectRepository:
             'SELECT project_id, owner, updated_at, payload_json FROM agent_projects ORDER BY project_id'
         ).fetchall()
         seen: dict[str, str] = {}
+        changed = False
         for project_id, owner, updated_at, raw_payload in rows:
             payload = json.loads(raw_payload)
             for raw_session_id in payload.get('sessionIds') or []:
@@ -258,9 +263,12 @@ class EngineeringProjectRepository:
                         f'Project/Session invariant violation: {session_id} relation points to '
                         f'{existing[0]} but payload points to {project_id}'
                     )
-                connection.execute(
-                    'INSERT OR IGNORE INTO agent_project_sessions(session_id, project_id, owner, created_at) '
-                    'VALUES (?, ?, ?, ?)',
-                    (session_id, project_id, owner, updated_at),
-                )
-        connection.commit()
+                if existing is None:
+                    connection.execute(
+                        'INSERT INTO agent_project_sessions(session_id, project_id, owner, created_at) '
+                        'VALUES (?, ?, ?, ?)',
+                        (session_id, project_id, owner, updated_at),
+                    )
+                    changed = True
+        if changed:
+            connection.commit()
