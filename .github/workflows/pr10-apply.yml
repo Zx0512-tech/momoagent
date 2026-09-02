@@ -75,6 +75,6 @@ jobs:
                   platform-ui/src/pages/projects/projectWorkspaceModel.ts \
                   platform-ui/src/pages/projects/projectWorkspaceModel.test.ts
           git commit -m "feat: add project workspace UI"
-          git rm scripts/pr10_apply.py .github/workflows/pr10-apply.yml
+          git rm -f scripts/pr10_apply.py .github/workflows/pr10-apply.yml
           git commit -m "chore: remove PR10 migration helper"
           git push origin HEAD:feat/project-workspace-ui
