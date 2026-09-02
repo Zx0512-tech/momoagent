@@ -195,6 +195,8 @@ def test_workspace_schema_is_strict_and_project_routes_are_registered() -> None:
     with pytest.raises(ValidationError):
         EngineeringWorkspacePatch.model_validate({'solver': 'UNKNOWN'})
     with pytest.raises(ValidationError):
+        EngineeringWorkspacePatch.model_validate({'selectedLayoutId': '每座塔两台黏滞阻尼器'})
+    with pytest.raises(ValidationError):
         EngineeringWorkspacePatch.model_validate({'optimizationProfile': 'FULL', 'extraField': True})
 
     paths = {route.path for route in app.routes}

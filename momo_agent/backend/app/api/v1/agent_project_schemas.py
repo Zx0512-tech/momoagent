@@ -24,7 +24,7 @@ class EngineeringWorkspacePatch(ProjectModel):
     load_artifact_id: str | None = None
     load_sha256: str | None = Field(default=None, min_length=64, max_length=64)
     damper_type: Literal['VISCOUS', 'FRICTION', 'EDDY_CURRENT'] | None = None
-    selected_layout_id: str | None = None
+    selected_layout_id: Literal['ONE_PER_TOWER', 'TWO_PER_TOWER'] | None = None
     response_ids: list[str] | None = Field(default=None, max_length=32)
     optimization_profile: Literal['STANDARD', 'FULL', 'CUSTOM'] | None = None
 

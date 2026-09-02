@@ -113,7 +113,7 @@ jobs:
             Get-Content $output
             throw "MAPDL smoke output contains an ANSYS error"
           }
-          if (-not (Select-String -Path $output -Pattern "ANSYS SOLVE" -Quiet)) {
+          if (-not (Select-String -Path $output -Pattern "(?:ANSYS|MAPDL) SOLVE\s+COMMAND" -Quiet)) {
             Get-Content $output
             throw "MAPDL smoke output did not reach the SOLVE command"
           }
