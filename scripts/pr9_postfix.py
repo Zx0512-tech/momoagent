@@ -12,6 +12,78 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 
 
 text = HARNESS.read_text(encoding='utf-8')
+
+# Preserve the pre-PR9 bootstrap failure semantics: WorkflowGuard owns stage violations;
+# only an allowed model-selected tool proceeds into Capability discovery/type validation.
+old_bootstrap = '''            call = turn.tool_calls[0]
+            try:
+                capability = _CAPABILITY_REGISTRY.require(call.name)
+                start = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                    call.name,
+                    call.arguments,
+                    allowed_capabilities=workflow_state['allowedTools'],
+                    idempotency_key=f'{session["sessionId"]}:{call.tool_call_id}',
+                )
+                WorkflowGuard().authorize(
+                    workflow_snapshot=freeze_workflow(_bootstrap_definition())['workflowSnapshot'],
+                    current_step='ROUTING',
+                    tool_call=WorkflowToolCall(
+                        name=call.name,
+                        arguments=start.model_dump(by_alias=True, mode='json'),
+                        risk=capability.risk,
+                        requiresApproval=capability.requires_approval,
+                        idempotencyKey=f'{session["sessionId"]}:{call.tool_call_id}',
+                    ),
+                )
+'''
+new_bootstrap = '''            call = turn.tool_calls[0]
+            try:
+                WorkflowGuard().authorize(
+                    workflow_snapshot=freeze_workflow(_bootstrap_definition())['workflowSnapshot'],
+                    current_step='ROUTING',
+                    tool_call=WorkflowToolCall(
+                        name=call.name,
+                        arguments=call.arguments,
+                        risk=ToolRisk.MUTATING,
+                        idempotencyKey=f'{session["sessionId"]}:{call.tool_call_id}',
+                    ),
+                )
+                capability = _CAPABILITY_REGISTRY.require(call.name)
+                start = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                    call.name,
+                    call.arguments,
+                    allowed_capabilities=workflow_state['allowedTools'],
+                    idempotency_key=f'{session["sessionId"]}:{call.tool_call_id}',
+                )
+'''
+text = replace_once(text, old_bootstrap, new_bootstrap, 'bootstrap workflow semantics')
+
+# For server-owned solver launch, deterministic engineering budget checks must retain their
+# established error codes before the generic Capability input validation. Dispatcher still runs
+# before WorkflowGuard and before any external execution/service call.
+early_dispatch = '''        arguments = {'runId': run['runId']}
+        arguments = _CAPABILITY_DISPATCHER.authorize_and_validate(
+            tool_name,
+            arguments,
+            allowed_capabilities=[tool_name],
+            approved=True,
+            idempotency_key=idempotency_key,
+        ).model_dump(by_alias=True, mode='json')
+        executed_arguments = effective_arguments or arguments
+'''
+text = replace_once(
+    text,
+    early_dispatch,
+    "        arguments = {'runId': run['runId']}\n        executed_arguments = effective_arguments or arguments\n",
+    'defer approved solver capability validation',
+)
+text = replace_once(
+    text,
+    "            usage['doeDesignCount'] = requested_doe_count\n        guard.authorize(\n",
+    "            usage['doeDesignCount'] = requested_doe_count\n        arguments = _CAPABILITY_DISPATCHER.authorize_and_validate(\n            tool_name,\n            arguments,\n            allowed_capabilities=[tool_name],\n            approved=True,\n            idempotency_key=idempotency_key,\n        ).model_dump(by_alias=True, mode='json')\n        guard.authorize(\n",
+    'approved solver dispatcher after deterministic validation',
+)
+
 text = replace_once(
     text,
     "            'approved': spec.requires_approval,\n            'authorized': True,\n            'idempotencyKey': idempotency_key,\n            'idempotencyKeySource': spec.idempotency_key_source,\n",
