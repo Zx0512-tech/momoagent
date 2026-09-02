@@ -2,7 +2,6 @@ import type React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
-  CheckCircle2,
   Download,
   FileCheck2,
   FileText,
@@ -299,5 +298,5 @@ const styles: Record<string, React.CSSProperties> = {
   claimCard: { padding: 8, borderRadius: 6, border: "1px solid var(--border-color)", background: "var(--bg-secondary)" },
   claimValue: { fontSize: 11, fontWeight: 700 },
   claimSource: { display: "block", marginTop: 5, color: "var(--text-muted)", fontSize: 8, whiteSpace: "pre-wrap", overflowWrap: "anywhere" },
-  narrativeBox: { marginTop: 10, display: "flex", gap: 7, padding: 8, borderRadius: 6, border: "1px dashed var(--warning-color)", color: "var(--text-secondary)", fontSize: 9 },
+  narrativeBox: { marginTop: 10, display: "flex", gap: 7, padding: 8, borderRadius: 6, border: "1px dashed var(--warning-color)", color: "var(--text-secondary)", fontSize: 9 }
 };
