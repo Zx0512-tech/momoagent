@@ -36,11 +36,11 @@ class EngineeringCapability:
     capability_id: str
     description: str
     input_model: type[BaseModel]
+    risk: ToolRisk
+    requires_approval: bool
+    prerequisites: tuple[str, ...]
+    evidence_policy: EvidencePolicy
     version: str = '1.0.0'
-    risk: ToolRisk = ToolRisk.READ_ONLY
-    requires_approval: bool = False
-    prerequisites: tuple[str, ...] = ()
-    evidence_policy: EvidencePolicy = EvidencePolicy.NONE
     idempotency_key_source: str | None = None
     artifact_kinds: tuple[str, ...] = ()
 

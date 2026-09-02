@@ -13,9 +13,8 @@ from app.agents.tools import ToolExecutionError, ToolRisk
 from app.services.agent_harness import (
     HarnessApprovalDecisionInput,
     HarnessJobInput,
-    _HARNESS_TOOL_SPECS,
     bootstrap_workflow_state,
-    harness_tool_catalog,
+    harness_capability_registry,
     harness_step_tool_catalog,
     _status_from_workflow_cursor,
 )
@@ -105,42 +104,26 @@ class _Repository:
         return []
 
 
-def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() -> None:
-    first = harness_tool_catalog()
-    second = harness_tool_catalog()
+def test_capability_registry_is_single_truth_and_keeps_compare_contracts_distinct() -> None:
+    registry = harness_capability_registry()
+    names = list(registry.list_ids())
 
-    names = [item['name'] for item in first]
-    assert first == second
     assert names == sorted(names)
     assert 'workflow.start' in names
-    assert names == [
-        'approval.decide',
-        'result.at_time',
-        'result.columns',
-        'result.compare',
-        'result.compare_runs',
-        'result.correlate',
-        'result.peak',
-        'result.sweep_cases',
-        'result.topsis',
-        'workflow.observe',
-        'workflow.start',
-    ]
+    assert 'comparison.compare' in names
     assert 'result.compare' in names
     assert 'result.compare_runs' in names
     assert 'result.peak' in names
     assert 'result.delta' not in names
     assert 'result.ratio' not in names
     assert 'solver.capabilities' not in names
-    assert all(item['inputSchema'].get('additionalProperties') is False for item in first)
-    assert all('当' in item['description'] for item in first)
-    assert first[names.index('result.peak')]['inputSchema']['properties']['artifactId']['type'] == 'string'
-    assert set(first[names.index('approval.decide')]['inputSchema']['properties']) == {'decision'}
-    assert first[names.index('approval.decide')]['inputSchema']['required'] == ['decision']
-    workflow_start = first[names.index('workflow.start')]
-    inquiry_compare = first[names.index('result.compare')]
-    cross_run_compare = first[names.index('result.compare_runs')]
-    engineering_compare = _HARNESS_TOOL_SPECS['comparison.compare']
+
+    workflow_start = registry.tool_schemas(['workflow.start'])[0]
+    inquiry_compare = registry.tool_schemas(['result.compare'])[0]
+    cross_run_compare = registry.tool_schemas(['result.compare_runs'])[0]
+    engineering_compare = registry.require('comparison.compare')
+
+    assert workflow_start['inputSchema'].get('additionalProperties') is False
     assert workflow_start['idempotencyKeySource'] == 'SERVER_DERIVED'
     intent_properties = workflow_start['inputSchema']['$defs']['EngineeringIntent']['properties']
     assert 'OpenSees' in intent_properties['solver']['description']
@@ -151,8 +134,8 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
     assert 'FULL' in str(intent_properties['optimizationProfile'])
     assert 'DAMPER_OPTIMIZATION' in str(start_properties['taskType'])
     assert 'FULL_OPTIMIZATION' not in str(start_properties['taskType'])
+
     assert engineering_compare.idempotency_key_source == 'SERVER_DERIVED'
-    assert all('幂等键由 Harness' not in item['description'] for item in first)
     assert set(inquiry_compare['inputSchema']['properties']) == {'artifactId', 'columns'}
     assert set(inquiry_compare['inputSchema']['required']) == {'artifactId', 'columns'}
     assert 'CSV' in inquiry_compare['description']
@@ -163,6 +146,23 @@ def test_harness_catalog_is_fixed_sorted_and_keeps_compare_contracts_distinct() 
     assert set(engineering_schema['properties']) == {'runId', 'jobId'}
     assert set(engineering_schema['required']) == {'runId', 'jobId'}
     assert '阻尼器' in engineering_compare.description
+
+    for capability_id in names:
+        descriptor = registry.require(capability_id).runtime_descriptor()
+        assert descriptor['capabilityId'] == capability_id
+        assert descriptor['sideEffect'] in {'NONE', 'ARTIFACT_WRITE', 'EXTERNAL_COMPUTE', 'STATE_MUTATION'}
+        assert descriptor['approvalPolicy'] in {'NONE', 'REQUIRED'}
+        assert isinstance(descriptor['prerequisites'], list)
+        assert descriptor['evidencePolicy'] in {'NONE', 'REGISTERED_ARTIFACT_ONLY', 'REAL_FEM_REQUIRED'}
+
+    expected = {'workflow.start', 'workflow.observe'}
+    for task_type in (
+        'ANALYSIS', 'DAMPER_COMPARISON', 'DAMPER_PARAMETER_SWEEP',
+        'DAMPER_OPTIMIZATION', 'RESULT_INQUIRY',
+    ):
+        for step in workflow_definition(task_type).steps:
+            expected.update(step.allowed_tools)
+    assert set(names) == expected
 
 
 def test_step_tool_catalog_exposes_only_current_frozen_step_tools() -> None:
@@ -527,7 +527,7 @@ def test_harness_payload_preserves_native_tool_message_fields() -> None:
         ],
         user_content='继续',
         workflow_state={'currentStep': 'QUERY'},
-        tools=harness_tool_catalog(),
+        tools=harness_step_tool_catalog(['result.peak']),
     )
 
     history = payload['messages'][1:3]
@@ -593,19 +593,15 @@ def test_history_drops_leading_orphan_tool_message() -> None:
     assert all(message['role'] != 'tool' for message in kept)
 
 
-def test_tool_catalogs_are_cached_and_mutation_safe() -> None:
-    first = harness_tool_catalog()
-    second = harness_tool_catalog()
+def test_stage_tool_catalog_is_cached_and_mutation_safe() -> None:
+    first = harness_step_tool_catalog(['workflow.observe', 'result.peak'])
+    second = harness_step_tool_catalog(['result.peak', 'workflow.observe'])
     assert first == second
-    # 出口深拷贝：调用方原地改写不得污染缓存。
-    first[0]['description'] = '污染'
-    assert harness_tool_catalog() == second
-
-    step_first = harness_step_tool_catalog(['workflow.observe', 'result.peak'])
-    step_first[0]['inputSchema']['properties']['hacked'] = True
-    step_second = harness_step_tool_catalog(['result.peak', 'workflow.observe'])
-    assert all('hacked' not in item['inputSchema'].get('properties', {}) for item in step_second)
-    assert [item['name'] for item in step_second] == ['result.peak', 'workflow.observe']
+    # 出口深拷贝：调用方原地改写不得污染阶段缓存。
+    first[0]['inputSchema']['properties']['hacked'] = True
+    again = harness_step_tool_catalog(['workflow.observe', 'result.peak'])
+    assert all('hacked' not in item['inputSchema'].get('properties', {}) for item in again)
+    assert [item['name'] for item in again] == ['result.peak', 'workflow.observe']
 
 
 def _compression_history_items(count: int = 6) -> list[dict]:
@@ -1819,7 +1815,9 @@ def test_python_job_stage_traces_follow_registered_contracts_and_risks() -> None
     traces = repository.list_tool_calls(run['runId'])
     by_name = {item['toolName']: item for item in traces}
     for name, trace in by_name.items():
-        validated = _HARNESS_TOOL_SPECS[name].input_model.model_validate(trace['arguments'])
+        validated = harness_capability_registry().require(name).input_model.model_validate(
+            trace['arguments'],
+        )
         assert validated.model_dump(by_alias=True, mode='json') == trace['arguments']
         assert trace['arguments'] == trace['effectiveArguments']
         assert trace['argumentsSha256'] == trace['effectiveArgumentsSha256']

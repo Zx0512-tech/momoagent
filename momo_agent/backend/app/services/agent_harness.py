@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import os
 from copy import deepcopy
-from dataclasses import dataclass
 from hashlib import sha256
 from threading import Lock
 from typing import Any, Callable, Literal
@@ -13,8 +12,6 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from app.agents.tools import (
     ToolExecutionError,
     ToolRisk,
-    TypedAgentTool,
-    TypedToolRegistry,
 )
 from app.core.exceptions import LLMUnavailableError
 from app.core.engineering_limits import DOE_INITIAL_MAX, DOE_INITIAL_MIN
@@ -131,280 +128,444 @@ class HarnessReviewOutput(BaseModel):
     extra: dict[str, Any]
 
 
-@dataclass(frozen=True)
-class HarnessToolSpec:
-    description: str
-    input_model: type[BaseModel]
-    idempotency_key_source: Literal['SERVER_DERIVED'] | None = None
-    risk: ToolRisk = ToolRisk.READ_ONLY
-    requires_approval: bool = False
-
-
-def _run_spec(
-    description: str,
-    *,
-    server_derived_idempotency: bool = False,
-    risk: ToolRisk = ToolRisk.READ_ONLY,
-    requires_approval: bool = False,
-) -> HarnessToolSpec:
-    return HarnessToolSpec(
-        description=description,
-        input_model=HarnessRunInput,
-        idempotency_key_source='SERVER_DERIVED' if server_derived_idempotency else None,
-        risk=risk,
-        requires_approval=requires_approval,
-    )
-
-
-_HARNESS_TOOL_SPECS: dict[str, HarnessToolSpec] = {
-    'workflow.start': HarnessToolSpec(
-        '当尚未进入工程工作流且用户意图字段完整时使用；模型必须结合完整对话语义选择 Schema 中的目录 ID，执行层不会把错误标签静默翻译成 ID。',
-        WorkflowStartInput,
-        'SERVER_DERIVED',
-        ToolRisk.ARTIFACT_WRITE,
-    ),
-    'workflow.observe': HarnessToolSpec(
-        '当会话已有活动工程运行且用户询问进度、完成状态或结果是否可用时使用；只读取当前绑定 run，不启动、重启或修改任务。',
-        HarnessNoInput,
-    ),
-    'workflow.complete': _run_spec(
-        '当当前工作流的证据审查和报告门禁均已通过时使用；不得提前声明完成。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'approval.request': _run_spec(
-        '当预检通过且需要向用户展示不可变冻结参数时使用；此工具不启动求解。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'approval.decide': HarnessToolSpec(
-        '当当前步骤正在等待审批且用户明确批准或拒绝时使用；不接受范围修改。',
-        HarnessApprovalDecisionInput,
-        'SERVER_DERIVED',
-        ToolRisk.MUTATING,
-    ),
-    'evidence.verify': _run_spec(
-        '当 RESULT_INQUIRY 工作流已完成只读查询、需要核对回答所引用证据时使用；工程工作流改用各自的 review 工具。'
-    ),
-    'analysis.plan': _run_spec(
-        '当 ANALYSIS 工作流处于需求确定步骤且用户意图完整时使用；不执行计算。'
-    ),
-    'analysis.prepare': _run_spec(
-        '当单次分析已有登记荷载映射、需要检查环境和模型合同后再审批时使用。'
-    ),
-    'analysis.run': _run_spec(
-        '当单次分析已审批且预检通过、需要创建唯一真实求解 Job 时使用；参数来自审批冻结动作。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'analysis.review': _run_spec(
-        '当单次分析 Job 已结束并完成结果提取、需要按分析专用门槛审查时使用。'
-    ),
-    'analysis.visualize': _run_spec(
-        '当分析结果已通过证据审查且用户需要可审计报告图件时使用；不得改变工程结论。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'result.extract': _run_spec(
-        '当真实 Job 成功结束且需要把原始输出登记为标准结果制品时使用；不得伪造数值。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'result.find_recent': HarnessToolSpec(
-        '当结果追问开始且需要定位当前会话最近的可追问终态 run 时使用；不接受路径或制品 ID。',
-        HarnessNoInput,
-    ),
-    'load.inspect': HarnessToolSpec(
-        '当需要读取当前 run 已登记荷载制品的结构、类型和哈希时使用；不修改源文件。',
-        HarnessArtifactInput,
-    ),
-    'load.map_targets': HarnessToolSpec(
-        '当荷载制品检查通过且需要映射到登记工程目标集时使用；不得指定任意节点。',
-        HarnessArtifactInput,
-        'SERVER_DERIVED',
-        ToolRisk.ARTIFACT_WRITE,
-    ),
-    'comparison.plan': _run_spec(
-        '当阻尼器对比处于需求确定步骤且已明确两种不同阻尼器时使用；不执行求解。'
-    ),
-    'comparison.calibrate': _run_spec(
-        '当两种阻尼器已确定且需要按相同最大出力基准生成可比参数时使用。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'comparison.prepare': _run_spec(
-        '当对比参数已标定且需要检查同一荷载、模型与真实求解环境时使用。'
-    ),
-    'comparison.run': _run_spec(
-        '当对比计划已审批且预检通过、需要串行创建两个真实案例时使用；不得并行求解。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'comparison.compare': HarnessToolSpec(
-        '当两个阻尼器真实案例 Job 均已完成、需要按同一工程基准登记阶段对比结果时使用；不用于临时 CSV 追问。',
-        HarnessJobInput,
-        'SERVER_DERIVED',
-        ToolRisk.ARTIFACT_WRITE,
-    ),
-    'comparison.review': _run_spec(
-        '当两个对比案例均结束且需要核对同一基准、标定和真实证据时使用。'
-    ),
-    'sweep.plan': _run_spec(
-        '当阻尼器参数批量计算处于需求确定步骤且已明确一组显式参数案例时使用；不执行优化。'
-    ),
-    'sweep.prepare': _run_spec(
-        '当批量参数案例已冻结且需要检查同一荷载、模型与真实求解环境时使用。'
-    ),
-    'sweep.run': _run_spec(
-        '当批量参数计算已审批且预检通过、需要并发创建真实案例时使用；不得添加优化约束或无控基线。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'sweep.review': _run_spec(
-        '当批量参数案例均结束且需要核对每个案例的真实结果证据时使用。'
-    ),
-    'optimization.prepare_plan': _run_spec(
-        '当优化需求字段完整且需要冻结 Python 受控方案和资源上限时使用；不得提前运行 DOE。'
-    ),
-    'optimization.preflight': _run_spec(
-        '当优化方案已冻结且需要检查真实求解环境、模型和荷载后再审批时使用。'
-    ),
-    'optimization.run_baseline': _run_spec(
-        '当优化已审批且预检通过、需要启动统一求解阶段时使用；服务器会将无控基线与 DOE 并行执行。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'optimization.run_doe': _run_spec(
-        '统一求解阶段的 DOE 子任务由服务器与无控基线并行执行；模型不得单独重启或修改样本数。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'optimization.fit_surrogate': _run_spec(
-        '当 DOE 结果制品完整且需要拟合并交叉验证代理模型时使用；不运行新 FEM。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'optimization.active_learning': _run_spec(
-        '当代理模型验证完成且 Python 策略要求补点时使用；最多执行冻结工作流允许的轮数。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'optimization.rank_candidates': _run_spec(
-        '当主动学习结束且需要在固定候选空间内枚举排序时使用；不得扩大候选空间。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'optimization.recommend': _run_spec(
-        '当候选排序完成且需要依据登记的 Pareto/TOPSIS 结果形成推荐时使用；不重算权重。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.ARTIFACT_WRITE,
-    ),
-    'optimization.validate_candidates': _run_spec(
-        '当推荐候选已生成且需要执行独立真实 FEM 复核时使用；只验证已登记候选。',
-        server_derived_idempotency=True,
-        risk=ToolRisk.SOLVER_EXECUTION,
-        requires_approval=True,
-    ),
-    'optimization.review': _run_spec(
-        '当候选 FEM 复核完成且需要执行优化专用最终证据审查时使用；最多一次受控修正。'
-    ),
-    'result.columns': HarnessToolSpec(
-        '当需要先确认已登记 CSV 可查询列名时使用；不得访问来源 run 白名单外的制品。',
-        ResultColumnsInput,
-    ),
-    'result.peak': HarnessToolSpec(
-        '当用户询问某列绝对峰值、带符号峰值及发生时刻时使用；只读取一个已登记 CSV。',
-        ResultPeakInput,
-    ),
-    'result.at_time': HarnessToolSpec(
-        '当用户询问指定时刻附近一个或多个响应值时使用；返回最近采样时刻并保持列名不变。',
-        ResultAtTimeInput,
-    ),
-    'result.correlate': HarnessToolSpec(
-        '当用户询问同一已登记 CSV 两列的线性同步关系时使用；Pearson 相关不表示因果。',
-        ResultCorrelateInput,
-    ),
-    'result.compare': HarnessToolSpec(
-        '当用户需要比较同一已登记 CSV 两列绝对峰值时使用；一次返回差值、比值和相对变化，columns[0] 为基准。',
-        ResultDerivedInput,
-    ),
-    'result.compare_runs': HarnessToolSpec(
-        '当用户需要比较 2–8 个同一 Project 的 SUCCEEDED + REAL_FEM 历史 Run 时使用；服务端先校验模型/荷载身份和单位，再计算基线差值、相对变化与允许的排名。跨求解器只用于一致性验证，不把差异解释为方案优劣。',
-        ResultCompareRunsInput,
-    ),
-    'result.topsis': HarnessToolSpec(
-        '当用户询问已完成优化的 TOPSIS 排名或前 N 个候选时使用；只读取登记的优化摘要。多个优化结果并存时，必须根据 availableResults 与 catalogsByRunId 中的工况、模型、阻尼器、更新时间和 runId 匹配用户语义，不能默认选最近结果。',
-        ResultTopsisInput,
-    ),
-    'result.sweep_cases': HarnessToolSpec(
-        '当用户询问批量参数计算或阻尼器对比的跨算例聚合（按指标排序、参数敏感性表）时使用；'
-        '只读取登记的批量/对比汇总 JSON（caseResults），不重新求解，不外推未计算参数。',
-        ResultSweepCasesInput,
-    ),
-}
-
-
 _WORKFLOW_OBSERVATION_TOOLS: frozenset[str] = frozenset({'workflow.observe'})
 
 
-# 模型自己选中后会被真正执行的工具。其余步骤工具由 Python 在阶段推进时自授权，
-# 摆进全局目录只会让模型有机会误选；要求严格步骤隔离的入口应改用
-# harness_step_tool_catalog，并继续用 WorkflowGuard 防御供应商返回未公开工具。
-_MODEL_INVOCABLE_TOOLS: frozenset[str] = frozenset({
-    'approval.decide',
-    'result.at_time',
-    'result.columns',
-    'result.compare',
-    'result.compare_runs',
-    'result.correlate',
-    'result.peak',
-    'result.sweep_cases',
-    'result.topsis',
-    'workflow.observe',
-    'workflow.start',
-})
+_CAPABILITY_REGISTRY = CapabilityRegistry()
+for _capability in (
+    EngineeringCapability(
+        capability_id='analysis.plan',
+        description='当 ANALYSIS 工作流处于需求确定步骤且用户意图完整时使用；不执行计算。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('INTENT_RESOLVED',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='analysis.prepare',
+        description='当单次分析已有登记荷载映射、需要检查环境和模型合同后再审批时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('MODEL_READY', 'LOAD_READY'),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='analysis.review',
+        description='当单次分析 Job 已结束并完成结果提取、需要按分析专用门槛审查时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REAL_FEM_RESULT', 'REGISTERED_RESULT'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='analysis.run',
+        description='当单次分析已审批且预检通过、需要创建唯一真实求解 Job 时使用；参数来自审批冻结动作。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='analysis.visualize',
+        description='当分析结果已通过证据审查且用户需要可审计报告图件时使用；不得改变工程结论。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('EVIDENCE_REVIEW_PASSED', 'REGISTERED_RESULT'),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='approval.decide',
+        description='当当前步骤正在等待审批且用户明确批准或拒绝时使用；不接受范围修改。',
+        input_model=HarnessApprovalDecisionInput,
+        risk=ToolRisk.MUTATING,
+        requires_approval=False,
+        prerequisites=('PENDING_APPROVAL',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='approval.request',
+        description='当预检通过且需要向用户展示不可变冻结参数时使用；此工具不启动求解。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('FROZEN_CONTRACT', 'PREFLIGHT_PASSED'),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='comparison.calibrate',
+        description='当两种阻尼器已确定且需要按相同最大出力基准生成可比参数时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('COMPARISON_CASES_FROZEN',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='comparison.compare',
+        description='当两个阻尼器真实案例 Job 均已完成、需要按同一工程基准登记阶段对比结果时使用；不用于临时 CSV 追问。',
+        input_model=HarnessJobInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('REAL_FEM_CASES_SUCCEEDED', 'REGISTERED_RESULT'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='comparison.plan',
+        description='当阻尼器对比处于需求确定步骤且已明确两种不同阻尼器时使用；不执行求解。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('INTENT_RESOLVED',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='comparison.prepare',
+        description='当对比参数已标定且需要检查同一荷载、模型与真实求解环境时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('CALIBRATION_READY', 'MODEL_READY', 'LOAD_READY'),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='comparison.review',
+        description='当两个对比案例均结束且需要核对同一基准、标定和真实证据时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('COMPARISON_RESULT_REGISTERED',),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='comparison.run',
+        description='当对比计划已审批且预检通过、需要串行创建两个真实案例时使用；不得并行求解。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='evidence.verify',
+        description='当 RESULT_INQUIRY 工作流已完成只读查询、需要核对回答所引用证据时使用；工程工作流改用各自的 review 工具。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='load.inspect',
+        description='当需要读取当前 run 已登记荷载制品的结构、类型和哈希时使用；不修改源文件。',
+        input_model=HarnessArtifactInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_LOAD_ARTIFACT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='load.map_targets',
+        description='当荷载制品检查通过且需要映射到登记工程目标集时使用；不得指定任意节点。',
+        input_model=HarnessArtifactInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('REGISTERED_LOAD_ARTIFACT', 'MODEL_TARGETS_REGISTERED'),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.active_learning',
+        description='当代理模型验证完成且 Python 策略要求补点时使用；最多执行冻结工作流允许的轮数。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('SURROGATE_VALIDATED', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.fit_surrogate',
+        description='当 DOE 结果制品完整且需要拟合并交叉验证代理模型时使用；不运行新 FEM。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('DOE_RESULTS_REGISTERED',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.preflight',
+        description='当优化方案已冻结且需要检查真实求解环境、模型和荷载后再审批时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('OPTIMIZATION_PLAN_FROZEN', 'MODEL_READY', 'LOAD_READY'),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='optimization.prepare_plan',
+        description='当优化需求字段完整且需要冻结 Python 受控方案和资源上限时使用；不得提前运行 DOE。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('INTENT_RESOLVED',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='optimization.rank_candidates',
+        description='当主动学习结束且需要在固定候选空间内枚举排序时使用；不得扩大候选空间。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('SURROGATE_VALIDATED', 'CANDIDATE_SPACE_FROZEN'),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.recommend',
+        description='当候选排序完成且需要依据登记的 Pareto/TOPSIS 结果形成推荐时使用；不重算权重。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('CANDIDATE_RANKING_REGISTERED',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.review',
+        description='当候选 FEM 复核完成且需要执行优化专用最终证据审查时使用；最多一次受控修正。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('CANDIDATE_VALIDATION_REGISTERED',),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='optimization.run_baseline',
+        description='当优化已审批且预检通过、需要启动统一求解阶段时使用；服务器会将无控基线与 DOE 并行执行。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.run_doe',
+        description='统一求解阶段的 DOE 子任务由服务器与无控基线并行执行；模型不得单独重启或修改样本数。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='optimization.validate_candidates',
+        description='当推荐候选已生成且需要执行独立真实 FEM 复核时使用；只验证已登记候选。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('RECOMMENDATION_REGISTERED', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='result.at_time',
+        description='当用户询问指定时刻附近一个或多个响应值时使用；返回最近采样时刻并保持列名不变。',
+        input_model=ResultAtTimeInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.columns',
+        description='当需要先确认已登记 CSV 可查询列名时使用；不得访问来源 run 白名单外的制品。',
+        input_model=ResultColumnsInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.compare',
+        description='当用户需要比较同一已登记 CSV 两列绝对峰值时使用；一次返回差值、比值和相对变化，columns[0] 为基准。',
+        input_model=ResultDerivedInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.compare_runs',
+        description='当用户需要比较 2–8 个同一 Project 的 SUCCEEDED + REAL_FEM 历史 Run 时使用；服务端先校验模型/荷载身份和单位，再计算基线差值、相对变化与允许的排名。跨求解器只用于一致性验证，不把差异解释为方案优劣。',
+        input_model=ResultCompareRunsInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('PROJECT_BOUND', 'VERIFIED_RESULT_AVAILABLE'),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.correlate',
+        description='当用户询问同一已登记 CSV 两列的线性同步关系时使用；Pearson 相关不表示因果。',
+        input_model=ResultCorrelateInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.extract',
+        description='当真实 Job 成功结束且需要把原始输出登记为标准结果制品时使用；不得伪造数值。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('REAL_FEM_JOB_SUCCEEDED',),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='result.find_recent',
+        description='当结果追问开始且需要定位当前会话最近的可追问终态 run 时使用；不接受路径或制品 ID。',
+        input_model=HarnessNoInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('TERMINAL_RUN_AVAILABLE',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.peak',
+        description='当用户询问某列绝对峰值、带符号峰值及发生时刻时使用；只读取一个已登记 CSV。',
+        input_model=ResultPeakInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.sweep_cases',
+        description='当用户询问批量参数计算或阻尼器对比的跨算例聚合（按指标排序、参数敏感性表）时使用；只读取登记的批量/对比汇总 JSON（caseResults），不重新求解，不外推未计算参数。',
+        input_model=ResultSweepCasesInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='result.topsis',
+        description='当用户询问已完成优化的 TOPSIS 排名或前 N 个候选时使用；只读取登记的优化摘要。多个优化结果并存时，必须根据 availableResults 与 catalogsByRunId 中的工况、模型、阻尼器、更新时间和 runId 匹配用户语义，不能默认选最近结果。',
+        input_model=ResultTopsisInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REGISTERED_RESULT',),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='sweep.plan',
+        description='当阻尼器参数批量计算处于需求确定步骤且已明确一组显式参数案例时使用；不执行优化。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('INTENT_RESOLVED',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='sweep.prepare',
+        description='当批量参数案例已冻结且需要检查同一荷载、模型与真实求解环境时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('SWEEP_CASES_FROZEN', 'MODEL_READY', 'LOAD_READY'),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='sweep.review',
+        description='当批量参数案例均结束且需要核对每个案例的真实结果证据时使用。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('REAL_FEM_CASES_SUCCEEDED', 'REGISTERED_RESULT'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='sweep.run',
+        description='当批量参数计算已审批且预检通过、需要并发创建真实案例时使用；不得添加优化约束或无控基线。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.SOLVER_EXECUTION,
+        requires_approval=True,
+        prerequisites=('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
+        evidence_policy=EvidencePolicy.REAL_FEM_REQUIRED,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='workflow.complete',
+        description='当当前工作流的证据审查和报告门禁均已通过时使用；不得提前声明完成。',
+        input_model=HarnessRunInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('WORKFLOW_GATES_PASSED', 'REPORT_READY'),
+        evidence_policy=EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+    EngineeringCapability(
+        capability_id='workflow.observe',
+        description='当会话已有活动工程运行且用户询问进度、完成状态或结果是否可用时使用；只读取当前绑定 run，不启动、重启或修改任务。',
+        input_model=HarnessNoInput,
+        risk=ToolRisk.READ_ONLY,
+        requires_approval=False,
+        prerequisites=('ACTIVE_RUN',),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source=None,
+    ),
+    EngineeringCapability(
+        capability_id='workflow.start',
+        description='当尚未进入工程工作流且用户意图字段完整时使用；模型必须结合完整对话语义选择 Schema 中的目录 ID，执行层不会把错误标签静默翻译成 ID。',
+        input_model=WorkflowStartInput,
+        risk=ToolRisk.ARTIFACT_WRITE,
+        requires_approval=False,
+        prerequisites=('SESSION_ACTIVE', 'INTENT_RESOLVED'),
+        evidence_policy=EvidencePolicy.NONE,
+        idempotency_key_source='SERVER_DERIVED',
+    ),
+):
+    _CAPABILITY_REGISTRY.register(_capability)
 
-
-_CAPABILITY_POLICY_OVERRIDES: dict[str, dict[str, Any]] = {
-    'result.peak': {
-        'prerequisites': ('REGISTERED_RESULT',),
-        'evidence_policy': EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
-    },
-    'result.compare_runs': {
-        'prerequisites': ('PROJECT_BOUND', 'VERIFIED_RESULT_AVAILABLE'),
-        'evidence_policy': EvidencePolicy.REGISTERED_ARTIFACT_ONLY,
-    },
-    'analysis.run': {
-        'prerequisites': ('FROZEN_CONTRACT', 'PREFLIGHT_PASSED', 'APPROVAL_GRANTED'),
-        'evidence_policy': EvidencePolicy.REAL_FEM_REQUIRED,
-    },
-}
-
-
-def _build_capability_registry() -> CapabilityRegistry:
-    registry = CapabilityRegistry()
-    for capability_id, spec in sorted(_HARNESS_TOOL_SPECS.items()):
-        overrides = _CAPABILITY_POLICY_OVERRIDES.get(capability_id, {})
-        registry.register(EngineeringCapability(
-            capability_id=capability_id,
-            description=spec.description,
-            input_model=spec.input_model,
-            risk=spec.risk,
-            requires_approval=spec.requires_approval,
-            idempotency_key_source=spec.idempotency_key_source,
-            prerequisites=tuple(overrides.get('prerequisites') or ()),
-            evidence_policy=overrides.get('evidence_policy', EvidencePolicy.NONE),
-        ))
-    return registry
-
-
-_CAPABILITY_REGISTRY = _build_capability_registry()
 _CAPABILITY_DISPATCHER = CapabilityDispatcher(_CAPABILITY_REGISTRY)
 
 
@@ -412,29 +573,8 @@ def harness_capability_registry() -> CapabilityRegistry:
     return _CAPABILITY_REGISTRY
 
 
-# 工具目录是静态数据的纯函数：workflow 定义与 Pydantic JSON Schema 每轮
-# 重建纯属浪费。首次构建后缓存，出口返回深拷贝防调用方原地改写。
-_TOOL_CATALOG_CACHE: dict[Any, list[dict[str, Any]]] = {}
-_TOOL_CATALOG_LOCK = Lock()
-
-
-def harness_tool_catalog() -> list[dict[str, Any]]:
-    """返回兼容用的全局模型可调用能力目录。
-
-    新的 Chat/Harness 主路径使用 ``harness_step_tool_catalog`` 按 Workflow 阶段
-    渐进披露；保留全局目录仅用于兼容旧调用点和目录一致性测试。实际授权仍由
-    WorkflowGuard 与 CapabilityDispatcher fail-closed 裁决。
-    """
-    with _TOOL_CATALOG_LOCK:
-        cached = _TOOL_CATALOG_CACHE.get('UNION')
-        if cached is None:
-            cached = _build_harness_tool_catalog()
-            _TOOL_CATALOG_CACHE['UNION'] = cached
-        return deepcopy(cached)
-
-
-def _build_harness_tool_catalog() -> list[dict[str, Any]]:
-    workflow_tools = {'workflow.start'}
+def _workflow_capability_ids() -> set[str]:
+    expected = {'workflow.start'} | set(_WORKFLOW_OBSERVATION_TOOLS)
     for task_type in (
         'ANALYSIS',
         'DAMPER_COMPARISON',
@@ -442,20 +582,29 @@ def _build_harness_tool_catalog() -> list[dict[str, Any]]:
         'DAMPER_OPTIMIZATION',
         'RESULT_INQUIRY',
     ):
-        definition = workflow_definition(task_type)
-        for step in definition.steps:
-            workflow_tools.update(step.allowed_tools)
-    # 阶段自授权和轨迹登记也按工具名取 spec，所以工作流工具与 spec 必须一一对应，
-    # 与目录是否暴露无关；可调用集则必须是工作流工具的子集。
-    registered_tools = workflow_tools | set(_WORKFLOW_OBSERVATION_TOOLS)
-    missing = sorted(workflow_tools - set(_HARNESS_TOOL_SPECS))
-    extra = sorted(set(_HARNESS_TOOL_SPECS) - registered_tools)
-    unknown = sorted(_MODEL_INVOCABLE_TOOLS - registered_tools)
-    if missing or extra or unknown:
+        for step in workflow_definition(task_type).steps:
+            expected.update(step.allowed_tools)
+    return expected
+
+
+def _validate_capability_registry() -> None:
+    expected = _workflow_capability_ids()
+    registered = set(_CAPABILITY_REGISTRY.list_ids())
+    missing = sorted(expected - registered)
+    extra = sorted(registered - expected)
+    if missing or extra:
         raise RuntimeError(
-            f'工具目录与工作流定义不一致: missing={missing}, extra={extra}, unknown={unknown}',
+            f'Capability Registry 与冻结 Workflow 定义不一致: missing={missing}, extra={extra}',
         )
-    return _CAPABILITY_REGISTRY.tool_schemas(sorted(_MODEL_INVOCABLE_TOOLS))
+
+
+_validate_capability_registry()
+
+
+# Tool Schema 只是 Capability 面向模型 API 的阶段投影。缓存只保存当前阶段投影，
+# 不再维护任何全局 tool union 或第二份 schema 真源。
+_TOOL_CATALOG_CACHE: dict[Any, list[dict[str, Any]]] = {}
+_TOOL_CATALOG_LOCK = Lock()
 
 
 def harness_step_tool_catalog(allowed_tools: list[str] | tuple[str, ...]) -> list[dict[str, Any]]:
@@ -472,7 +621,7 @@ def harness_step_tool_catalog(allowed_tools: list[str] | tuple[str, ...]) -> lis
 def _build_harness_step_tool_catalog(
     allowed_tools: list[str] | tuple[str, ...],
 ) -> list[dict[str, Any]]:
-    unknown = sorted(set(allowed_tools) - set(_HARNESS_TOOL_SPECS))
+    unknown = sorted(set(allowed_tools) - set(_CAPABILITY_REGISTRY.list_ids()))
     if unknown:
         raise ToolExecutionError(
             'TOOL_NOT_REGISTERED',
@@ -1208,15 +1357,15 @@ class WorkflowHarnessMixin:
                 approved=True,
                 idempotency_key=f'{run["runId"]}:approval:{call.tool_call_id}',
             )
-        except ValidationError as exc:
+        except ToolExecutionError as exc:
             return self._create_harness_failure_run(
                 repository,
                 session,
                 content,
                 now,
-                code='INPUT_VALIDATION_ERROR',
-                message='approval.decide 参数未通过类型校验。',
-                details={'message': str(exc)},
+                code=exc.code,
+                message=exc.message,
+                details=exc.details,
             )
         decision = approval_input.decision
         effective_arguments = approval_input.model_dump(by_alias=True, mode='json')
@@ -1332,7 +1481,12 @@ class WorkflowHarnessMixin:
                     message='澄清阶段需要模型返回 workflow.start 的类型化工程意图。',
                 )
             try:
-                start = WorkflowStartInput.model_validate(call.arguments)
+                start = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                    'workflow.start',
+                    call.arguments,
+                    allowed_capabilities=['workflow.start'],
+                    idempotency_key=f'{run["runId"]}:clarify:{call.tool_call_id}',
+                )
                 if start.task_type != run.get('taskType'):
                     raise ValueError('澄清回复的 taskType 与原 run 不匹配')
                 if start.engineering_intent is None:
@@ -1519,6 +1673,13 @@ class WorkflowHarnessMixin:
                         idempotencyKey=f'{session["sessionId"]}:{call.tool_call_id}',
                     ),
                 )
+                capability = _CAPABILITY_REGISTRY.require(call.name)
+                start = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                    call.name,
+                    call.arguments,
+                    allowed_capabilities=workflow_state['allowedTools'],
+                    idempotency_key=f'{session["sessionId"]}:{call.tool_call_id}',
+                )
             except ToolExecutionError as exc:
                 if correction_attempt >= 2:
                     return self._create_harness_failure_run(
@@ -1558,7 +1719,6 @@ class WorkflowHarnessMixin:
                 ])
                 continue
             try:
-                start = WorkflowStartInput.model_validate(call.arguments)
                 if start.engineering_intent is not None:
                     resolved_intent, memory_field_sources = (
                         engineering_project_context_service.resolve_intent(
@@ -1820,8 +1980,10 @@ class WorkflowHarnessMixin:
                 repeated_no_progress=0,
                 tool_call=WorkflowToolCall(name='result.topsis', arguments=arguments),
             )
-            effective_arguments = _HARNESS_TOOL_SPECS['result.topsis'].input_model.model_validate(
+            effective_arguments = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                'result.topsis',
                 arguments,
+                allowed_capabilities=self._workflow_state_from_run(run)['allowedTools'],
             ).model_dump(by_alias=True, mode='json')
             output = tools.call('result.topsis', arguments).model_dump(by_alias=True, mode='json')
             fallback_query = {
@@ -1951,17 +2113,26 @@ class WorkflowHarnessMixin:
                 repeated_no_progress = repeated_no_progress + 1 if signature == previous_signature else 0
                 previous_signature = signature
                 try:
+                    capability = _CAPABILITY_REGISTRY.require(call.name)
+                    validated = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                        call.name,
+                        call.arguments,
+                        allowed_capabilities=self._workflow_state_from_run(run)['allowedTools'],
+                    )
+                    effective_arguments = validated.model_dump(by_alias=True, mode='json')
                     WorkflowGuard().authorize(
                         workflow_snapshot=run['workflowSnapshot'],
                         current_step='QUERY',
                         completed_steps=run['completedSteps'],
                         repeated_no_progress=repeated_no_progress,
-                        tool_call=WorkflowToolCall(name=call.name, arguments=call.arguments),
+                        tool_call=WorkflowToolCall(
+                            name=call.name,
+                            arguments=effective_arguments,
+                            risk=capability.risk,
+                        ),
                     )
                     if call.name == 'result.compare_runs':
                         try:
-                            validated = ResultCompareRunsInput.model_validate(call.arguments)
-                            effective_arguments = validated.model_dump(by_alias=True, mode='json')
                             comparison = cross_run_comparison_service.compare(
                                 repository=repository,
                                 session_id=session['sessionId'],
@@ -1987,10 +2158,7 @@ class WorkflowHarnessMixin:
                                 'ARTIFACT_NOT_REGISTERED',
                                 '结果追问只能读取当前结果目录登记的只读制品。',
                             )
-                        output = tools.call(call.name, call.arguments).model_dump(by_alias=True, mode='json')
-                        effective_arguments = _HARNESS_TOOL_SPECS[call.name].input_model.model_validate(
-                            call.arguments,
-                        ).model_dump(by_alias=True, mode='json')
+                        output = tools.call(call.name, effective_arguments).model_dump(by_alias=True, mode='json')
                 except ToolExecutionError as exc:
                     return self._fail_native_inquiry(
                         repository,
@@ -2703,7 +2871,7 @@ class WorkflowHarnessMixin:
                 f'未登记的工程任务类型: {task_type}',
             )
         tool_name = task_spec.solver_run_tool
-        spec = _HARNESS_TOOL_SPECS[tool_name]
+        capability = _CAPABILITY_REGISTRY.require(tool_name)
         guard = WorkflowGuard()
         current_step = str(run.get('currentStep') or 'WAITING_APPROVAL')
         completed = list(run.get('completedSteps') or [])
@@ -2782,6 +2950,13 @@ class WorkflowHarnessMixin:
                     },
                 )
             usage['doeDesignCount'] = requested_doe_count
+        arguments = _CAPABILITY_DISPATCHER.authorize_and_validate(
+            tool_name,
+            arguments,
+            allowed_capabilities=[tool_name],
+            approved=True,
+            idempotency_key=idempotency_key,
+        ).model_dump(by_alias=True, mode='json')
         guard.authorize(
             workflow_snapshot=run['workflowSnapshot'],
             current_step=current_step,
@@ -2790,9 +2965,9 @@ class WorkflowHarnessMixin:
             tool_call=WorkflowToolCall(
                 name=tool_name,
                 arguments=arguments,
-                risk=spec.risk,
-                requiresApproval=spec.requires_approval,
-                approved=spec.requires_approval,
+                risk=capability.risk,
+                requiresApproval=capability.requires_approval,
+                approved=capability.requires_approval,
                 idempotencyKey=idempotency_key,
                 usage=usage,
             ),
@@ -2836,11 +3011,11 @@ class WorkflowHarnessMixin:
                     separators=(',', ':'),
                 ).encode('utf-8')).hexdigest(),
             } if isinstance(frozen_action, dict) else {}),
-            'risk': spec.risk.value,
-            'approved': spec.requires_approval,
+            'risk': capability.risk.value,
+            'approved': capability.requires_approval,
             'authorized': True,
             'idempotencyKey': idempotency_key,
-            'idempotencyKeySource': spec.idempotency_key_source,
+            'idempotencyKeySource': capability.idempotency_key_source,
             'executionSource': 'WORKFLOW_HARNESS',
             'status': 'RUNNING',
             'updatedAt': utc_now(),
@@ -2919,23 +3094,15 @@ class WorkflowHarnessMixin:
 
     @staticmethod
     def _python_stage_arguments(name: str, run: dict[str, Any]) -> dict[str, Any]:
-        """只按登记输入模型构造服务端阶段参数，不裁剪失败输入。"""
-        spec = _HARNESS_TOOL_SPECS[name]
-        fields = spec.input_model.model_fields
+        """只按 Capability InputModel 构造服务端阶段参数；最终校验统一交给 Dispatcher。"""
+        capability = _CAPABILITY_REGISTRY.require(name)
+        fields = capability.input_model.model_fields
         arguments: dict[str, Any] = {}
         if 'run_id' in fields:
             arguments['runId'] = run['runId']
         if 'job_id' in fields:
             arguments['jobId'] = run['jobId']
-        try:
-            validated = spec.input_model.model_validate(arguments)
-        except ValidationError as exc:
-            raise ToolExecutionError(
-                'INPUT_VALIDATION_ERROR',
-                f'Python Job 阶段工具 {name} 的服务端参数不符合登记契约。',
-                details={'toolName': name, 'message': str(exc)},
-            ) from exc
-        return validated.model_dump(by_alias=True, mode='json')
+        return arguments
 
     @staticmethod
     def _record_python_job_stage(
@@ -2951,9 +3118,11 @@ class WorkflowHarnessMixin:
         if name is None:
             return
         call_id = f'{run["runId"]}:job:{step["stepId"]}'
-        spec = _HARNESS_TOOL_SPECS[name]
+        capability = _CAPABILITY_REGISTRY.require(name)
         arguments = WorkflowHarnessMixin._python_stage_arguments(name, run)
-        idempotency_key = call_id if spec.idempotency_key_source == 'SERVER_DERIVED' else None
+        idempotency_key = (
+            call_id if capability.idempotency_key_source == 'SERVER_DERIVED' else None
+        )
         runtime_approval = (
             'WAITING_APPROVAL' in completed_steps
             or any(
@@ -2961,7 +3130,14 @@ class WorkflowHarnessMixin:
                 for item in repository.list_tool_calls(run['runId'])
             )
         )
-        approved = runtime_approval if spec.requires_approval else False
+        approved = runtime_approval if capability.requires_approval else False
+        arguments = _CAPABILITY_DISPATCHER.authorize_and_validate(
+            name,
+            arguments,
+            allowed_capabilities=[name],
+            approved=approved,
+            idempotency_key=idempotency_key,
+        ).model_dump(by_alias=True, mode='json')
         WorkflowGuard().authorize(
             workflow_snapshot=run['workflowSnapshot'],
             current_step=str(step['stepId']),
@@ -2970,8 +3146,8 @@ class WorkflowHarnessMixin:
             tool_call=WorkflowToolCall(
                 name=name,
                 arguments=arguments,
-                risk=spec.risk,
-                requiresApproval=spec.requires_approval,
+                risk=capability.risk,
+                requiresApproval=capability.requires_approval,
                 approved=approved,
                 idempotencyKey=idempotency_key,
             ),
@@ -2993,15 +3169,15 @@ class WorkflowHarnessMixin:
             'argumentsSha256': digest,
             'effectiveArguments': arguments,
             'effectiveArgumentsSha256': digest,
-            'risk': spec.risk.value,
+            'risk': capability.risk.value,
             'approved': approved,
             'authorized': True,
             'executionSource': 'PYTHON_JOB',
             'jobId': run.get('jobId'),
             **({'idempotencyKey': idempotency_key} if idempotency_key else {}),
             **(
-                {'idempotencyKeySource': spec.idempotency_key_source}
-                if spec.idempotency_key_source
+                {'idempotencyKeySource': capability.idempotency_key_source}
+                if capability.idempotency_key_source
                 else {}
             ),
             'status': 'SUCCEEDED',
@@ -3149,9 +3325,7 @@ class WorkflowHarnessMixin:
                     f'步骤 {current} 不允许调用工具 {call.name}',
                     details={'currentStep': current, 'allowedTools': allowed_tools},
                 )
-            spec = _HARNESS_TOOL_SPECS[call.name]
-            validated = spec.input_model.model_validate(call.arguments)
-            effective_arguments = validated.model_dump(by_alias=True, mode='json')
+            capability = _CAPABILITY_REGISTRY.require(call.name)
             runtime_approval = (
                 'WAITING_APPROVAL' in (run.get('completedSteps') or [])
                 or any(
@@ -3159,7 +3333,17 @@ class WorkflowHarnessMixin:
                     for item in repository.list_tool_calls(run['runId'])
                 )
             )
-            idempotency_key = call_id if spec.idempotency_key_source == 'SERVER_DERIVED' else None
+            idempotency_key = (
+                call_id if capability.idempotency_key_source == 'SERVER_DERIVED' else None
+            )
+            validated = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                call.name,
+                call.arguments,
+                allowed_capabilities=allowed_tools,
+                approved=runtime_approval if capability.requires_approval else False,
+                idempotency_key=idempotency_key,
+            )
+            effective_arguments = validated.model_dump(by_alias=True, mode='json')
             WorkflowGuard().authorize(
                 workflow_snapshot=snapshot,
                 current_step=current,
@@ -3167,14 +3351,13 @@ class WorkflowHarnessMixin:
                 step_attempt=int(run.get('stepAttempt') or 1),
                 tool_call=WorkflowToolCall(
                     name=call.name,
-                    arguments=call.arguments,
-                    risk=spec.risk,
-                    requiresApproval=spec.requires_approval,
-                    approved=runtime_approval if spec.requires_approval else False,
+                    arguments=effective_arguments,
+                    risk=capability.risk,
+                    requiresApproval=capability.requires_approval,
+                    approved=runtime_approval if capability.requires_approval else False,
                     idempotencyKey=idempotency_key,
                 ),
             )
-            registry = TypedToolRegistry()
             is_review_step = current in {'EVIDENCE_REVIEW', 'REVIEW'}
 
             def stage_handler(_payload: BaseModel) -> dict[str, Any]:
@@ -3205,21 +3388,11 @@ class WorkflowHarnessMixin:
                     'artifactIds': artifact_ids,
                 }
 
-            registry.register(TypedAgentTool(
-                name=call.name,
-                description=spec.description,
-                input_model=spec.input_model,
-                output_model=HarnessReviewOutput if is_review_step else HarnessStageEvidenceOutput,
-                risk=spec.risk,
-                requires_approval=spec.requires_approval,
-                handler=stage_handler,
-            ))
-            stage_output = registry.execute(
-                call.name,
-                call.arguments,
-                approved=runtime_approval if spec.requires_approval else False,
-                idempotency_key=idempotency_key,
-            ).model_dump(by_alias=True, mode='json')
+            output_model = HarnessReviewOutput if is_review_step else HarnessStageEvidenceOutput
+            stage_output = output_model.model_validate(stage_handler(validated)).model_dump(
+                by_alias=True,
+                mode='json',
+            )
         except (LLMUnavailableError, ValidationError, ToolExecutionError) as exc:
             model_failure_count += 1
             error = {
@@ -3281,15 +3454,15 @@ class WorkflowHarnessMixin:
             'argumentsSha256': sha256(arguments_canonical.encode('utf-8')).hexdigest(),
             'effectiveArguments': effective_arguments,
             'effectiveArgumentsSha256': sha256(effective_canonical.encode('utf-8')).hexdigest(),
-            'risk': spec.risk.value,
-            'approved': runtime_approval if spec.requires_approval else False,
+            'risk': capability.risk.value,
+            'approved': runtime_approval if capability.requires_approval else False,
             'authorized': True,
             'executionSource': 'LLM_PERSISTENT_LOOP',
             'jobId': run.get('jobId'),
             **({'idempotencyKey': idempotency_key} if idempotency_key else {}),
             **(
-                {'idempotencyKeySource': spec.idempotency_key_source}
-                if spec.idempotency_key_source
+                {'idempotencyKeySource': capability.idempotency_key_source}
+                if capability.idempotency_key_source
                 else {}
             ),
             'status': 'SUCCEEDED',
