@@ -1,0 +1,28 @@
+name: PR8 runtime refinement
+
+on:
+  push:
+    branches:
+      - feat/engineering-capability-runtime
+    paths:
+      - .github/pr8_refine.py
+      - .github/workflows/pr8-refine.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install backend dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-opensees.txt && python -m pip install ruff==0.16.4
+      - name: Apply and validate refinements
+        run: python .github/pr8_refine.py
