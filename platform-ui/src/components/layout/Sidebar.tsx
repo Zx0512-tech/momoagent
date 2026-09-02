@@ -9,6 +9,7 @@ import {
   Brain,
   Sliders,
   FolderOpen,
+  FolderKanban,
   Wrench,
   Bot,
   ChevronLeft,
@@ -26,6 +27,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const menuItems = [
     { name: "总览主面板", path: "/", icon: LayoutDashboard },
     { name: "工程智能体", path: "/agent", icon: Bot },
+    { name: "工程项目", path: "/projects", icon: FolderKanban },
     { name: "阻尼器基准配置", path: "/damper-base", icon: Wrench },
     { name: "试验设计", path: "/experiment-design", icon: FlaskConical },
     { name: "荷载配置", path: "/loads", icon: Zap },
