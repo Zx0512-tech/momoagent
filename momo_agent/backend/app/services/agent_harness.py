@@ -419,12 +419,11 @@ _TOOL_CATALOG_LOCK = Lock()
 
 
 def harness_tool_catalog() -> list[dict[str, Any]]:
-    """返回字节稳定的模型可调用工具目录。
+    """返回兼容用的全局模型可调用能力目录。
 
-    所有调用点共用这一张表：各入口能接受的工具其实不同（入口只认
-    workflow.start，审批只认 approval.decide），但按调用点分表会产生多份
-    请求前缀并压低 KV cache 命中率，因此暴露固定并集，仍由 WorkflowGuard
-    按步骤逐次裁决。阶段授权不通过删工具实现。
+    新的 Chat/Harness 主路径使用 ``harness_step_tool_catalog`` 按 Workflow 阶段
+    渐进披露；保留全局目录仅用于兼容旧调用点和目录一致性测试。实际授权仍由
+    WorkflowGuard 与 CapabilityDispatcher fail-closed 裁决。
     """
     with _TOOL_CATALOG_LOCK:
         cached = _TOOL_CATALOG_CACHE.get('UNION')
@@ -1063,10 +1062,11 @@ class WorkflowHarnessMixin:
             )
 
         try:
-            effective_arguments = HarnessNoInput.model_validate(call.arguments).model_dump(
-                by_alias=True,
-                mode='json',
-            )
+            effective_arguments = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                'workflow.observe',
+                call.arguments,
+                allowed_capabilities=['workflow.observe'],
+            ).model_dump(by_alias=True, mode='json')
             WorkflowGuard().authorize(
                 workflow_snapshot=run['workflowSnapshot'],
                 current_step=str(run.get('currentStep') or ''),
@@ -1119,7 +1119,7 @@ class WorkflowHarnessMixin:
             *base_history,
             {
                 'role': 'user',
-                'content': self._harness_user_content(workflow_state, content),
+                'content': self._harness_user_content(workflow_state, content, tools=capability_tools),
             },
             {
                 'role': 'assistant',
@@ -1168,10 +1168,11 @@ class WorkflowHarnessMixin:
         if run.get('runtimeMode') != 'WORKFLOW_HARNESS' or not run.get('workflowSnapshot'):
             # STANDARDIZE_LOAD 等旧审批没有工作流快照，必须回到兼容审批处理。
             return self._resolve_approval_reply(repository, session, run, content, now)
+        workflow_state = self._workflow_state_from_run(run)
         history = self._history_for_harness_turn(
             repository,
             session['sessionId'],
-            self._workflow_state_from_run(run),
+            workflow_state,
             content,
         )
         capability_tools = harness_step_tool_catalog(['approval.decide'])
@@ -1182,7 +1183,7 @@ class WorkflowHarnessMixin:
         turn = self.planner.run_harness_turn(
             messages=history,
             user_content=content,
-            workflow_state=self._workflow_state_from_run(run),
+            workflow_state=workflow_state,
             tools=capability_tools,
         )
         call = turn.tool_calls[0] if turn.tool_calls else None
@@ -1200,7 +1201,13 @@ class WorkflowHarnessMixin:
             repository.save_session(session)
             return self._decorate_run(run)
         try:
-            approval_input = HarnessApprovalDecisionInput.model_validate(call.arguments)
+            approval_input = _CAPABILITY_DISPATCHER.authorize_and_validate(
+                'approval.decide',
+                call.arguments,
+                allowed_capabilities=['approval.decide'],
+                approved=True,
+                idempotency_key=f'{run["runId"]}:approval:{call.tool_call_id}',
+            )
         except ValidationError as exc:
             return self._create_harness_failure_run(
                 repository,

@@ -50,7 +50,7 @@ class EngineeringCapability:
         if not self.version.strip():
             raise ValueError('Capability version 不能为空')
         if self.risk is ToolRisk.SOLVER_EXECUTION and not self.requires_approval:
-            raise ValueError('求解或状态变更 Capability 必须要求审批')
+            raise ValueError('求解 Capability 必须要求审批')
 
     @property
     def side_effect(self) -> CapabilitySideEffect:
