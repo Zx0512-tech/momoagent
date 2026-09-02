@@ -97,7 +97,7 @@ class EngineeringProjectEvidenceService:
                 if not isinstance(metric, dict) or not isinstance(metric.get('evidence'), dict):
                     continue
                 value = metric.get('value')
-                if not isinstance(value, (int, float)):
+                if isinstance(value, bool) or not isinstance(value, (int, float)):
                     continue
                 unit = str(metric.get('unit') or '')
                 label = str(metric.get('label') or metric_id)
