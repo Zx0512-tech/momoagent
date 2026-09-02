@@ -508,6 +508,63 @@ export interface AgentSessionMessage {
   createdAt: string;
 }
 
+
+export interface EngineeringWorkspace {
+  schemaVersion: number;
+  modelArtifactId: string | null;
+  modelFileName: string | null;
+  modelSha256: string | null;
+  solver: "ANSYS" | "OPENSEESPY_INPROC" | null;
+  loadKind: "EARTHQUAKE" | "WIND" | "TRAFFIC" | "GENERIC_NODAL" | null;
+  loadArtifactId: string | null;
+  loadSha256: string | null;
+  damperType: "VISCOUS" | "FRICTION" | "EDDY_CURRENT" | null;
+  selectedLayoutId: string | null;
+  responseIds: string[];
+  optimizationProfile: "STANDARD" | "FULL" | "CUSTOM";
+}
+
+export type EngineeringWorkspacePatchPayload = Partial<Omit<EngineeringWorkspace, "schemaVersion">>;
+
+export interface EngineeringProjectSummary {
+  projectId: string;
+  ownerId?: string;
+  name: string;
+  description: string;
+  status: string;
+  workspace: EngineeringWorkspace;
+  workspaceRevision: number;
+  sessionIds: string[];
+  sessionCount: number;
+  runCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EngineeringProjectSession {
+  sessionId: string;
+  title: string;
+  createdAt?: string;
+  updatedAt?: string;
+  runCount?: number;
+}
+
+export interface EngineeringProjectRunSummary {
+  runId: string;
+  sessionId: string;
+  taskType?: AgentRunTaskType;
+  status: string;
+  currentStage: string;
+  createdAt?: string;
+  updatedAt?: string;
+  resultSummary?: AgentRun["resultSummary"];
+}
+
+export interface EngineeringProjectDetail extends EngineeringProjectSummary {
+  sessions: EngineeringProjectSession[];
+  runs: EngineeringProjectRunSummary[];
+}
+
 export interface AgentSessionDetail extends AgentSessionSummary {
   messages: AgentSessionMessage[];
   runs: AgentRun[];
@@ -521,6 +578,33 @@ export interface AgentSessionDeleteResult {
 }
 
 export const agentApi = {
+  listProjects(): Promise<{ data: EngineeringProjectSummary[] }> {
+    return request("GET", "/agent/projects");
+  },
+
+  createProject(name: string, description = ""): Promise<EngineeringProjectSummary> {
+    return request("POST", "/agent/projects", { name, description });
+  },
+
+  getProject(projectId: string): Promise<EngineeringProjectDetail> {
+    return request("GET", `/agent/projects/${projectId}`);
+  },
+
+  updateProjectWorkspace(
+    projectId: string,
+    workspace: EngineeringWorkspacePatchPayload
+  ): Promise<EngineeringProjectSummary> {
+    return request("PUT", `/agent/projects/${projectId}/workspace`, workspace);
+  },
+
+  createProjectSession(projectId: string, title = "新建工程智能体会话"): Promise<{ sessionId: string; projectId: string }> {
+    return request("POST", `/agent/projects/${projectId}/sessions`, { title });
+  },
+
+  attachProjectSession(projectId: string, sessionId: string): Promise<{ projectId: string; sessionId: string; attached: true }> {
+    return request("PUT", `/agent/projects/${projectId}/sessions/${sessionId}`);
+  },
+
   createSession(title: string): Promise<{ sessionId: string }> {
     return request("POST", "/agent/sessions", { title });
   },

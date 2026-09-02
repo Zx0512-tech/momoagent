@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { AlertTriangle, X } from "lucide-react";
 
 import { POLL_INTERVAL_MS, isPollingStatus, useChatStore } from "../../stores/chatStore";
@@ -18,15 +19,34 @@ export const ChatPage = () => {
   const {
     messages, run, runHistory, loadImport, mapping, busy, switchingSession, error,
     sessions, activeSessionId,
-    loadSessions, send, updateMapping, submitMapping, decide, cancel, refreshRun, dismissError
+    loadSessions, switchSession, send, updateMapping, submitMapping, decide, cancel, refreshRun, dismissError
   } = useChatStore();
 
   const [draft, setDraft] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [searchParams] = useSearchParams();
+  const requestedSessionId = searchParams.get("session");
+  const requestedProjectId = searchParams.get("project");
+  const requestedPrompt = searchParams.get("prompt");
+  const appliedSessionLinkRef = useRef<string | undefined>(undefined);
+  const appliedPromptRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     void loadSessions();
   }, [loadSessions]);
+
+  // Project Workspace 深链只在 URL 变化时应用一次，避免侧栏切换会话后被旧 query 强行切回。
+  useEffect(() => {
+    if (!requestedSessionId || appliedSessionLinkRef.current === requestedSessionId) return;
+    appliedSessionLinkRef.current = requestedSessionId;
+    void switchSession(requestedSessionId);
+  }, [requestedSessionId, switchSession]);
+
+  useEffect(() => {
+    if (!requestedPrompt || appliedPromptRef.current === requestedPrompt) return;
+    appliedPromptRef.current = requestedPrompt;
+    setDraft(requestedPrompt);
+  }, [requestedPrompt]);
 
   // 轮询：仅在 run 处于等待求解/复核时开启。
   useEffect(() => {
@@ -103,7 +123,14 @@ export const ChatPage = () => {
     <div style={styles.page}>
       {activeSessionId && (
         <header style={styles.header}>
-          <span style={styles.headerTitle}>{activeTitle ?? "工程智能体"}</span>
+          <div style={styles.headerContext}>
+            {requestedProjectId && (
+              <Link to={`/projects/${requestedProjectId}`} style={styles.projectLink}>
+                返回工程项目
+              </Link>
+            )}
+            <span style={styles.headerTitle}>{activeTitle ?? "工程智能体"}</span>
+          </div>
           {run && <span style={styles.headerBadge}>{run.status}</span>}
         </header>
       )}
@@ -208,7 +235,9 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid var(--border-color)",
     flexShrink: 0
   },
-  headerTitle: { fontSize: 13, fontWeight: 600 },
+  headerContext: { display: "flex", alignItems: "center", gap: 10, minWidth: 0 },
+  projectLink: { color: "var(--primary-color)", fontSize: 11, textDecoration: "none", whiteSpace: "nowrap" },
+  headerTitle: { fontSize: 13, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   headerBadge: {
     padding: "2px 8px",
     borderRadius: 999,
