@@ -5,9 +5,10 @@ export type ProjectEvidenceIntegrityState = "VALID" | "MISSING_ARTIFACT" | "HASH
 
 export interface ProjectEvidenceArtifactRef {
   artifactId: string;
-  role: "REPORT" | "OUTPUT_MANIFEST" | "FIGURE" | "RESULT" | "REGISTERED";
+  role: "REPORT" | "OUTPUT_MANIFEST" | "FIGURE" | "RESULT" | "REGISTERED" | "CLAIM_EVIDENCE";
   name?: string;
   kind?: string;
+  sourceRunId?: string;
 }
 
 export interface ProjectEvidenceIntegrityIssue {
@@ -105,7 +106,7 @@ async function getJson<T>(path: string): Promise<T> {
   });
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
-    throw new Error(payload?.error?.message || `请求失败（HTTP ${response.status}）`);
+    throw new Error(payload?.error?.message || payload?.detail?.message || `请求失败（HTTP ${response.status}）`);
   }
   return response.json() as Promise<T>;
 }
