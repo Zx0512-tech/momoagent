@@ -26,6 +26,7 @@ jobs:
       - name: Apply deterministic PR9 migration
         run: |
           python scripts/pr9_fix_apply.py
+          python scripts/pr9_fix_import.py
           python scripts/pr9_apply.py
       - name: Compile backend
         run: python -m compileall -q momo_agent/backend/app momo_agent/backend/tests
@@ -48,7 +49,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -f .github/workflows/pr9-scan.yml .github/workflows/pr9-apply.yml scripts/pr9_apply.py scripts/pr9_fix_apply.py
+          rm -f .github/workflows/pr9-scan.yml .github/workflows/pr9-apply.yml scripts/pr9_apply.py scripts/pr9_fix_apply.py scripts/pr9_fix_import.py
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
