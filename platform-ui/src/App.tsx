@@ -6,6 +6,7 @@ import { LoadingSpinner } from "./components/feedback/LoadingSpinner";
 // 对话式智能体是主入口。
 const ChatPage = lazy(() => import("./pages/chat/ChatPage").then(m => ({ default: m.ChatPage })));
 const ProjectWorkspacePage = lazy(() => import("./pages/projects/ProjectWorkspacePage"));
+const ProjectEvidenceCenterPage = lazy(() => import("./pages/projects/ProjectEvidenceCenterPage"));
 
 // 分析页全部保留，作为对话之外的深挖入口。
 const DashboardPage = lazy(() => import("./pages/dashboard/DashboardPage"));
@@ -30,6 +31,7 @@ function App() {
             <Route path="/agent" element={<Navigate to="/" replace />} />
             <Route path="/projects" element={<ProjectWorkspacePage />} />
             <Route path="/projects/:projectId" element={<ProjectWorkspacePage />} />
+            <Route path="/evidence" element={<ProjectEvidenceCenterPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/loads" element={<LoadsPage />} />
             <Route path="/command-stream" element={<CommandStreamPage />} />

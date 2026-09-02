@@ -9,6 +9,7 @@ from app.api.v1.agent_project_schemas import (
     EngineeringProjectSessionCreateRequest,
     EngineeringWorkspacePatch,
 )
+from app.services.agent_project_evidence import engineering_project_evidence_service
 from app.services.agent_project_service import engineering_project_service
 
 
@@ -37,6 +38,11 @@ def list_engineering_projects() -> dict[str, Any]:
 @router.get('/agent/projects/{project_id}')
 def get_engineering_project(project_id: str) -> dict[str, Any]:
     return engineering_project_service.get_project(project_id)
+
+
+@router.get('/agent/projects/{project_id}/evidence')
+def get_engineering_project_evidence(project_id: str) -> dict[str, Any]:
+    return engineering_project_evidence_service.build(project_id)
 
 
 @router.put('/agent/projects/{project_id}/workspace')
