@@ -474,7 +474,7 @@ async function request<T>(method: string, path: string, body?: unknown, raw = fa
   });
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
-    throw new Error(payload?.error?.message || `请求失败（HTTP ${response.status}）`);
+    throw new Error(payload?.error?.message || payload?.detail?.message || `请求失败（HTTP ${response.status}）`);
   }
   return response.json() as Promise<T>;
 }
@@ -507,7 +507,6 @@ export interface AgentSessionMessage {
   fileId?: string | null;
   createdAt: string;
 }
-
 
 export interface EngineeringWorkspace {
   schemaVersion: number;
@@ -577,6 +576,8 @@ export interface AgentSessionDeleteResult {
   cancelledRunCount: number;
 }
 
+const projectWorkspaceRevisions = new Map<string, number>();
+
 export const agentApi = {
   listProjects(): Promise<{ data: EngineeringProjectSummary[] }> {
     return request("GET", "/agent/projects");
@@ -586,15 +587,27 @@ export const agentApi = {
     return request("POST", "/agent/projects", { name, description });
   },
 
-  getProject(projectId: string): Promise<EngineeringProjectDetail> {
-    return request("GET", `/agent/projects/${projectId}`);
+  async getProject(projectId: string): Promise<EngineeringProjectDetail> {
+    const detail = await request<EngineeringProjectDetail>("GET", `/agent/projects/${projectId}`);
+    projectWorkspaceRevisions.set(projectId, detail.workspaceRevision);
+    return detail;
   },
 
-  updateProjectWorkspace(
+  async updateProjectWorkspace(
     projectId: string,
     workspace: EngineeringWorkspacePatchPayload
   ): Promise<EngineeringProjectSummary> {
-    return request("PUT", `/agent/projects/${projectId}/workspace`, workspace);
+    const expectedRevision = projectWorkspaceRevisions.get(projectId);
+    if (expectedRevision === undefined) {
+      throw new Error("Workspace revision 不可用，请刷新工程项目后重新保存");
+    }
+    const updated = await request<EngineeringProjectSummary>(
+      "PUT",
+      `/agent/projects/${projectId}/workspace`,
+      { expectedRevision, patch: workspace }
+    );
+    projectWorkspaceRevisions.set(projectId, updated.workspaceRevision);
+    return updated;
   },
 
   createProjectSession(projectId: string, title = "新建工程智能体会话"): Promise<{ sessionId: string; projectId: string }> {
@@ -652,7 +665,7 @@ export const agentApi = {
     });
     if (!response.ok) {
       const payload = await response.json().catch(() => null);
-      throw new Error(payload?.error?.message || `请求失败（HTTP ${response.status}）`);
+      throw new Error(payload?.error?.message || payload?.detail?.message || `请求失败（HTTP ${response.status}）`);
     }
     if (!response.body) throw new Error("浏览器未提供流式响应通道");
 
