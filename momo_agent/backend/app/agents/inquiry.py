@@ -50,6 +50,11 @@ RESPONSE_METRIC_SPECS: dict[str, dict[str, Any]] = {
         'unit': 'm',
         'semantic': 'damper_stroke',
     },
+    'dissipated_energy': {
+        'label': '阻尼器耗能',
+        'unit': 'J',
+        'semantic': 'dissipated_energy',
+    },
     'cumulative_displacement': {
         'label': '累计位移',
         'unit': 'm',

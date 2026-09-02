@@ -324,6 +324,7 @@ def _result_units(result: AnalysisResult) -> dict[str, str]:
         "max_damper_force": "N",
         "damper_stroke": "m",
         "max_damper_stroke": "m",
+        "dissipated_energy": "J",
         "cumulative_displacement": "m",
     }
     raw_units = result.metadata.get("units") if isinstance(result.metadata, dict) else None

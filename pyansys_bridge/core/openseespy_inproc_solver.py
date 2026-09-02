@@ -36,7 +36,12 @@ from pyansys_bridge.core.opensees_common import (
     uniform_excitation_axis,
 )
 from pyansys_bridge.core.progress_sink import safe_progress_filename
-from pyansys_bridge.core.result_summary import SUMMARY_FILENAME, TIMESERIES_FILENAME, ensure_solver_summary
+from pyansys_bridge.core.result_summary import (
+    SUMMARY_FILENAME,
+    TIMESERIES_FILENAME,
+    dissipated_energy_from_relative_response,
+    ensure_solver_summary,
+)
 from pyansys_bridge.core.solver_interface import (
     COMMON_PRODUCTION_SOLVER_FEATURES,
     COMMON_SOLVER_WORKFLOW_ROLES,
@@ -506,6 +511,14 @@ class OpenSeesPyInProcSolver(SolverInterface):
             key: [float(item) for item in values]
             for key, values in timeseries.items()
         }
+        damper_energy: dict[str, Any] | None = None
+        if self.command_stream_path is not None:
+            damper_energy = dissipated_energy_from_relative_response(
+                self.command_stream_path.with_name("tower_girder_relative_response.csv")
+            )
+            self._objectives["dissipated_energy"] = float(
+                damper_energy["dissipated_energy"]
+            )
         if not _finite_outputs(self._objectives, self._timeseries):
             raise RuntimeError("OpenSeesPy in-process output contains non-finite values")
         with (case_dir / SUMMARY_FILENAME).open("w", encoding="utf-8") as handle:
@@ -514,6 +527,7 @@ class OpenSeesPyInProcSolver(SolverInterface):
                     "status": "completed",
                     "objectives": self._objectives,
                     "timeseries": self._timeseries,
+                    "metadata": ({"damperEnergy": damper_energy} if damper_energy else {}),
                 },
                 handle,
                 ensure_ascii=False,

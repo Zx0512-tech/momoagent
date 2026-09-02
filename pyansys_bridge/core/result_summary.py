@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +20,7 @@ STANDARD_OBJECTIVE_NAMES = (
     "max_tower_base_shear",
     "max_damper_force",
     "max_damper_stroke",
+    "dissipated_energy",
 )
 
 
@@ -96,6 +98,51 @@ def objectives_from_timeseries(timeseries: dict[str, list[float]]) -> dict[str, 
     if "damper_stroke" in timeseries:
         objectives["max_damper_stroke"] = max(abs(value) for value in timeseries["damper_stroke"])
     return objectives
+
+
+def dissipated_energy_from_relative_response(path: str | Path) -> dict[str, Any]:
+    """由求解器导出的逐阻尼器力-速度时程计算耗散能。"""
+    source = Path(path)
+    with source.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    if not rows or not rows[0]:
+        raise ValueError("Damper relative response must contain data rows")
+    force_columns = [
+        name for name in rows[0]
+        if name.endswith("_damper_force")
+    ]
+    if not force_columns:
+        raise ValueError("Damper relative response must contain force columns")
+
+    per_damper = {
+        name.removesuffix("_damper_force"): 0.0
+        for name in force_columns
+    }
+    previous_time: float | None = None
+    for row in rows:
+        time = float(row["time"])
+        if not math.isfinite(time):
+            raise ValueError("Damper response time must be finite")
+        if previous_time is not None and time < previous_time:
+            raise ValueError("Damper response time must be nondecreasing")
+        interval = 0.0 if previous_time is None else time - previous_time
+        for force_column in force_columns:
+            damper = force_column.removesuffix("_damper_force")
+            velocity_column = f"{damper}_rel_vel"
+            if velocity_column not in row:
+                raise ValueError(f"Missing relative velocity for damper {damper}")
+            force = float(row[force_column])
+            velocity = float(row[velocity_column])
+            if not math.isfinite(force) or not math.isfinite(velocity):
+                raise ValueError("Damper force and velocity must be finite")
+            per_damper[damper] += abs(force * velocity) * interval
+        previous_time = time
+    return {
+        "dissipated_energy": sum(per_damper.values()),
+        "perDamper": per_damper,
+        "source": source.name,
+        "definition": "sum(abs(force * relative_velocity) * delta_time)",
+    }
 
 
 def _objective_displacement_values(timeseries: dict[str, list[float]]) -> list[float]:

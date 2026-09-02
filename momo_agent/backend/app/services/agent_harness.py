@@ -2612,6 +2612,7 @@ class WorkflowHarnessMixin:
             'max_tower_base_moment': '最大塔底弯矩',
             'max_damper_force': '最大阻尼器力',
             'max_damper_stroke': '最大阻尼器行程',
+            'dissipated_energy': '阻尼器耗能',
             'cumulative_displacement': '累计位移',
         }
         metrics: list[dict[str, Any]] = []

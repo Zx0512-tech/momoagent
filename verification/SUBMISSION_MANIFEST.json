@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "project": "MOMO Competition Submission",
-  "generatedAt": "2026-09-02T11:02:26.579Z",
-  "fileCount": 572,
-  "totalSizeBytes": 41694497,
+  "generatedAt": "2026-09-02T13:07:41.452Z",
+  "fileCount": 573,
+  "totalSizeBytes": 41699632,
   "files": [
     {
       "path": ".env.example",
@@ -652,8 +652,8 @@
     },
     {
       "path": "momo_agent/backend/app/agents/capabilities.py",
-      "sizeBytes": 10294,
-      "sha256": "d3b77e2cc4368b3e9a74bef8a85920cb1f0f50ee425a366272084a83ec085c05"
+      "sizeBytes": 10319,
+      "sha256": "d87d119d87bda7b29f5ca46e9e057746256de6a63609c8fe5dbc45096f09781e"
     },
     {
       "path": "momo_agent/backend/app/agents/core.py",
@@ -667,8 +667,8 @@
     },
     {
       "path": "momo_agent/backend/app/agents/damper_optimization.py",
-      "sizeBytes": 22943,
-      "sha256": "f9c1336d9217de04351eef2a58560e277281d83b35fb1d4ffb1940a5ea1de3bb"
+      "sizeBytes": 23029,
+      "sha256": "0be1db2e457008a3a95dcd1368872dfda97898e400c811c64799a8498391f7cb"
     },
     {
       "path": "momo_agent/backend/app/agents/damper_parameter_sweep.py",
@@ -692,8 +692,8 @@
     },
     {
       "path": "momo_agent/backend/app/agents/inquiry.py",
-      "sizeBytes": 13043,
-      "sha256": "afc2807a31eb81a37bc7dce74322f074ef738cc1fdad4f6829c156c1ab81f2b3"
+      "sizeBytes": 13175,
+      "sha256": "11205c402d5473e292675c89269c1d28cc5419a034339005b90385ca8c6e83cf"
     },
     {
       "path": "momo_agent/backend/app/agents/task_registry.py",
@@ -822,8 +822,8 @@
     },
     {
       "path": "momo_agent/backend/app/services/agent_engineering.py",
-      "sizeBytes": 26970,
-      "sha256": "6c4683f00b8e95aaf8be7b28e44296b16740b2375b72f330051cf05a7b8430d3"
+      "sizeBytes": 27063,
+      "sha256": "1cb9b8effec91645ce87bf564203fbc2e7b5652fb5fea8ffeaba6931fb86f435"
     },
     {
       "path": "momo_agent/backend/app/services/agent_evidence.py",
@@ -837,8 +837,8 @@
     },
     {
       "path": "momo_agent/backend/app/services/agent_harness.py",
-      "sizeBytes": 164414,
-      "sha256": "e2740e75239aeb88a793fb00e43eb86e9a797d0cac693d1440101048d25a233d"
+      "sizeBytes": 164466,
+      "sha256": "74207fd1dc0bb522ca36d5eb79b45bfa0b77c9fc291476280e17f3e7a48dc317"
     },
     {
       "path": "momo_agent/backend/app/services/agent_llm.py",
@@ -847,8 +847,8 @@
     },
     {
       "path": "momo_agent/backend/app/services/agent_project_context.py",
-      "sizeBytes": 18348,
-      "sha256": "e592561ea0a17ab5ef77d540a8d165b54eba97a800ed37b611a430f33cbd0a04"
+      "sizeBytes": 18435,
+      "sha256": "1d4061b962d9ce7f21e6e9ed8bea0a54bc8deeeb1284ebcd1b25874afe6371bb"
     },
     {
       "path": "momo_agent/backend/app/services/agent_project_evidence.py",
@@ -992,8 +992,8 @@
     },
     {
       "path": "momo_agent/backend/app/services/real_execution/executor.py",
-      "sizeBytes": 12115,
-      "sha256": "eecc40c8693fe4e70d01bc00655f9fb2afd124f8b4e504596cbab4e4054e6363"
+      "sizeBytes": 12149,
+      "sha256": "e46e48229a40635f45fd4917cdf351673adedfd02ff289e855ebde0574b86325"
     },
     {
       "path": "momo_agent/backend/app/services/real_execution/registry.py",
@@ -1251,9 +1251,14 @@
       "sha256": "d326b1942670909fc7d04b090c103d0ece71bdd688954a75b3da73209a57253d"
     },
     {
+      "path": "momo_agent/backend/tests/test_damper_energy_extraction.py",
+      "sizeBytes": 900,
+      "sha256": "b9a16086b933683583ab35a6a786772dfd21f1718588a7bd4403214507515248"
+    },
+    {
       "path": "momo_agent/backend/tests/test_damper_optimization_agent.py",
-      "sizeBytes": 5836,
-      "sha256": "0313cea7718b3635d6c45a6936b714abc50bfd5feeae1fb17c8388032cde65c5"
+      "sizeBytes": 6848,
+      "sha256": "083cc8041167d88cdc61387ed3bb5b4e4064eedc0c127fd69c3fa80ed71d2bec"
     },
     {
       "path": "momo_agent/backend/tests/test_damper_sweep_evidence_reverification.py",
@@ -2367,13 +2372,13 @@
     },
     {
       "path": "pyansys_bridge/core/openseespy_inproc_solver.py",
-      "sizeBytes": 26744,
-      "sha256": "565f918cb52d146e8af6a176fb3c9a67a79bf742d1f269bec98a3994b43f717c"
+      "sizeBytes": 27297,
+      "sha256": "1a2d1ccf668c2229a9adc70e0ba786643fed482dab0a90dfaafaf594ffddbbe6"
     },
     {
       "path": "pyansys_bridge/core/postprocessor.py",
-      "sizeBytes": 60773,
-      "sha256": "4047f48b34a54aa16352b02c223b97ce6ee60196810c9f837fb9a917ec9edcbf"
+      "sizeBytes": 60929,
+      "sha256": "9b87e5351a0567601b5e2ad15706731d703d3cfdaae01e82b566e2d3d8aaddfd"
     },
     {
       "path": "pyansys_bridge/core/preprocessor.py",
@@ -2392,8 +2397,8 @@
     },
     {
       "path": "pyansys_bridge/core/result_summary.py",
-      "sizeBytes": 6568,
-      "sha256": "59a861a5b8d4450b02f10cbe984b5f792f0530c85692444b1eecb30f2a7a3173"
+      "sizeBytes": 8573,
+      "sha256": "319125e6eba737c9167465121ca918885752a617ee20c2e73a784967a252806f"
     },
     {
       "path": "pyansys_bridge/core/solver_factory.py",

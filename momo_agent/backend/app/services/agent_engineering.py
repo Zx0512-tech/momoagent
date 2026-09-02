@@ -186,6 +186,7 @@ RESPONSE_CATALOG = {
     'max_tower_base_moment',
     'max_damper_force',
     'max_damper_stroke',
+    'dissipated_energy',
     'cumulative_displacement',
 }
 ResponseId = Literal[
@@ -195,6 +196,7 @@ ResponseId = Literal[
     'max_tower_base_moment',
     'max_damper_force',
     'max_damper_stroke',
+    'dissipated_energy',
     'cumulative_displacement',
 ]
 
@@ -230,7 +232,8 @@ class EngineeringIntent(BaseModel):
             '按用户关注的工程响应选择：梁端位移=max_girder_end_displacement；'
             '塔底内力同时包含 max_tower_base_shear 和 max_tower_base_moment；'
             '加速度=max_acceleration；阻尼器力=max_damper_force；'
-            '阻尼器行程=max_damper_stroke；累积位移=cumulative_displacement。'
+            '阻尼器行程=max_damper_stroke；耗能=dissipated_energy；'
+            '累积位移=cumulative_displacement。'
         ),
     )
     cases: list[DamperParameterSweepCase] = Field(default_factory=list, max_length=64)

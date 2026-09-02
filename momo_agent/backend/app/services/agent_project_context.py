@@ -33,6 +33,7 @@ _RESPONSE_ANCHORS = {
     'max_tower_base_moment': ('塔底弯矩', '弯矩', 'moment'),
     'max_damper_force': ('阻尼器力', '阻尼力', 'damper force'),
     'max_damper_stroke': ('行程', 'stroke'),
+    'dissipated_energy': ('耗能', '耗散能', '能量耗散', 'dissipated energy'),
     'cumulative_displacement': ('累积位移', '累计位移', 'cumulative displacement'),
 }
 

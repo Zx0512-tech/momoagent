@@ -36,6 +36,7 @@ ResponseId = Literal[
     'max_tower_base_moment',
     'max_damper_force',
     'max_damper_stroke',
+    'dissipated_energy',
     'cumulative_displacement',
 ]
 CommandRole = Literal[

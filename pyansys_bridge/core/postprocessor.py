@@ -482,6 +482,10 @@ class AnsysDpfRstPostprocessor:
             },
             alpha=float(context.damper_params.alpha),
         )
+        standard_objectives["dissipated_energy"] = sum(
+            float(values["E"])
+            for values in damper_capacity_metrics.values()
+        )
         _write_json(context.case_dir / "damper_capacity_metrics.json", damper_capacity_metrics)
         _write_standard_timeseries(context.case_dir / TIMESERIES_FILENAME, standard_rows)
         _write_json(

@@ -104,6 +104,39 @@ def test_prepare_approval_returns_real_preflight_without_persisting() -> None:
     assert 'pendingApprovalId' not in run
 
 
+def test_prepare_approval_accepts_extracted_damper_evaluation_metrics() -> None:
+    """真实时程已导出时，力、行程和耗能可作为冻结的评价指标。"""
+    agent = _agent()
+    run = {
+        'runId': 'run-damper-metrics',
+        'intent': {'loadKind': 'EARTHQUAKE'},
+        'workflowContract': build_engineering_contract(
+            task_type='DAMPER_OPTIMIZATION',
+            solver='ANSYS',
+            damper_type='VISCOUS',
+            response_ids=[
+                'max_damper_force',
+                'max_damper_stroke',
+                'dissipated_energy',
+            ],
+        ),
+    }
+
+    prepared = agent.prepare_approval(
+        run,
+        mapping={'loadKind': 'EARTHQUAKE', 'channels': []},
+        standard_artifact_id='load-1',
+        standard_sha256='d' * 64,
+    )
+
+    assert prepared.passed, prepared.preflight
+    assert prepared.frozen_action['responseIds'] == [
+        'max_damper_force',
+        'max_damper_stroke',
+        'dissipated_energy',
+    ]
+
+
 def test_review_keeps_damper_specific_load_and_layout_checks() -> None:
     agent = _agent()
     outcome = agent.review(
