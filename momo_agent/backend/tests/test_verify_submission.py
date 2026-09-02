@@ -22,6 +22,15 @@ def test_verification_module_uses_repository_root() -> None:
     assert verify_submission.MANIFEST == VERIFICATION_ROOT / 'SUBMISSION_MANIFEST.json'
 
 
+def test_repository_submission_manifest_matches_checked_out_files() -> None:
+    result = verify_submission.verify_submission_manifest(
+        SUBMISSION_ROOT,
+        VERIFICATION_ROOT / 'SUBMISSION_MANIFEST.json',
+    )
+
+    assert result['fileCount'] == len(result['files'])
+
+
 def test_root_verify_submission_entrypoint_re_exports_implementation(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.syspath_prepend(str(SUBMISSION_ROOT))
     spec = importlib.util.spec_from_file_location('root_verify_submission_module', SUBMISSION_ROOT / 'verify_submission.py')

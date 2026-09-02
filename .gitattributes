@@ -1,3 +1,6 @@
+# 提交清单按裸字节校验，为避免 Windows autocrlf 改写已登记文本，统一以 LF 检出。
+* text=auto eol=lf
+
 # Trellis: append-only developer journals should merge cleanly across
 # parallel sessions/worktrees — each session only appends a new block, so
 # there is nothing to actually conflict on.

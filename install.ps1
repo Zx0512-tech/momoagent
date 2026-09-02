@@ -62,4 +62,5 @@ elseif (-not (Test-Path (Join-Path $root 'platform-ui\dist\index.html'))) {
 
 Write-Step 'Running submission self-check...'
 & $venvPython (Join-Path $root 'verify_submission.py')
+Assert-ExitCode 'Running submission self-check'
 Write-Host '[MOMO] Installation and self-check completed. Run .\start.ps1 to start the app.' -ForegroundColor Green
