@@ -3,6 +3,8 @@ from __future__ import annotations
 from hashlib import sha256
 from typing import Any
 
+from fastapi import HTTPException
+
 from app.services.agent_project_service import engineering_project_service
 from app.services.agent_repository import DEFAULT_OWNER
 from app.services.agent_service import agent_service
@@ -18,8 +20,8 @@ class EngineeringProjectEvidenceService:
     """Build a deterministic, read-only evidence projection for one Engineering Project.
 
     ``trustState`` describes the persisted engineering/evidence contract of a Run. ``integrityState``
-    independently checks whether the artifacts referenced by that Run are still registered, bound to
-    the expected Run when a runId is present, and byte-identical to their registered SHA256.
+    independently checks whether all Artifacts referenced by the Run or its Evidence-backed claims are
+    still registered, bound to the expected source Run, and byte-identical to registered SHA256 values.
     """
 
     def __init__(
@@ -86,59 +88,6 @@ class EngineeringProjectEvidenceService:
             add(artifact_id, 'REGISTERED')
         return refs
 
-    def _integrity(self, run: dict[str, Any], refs: list[dict[str, Any]]) -> dict[str, Any]:
-        if not refs:
-            return {'state': 'NOT_CHECKED', 'checkedArtifactCount': 0, 'issues': []}
-
-        run_id = str(run.get('runId') or '')
-        issues: list[dict[str, Any]] = []
-        checked = 0
-        for ref in refs:
-            artifact_id = str(ref['artifactId'])
-            try:
-                record = self.artifact_store.get_artifact(artifact_id)
-            except Exception:
-                issues.append({'code': 'MISSING_ARTIFACT', 'artifactId': artifact_id})
-                continue
-
-            checked += 1
-            artifact = record.artifact
-            artifact_run_id = str(getattr(artifact, 'run_id', None) or '')
-            if artifact_run_id and run_id and artifact_run_id != run_id:
-                issues.append({
-                    'code': 'RUN_MISMATCH',
-                    'artifactId': artifact_id,
-                    'expectedRunId': run_id,
-                    'actualRunId': artifact_run_id,
-                })
-
-            expected_hash = str(getattr(artifact, 'sha256', None) or '')
-            if expected_hash:
-                try:
-                    content = bytes(record.content)
-                except Exception:
-                    issues.append({'code': 'HASH_MISMATCH', 'artifactId': artifact_id})
-                    continue
-                actual_hash = sha256(content).hexdigest()
-                if actual_hash != expected_hash:
-                    issues.append({
-                        'code': 'HASH_MISMATCH',
-                        'artifactId': artifact_id,
-                        'expectedSha256': expected_hash,
-                        'actualSha256': actual_hash,
-                    })
-
-        issue_codes = {str(item['code']) for item in issues}
-        if 'HASH_MISMATCH' in issue_codes:
-            state = 'HASH_MISMATCH'
-        elif 'RUN_MISMATCH' in issue_codes:
-            state = 'RUN_MISMATCH'
-        elif 'MISSING_ARTIFACT' in issue_codes:
-            state = 'MISSING_ARTIFACT'
-        else:
-            state = 'VALID'
-        return {'state': state, 'checkedArtifactCount': checked, 'issues': issues}
-
     @staticmethod
     def _comparison_claims(run: dict[str, Any]) -> list[dict[str, Any]]:
         summary = run.get('resultSummary') if isinstance(run.get('resultSummary'), dict) else {}
@@ -178,10 +127,86 @@ class EngineeringProjectEvidenceService:
                 })
         return claims
 
+    @staticmethod
+    def _with_claim_evidence_refs(
+        artifacts: list[dict[str, Any]],
+        claims: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        refs = [dict(item) for item in artifacts]
+        seen = {str(item.get('artifactId') or '') for item in refs}
+        for claim in claims:
+            source = claim.get('source') if isinstance(claim.get('source'), dict) else {}
+            evidence = source.get('evidence') if isinstance(source.get('evidence'), dict) else {}
+            artifact_id = str(evidence.get('artifactId') or '').strip()
+            if not artifact_id or artifact_id in seen:
+                continue
+            seen.add(artifact_id)
+            refs.append({
+                'artifactId': artifact_id,
+                'role': 'CLAIM_EVIDENCE',
+                'sourceRunId': source.get('targetRunId'),
+            })
+        return refs
+
+    def _integrity(self, run: dict[str, Any], refs: list[dict[str, Any]]) -> dict[str, Any]:
+        if not refs:
+            return {'state': 'NOT_CHECKED', 'checkedArtifactCount': 0, 'issues': []}
+
+        run_id = str(run.get('runId') or '')
+        issues: list[dict[str, Any]] = []
+        checked = 0
+        for ref in refs:
+            artifact_id = str(ref['artifactId'])
+            try:
+                record = self.artifact_store.get_artifact(artifact_id)
+            except (HTTPException, KeyError):
+                issues.append({'code': 'MISSING_ARTIFACT', 'artifactId': artifact_id})
+                continue
+
+            checked += 1
+            artifact = record.artifact
+            expected_run_id = str(ref.get('sourceRunId') or run_id)
+            artifact_run_id = str(getattr(artifact, 'run_id', None) or '')
+            if artifact_run_id and expected_run_id and artifact_run_id != expected_run_id:
+                issues.append({
+                    'code': 'RUN_MISMATCH',
+                    'artifactId': artifact_id,
+                    'expectedRunId': expected_run_id,
+                    'actualRunId': artifact_run_id,
+                })
+
+            expected_hash = str(getattr(artifact, 'sha256', None) or '')
+            if expected_hash:
+                try:
+                    content = bytes(record.content)
+                except (TypeError, ValueError):
+                    issues.append({'code': 'HASH_MISMATCH', 'artifactId': artifact_id})
+                    continue
+                actual_hash = sha256(content).hexdigest()
+                if actual_hash != expected_hash:
+                    issues.append({
+                        'code': 'HASH_MISMATCH',
+                        'artifactId': artifact_id,
+                        'expectedSha256': expected_hash,
+                        'actualSha256': actual_hash,
+                    })
+
+        issue_codes = {str(item['code']) for item in issues}
+        if 'HASH_MISMATCH' in issue_codes:
+            state = 'HASH_MISMATCH'
+        elif 'RUN_MISMATCH' in issue_codes:
+            state = 'RUN_MISMATCH'
+        elif 'MISSING_ARTIFACT' in issue_codes:
+            state = 'MISSING_ARTIFACT'
+        else:
+            state = 'VALID'
+        return {'state': state, 'checkedArtifactCount': checked, 'issues': issues}
+
     def _run_evidence(self, run: dict[str, Any]) -> dict[str, Any]:
         summary = run.get('resultSummary') if isinstance(run.get('resultSummary'), dict) else {}
         contract = run.get('engineeringContract') if isinstance(run.get('engineeringContract'), dict) else {}
-        artifacts = self._artifact_refs(run)
+        claims = self._comparison_claims(run)
+        artifacts = self._with_claim_evidence_refs(self._artifact_refs(run), claims)
         integrity = self._integrity(run, artifacts)
         return {
             'runId': run.get('runId'),
@@ -199,7 +224,7 @@ class EngineeringProjectEvidenceService:
             'inputProvenance': list(run.get('inputProvenance') or []),
             'contractHash': contract.get('contractHash') or run.get('workflowSha256'),
             'artifacts': artifacts,
-            'claims': self._comparison_claims(run),
+            'claims': claims,
             'narrativeSummary': summary.get('narrativeSummary') or summary.get('message'),
         }
 
@@ -262,6 +287,7 @@ class EngineeringProjectEvidenceService:
                 'limitations': [
                     'This project report is a deterministic evidence index, not a replacement for registered per-run engineering reports.',
                     'trustState describes the persisted Run evidence contract; integrityState independently re-checks currently registered Artifact bytes and ownership.',
+                    'Evidence-backed comparison claims also include their source Artifact in integrity verification.',
                     'Exact numerical claims are included only when an existing result carries an explicit evidence mapping.',
                     'For other engineering numbers, inspect the registered per-run report/artifacts instead of conversation history or summaries.',
                     'CROSS_SOLVER comparison evidence is validation-only and must not be interpreted as scheme ranking.',
