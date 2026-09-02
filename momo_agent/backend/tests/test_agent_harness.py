@@ -770,7 +770,7 @@ def test_harness_text_response_creates_conversation_without_legacy_classifier(mo
     assert run['runtimeMode'] == 'WORKFLOW_HARNESS'
     assert run['resultSummary']['cachedTokens'] == 42
     assert repository.messages[-1]['content'].startswith('你好')
-    assert repository.messages[0]['harnessContent'].startswith('{"workflowState"')
+    assert repository.messages[0]['harnessContent'].startswith('{"runtimeContext"')
 
 
 def test_message_during_active_job_observes_same_run_instead_of_starting_another(monkeypatch) -> None:
