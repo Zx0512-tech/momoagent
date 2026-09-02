@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.services.agent_project_evidence import EngineeringProjectEvidenceService
+from app.services.agent_repository import DEFAULT_OWNER
 
 
 class _ProjectService:
@@ -9,7 +10,7 @@ class _ProjectService:
 
     def get_project(self, project_id: str, owner: str):
         assert project_id == 'agp_1'
-        assert owner == 'local-user'
+        assert owner == DEFAULT_OWNER
         return {
             'projectId': 'agp_1',
             'name': 'Bridge Project',
