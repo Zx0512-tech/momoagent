@@ -13,6 +13,7 @@ import { agentApi } from "../../api/agentApi";
 import {
   projectEvidenceApi,
   type ProjectEvidenceBundle,
+  type ProjectEvidenceIntegrityState,
   type ProjectEvidenceRun,
   type ProjectEvidenceTrustState
 } from "../../api/projectEvidenceApi";
@@ -20,6 +21,8 @@ import {
   buildEvidenceReportDownload,
   claimInterpretation,
   evidenceReportFileName,
+  INTEGRITY_DESCRIPTIONS,
+  INTEGRITY_LABELS,
   TRUST_DESCRIPTIONS,
   TRUST_LABELS
 } from "./projectEvidenceModel";
@@ -36,6 +39,12 @@ function trustTone(state: ProjectEvidenceTrustState): React.CSSProperties {
   if (state === "REAL_FEM" || state === "VERIFIED") return { color: "var(--success-color)" };
   if (state === "LIMITED") return { color: "var(--warning-color)" };
   return { color: "var(--text-muted)" };
+}
+
+function integrityTone(state: ProjectEvidenceIntegrityState): React.CSSProperties {
+  if (state === "VALID") return { color: "var(--success-color)" };
+  if (state === "NOT_CHECKED") return { color: "var(--text-muted)" };
+  return { color: "var(--error-color)" };
 }
 
 function downloadJson(content: string, fileName: string) {
@@ -59,6 +68,7 @@ function RunEvidenceCard({ run }: { run: ProjectEvidenceRun }) {
           <div style={styles.runTitleRow}>
             <code style={styles.code}>{run.runId}</code>
             <strong style={trustTone(run.trustState)}>{TRUST_LABELS[run.trustState]}</strong>
+            <strong style={integrityTone(run.integrityState)}>{INTEGRITY_LABELS[run.integrityState]}</strong>
           </div>
           <div style={styles.meta}>
             {run.taskType || "—"} · {run.status || "—"} · {formatTime(run.updatedAt || run.createdAt)}
@@ -68,6 +78,13 @@ function RunEvidenceCard({ run }: { run: ProjectEvidenceRun }) {
       </div>
 
       <p style={styles.trustDescription}>{TRUST_DESCRIPTIONS[run.trustState]}</p>
+      <div style={{ ...styles.integrityBox, ...integrityTone(run.integrityState) }}>
+        <strong>Integrity · {INTEGRITY_LABELS[run.integrityState]}</strong>
+        <span>{INTEGRITY_DESCRIPTIONS[run.integrityState]}</span>
+        {run.integrity.issues.length > 0 && (
+          <code style={styles.integrityIssues}>{JSON.stringify(run.integrity.issues)}</code>
+        )}
+      </div>
 
       <div style={styles.detailGrid}>
         <div>
@@ -86,7 +103,7 @@ function RunEvidenceCard({ run }: { run: ProjectEvidenceRun }) {
         </div>
         <div>
           <span style={styles.label}>Artifacts</span>
-          <strong>{run.artifacts.length}</strong>
+          <strong>{run.integrity.checkedArtifactCount} / {run.artifacts.length} checked</strong>
         </div>
       </div>
 
@@ -190,7 +207,7 @@ export default function ProjectEvidencePanel({ projectId }: { projectId: string 
         <div>
           <div style={styles.sectionTitle}><ShieldCheck size={15} />Engineering Evidence Center</div>
           <p style={styles.subtitle}>
-            这里展示的是 Project → Run → Artifact → Evidence 的确定性索引。没有显式 Evidence 映射的数字不会被提升为工程 Claim。
+            这里展示 Project → Run → Artifact → Evidence 的确定性索引。Trust 描述 Run 的持久化证据合同，Integrity 独立复核当前 Artifact 是否仍可读取且哈希/归属一致。
           </p>
         </div>
         <div style={styles.actions}>
@@ -221,8 +238,8 @@ export default function ProjectEvidencePanel({ projectId }: { projectId: string 
               </button>
             ))}
             <div style={styles.summaryCard}>
-              <span style={styles.label}>Evidence Claims</span>
-              <strong style={styles.summaryValue}>{bundle.claims.length}</strong>
+              <span style={styles.label}>Integrity Valid</span>
+              <strong style={{ ...styles.summaryValue, color: "var(--success-color)" }}>{bundle.integrityCounts.VALID ?? 0}</strong>
             </div>
           </div>
 
@@ -231,6 +248,7 @@ export default function ProjectEvidencePanel({ projectId }: { projectId: string 
             <div style={styles.reportStats}>
               <span>{bundle.projectReport.runCount} Runs</span>
               <span>{bundle.projectReport.trustedRunCount} Trusted Runs</span>
+              <span>{bundle.projectReport.integrityValidRunCount} Integrity-valid Runs</span>
               <span>{bundle.projectReport.claimCount} Evidence Claims</span>
               <span>Workspace rev. {bundle.projectReport.workspaceRevision}</span>
             </div>
@@ -282,11 +300,13 @@ const styles: Record<string, React.CSSProperties> = {
   runList: { display: "flex", flexDirection: "column", gap: 10 },
   runCard: { padding: 12, borderRadius: 8, border: "1px solid var(--border-color)", background: "var(--bg-primary)" },
   runHeader: { display: "flex", justifyContent: "space-between", gap: 12 },
-  runTitleRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 11 },
+  runTitleRow: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", fontSize: 11 },
   code: { fontFamily: "var(--font-mono, monospace)", fontSize: 10, wordBreak: "break-all" },
   meta: { color: "var(--text-muted)", fontSize: 10, marginTop: 3, lineHeight: 1.5 },
   evidenceMode: { padding: "3px 6px", borderRadius: 999, border: "1px solid var(--border-color)", color: "var(--text-secondary)", fontSize: 9, alignSelf: "flex-start" },
   trustDescription: { margin: "9px 0", color: "var(--text-secondary)", fontSize: 10, lineHeight: 1.6 },
+  integrityBox: { margin: "8px 0 10px", display: "flex", flexDirection: "column", gap: 3, padding: 8, borderRadius: 6, border: "1px solid var(--border-color)", background: "var(--bg-secondary)", fontSize: 9, lineHeight: 1.5 },
+  integrityIssues: { marginTop: 4, color: "var(--text-muted)", fontSize: 8, whiteSpace: "pre-wrap", overflowWrap: "anywhere" },
   detailGrid: { display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 8, padding: 9, borderRadius: 7, background: "var(--bg-secondary)", fontSize: 10 },
   block: { marginTop: 10 },
   provenanceList: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 },
