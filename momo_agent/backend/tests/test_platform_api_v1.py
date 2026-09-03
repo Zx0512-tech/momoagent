@@ -547,6 +547,30 @@ def test_v1_dashboard_can_start_real_baseline_optimization_workflow(monkeypatch,
             json.dumps(
                 {
                     'status': 'completed',
+                    'optimization': {
+                        'objective_names': [
+                            'earthquake:max_girder_end_displacement',
+                            'earthquake:max_tower_base_shear',
+                            'earthquake:max_tower_base_moment',
+                        ],
+                        'best_objectives': [0.17, 4.8e7, 2.1e9],
+                        'parameter_names': ['c', 'alpha'],
+                        'best_design': [7800.0, 0.8],
+                        'pareto_solutions': [{
+                            'design_parameters': {'c': 7800.0, 'alpha': 0.8},
+                            'objective_values': {
+                                'earthquake:max_girder_end_displacement': 0.17,
+                                'earthquake:max_tower_base_shear': 4.8e7,
+                                'earthquake:max_tower_base_moment': 2.1e9,
+                            },
+                        }],
+                        'topsis': {
+                            'best_index': 0,
+                            'ranking': [0],
+                            'closeness': [0.9],
+                            'weights': [0.4, 0.4, 0.2],
+                        },
+                    },
                     'objective_limits': {
                         'earthquake:max_girder_end_displacement': 0.38,
                         'earthquake:max_tower_base_shear': 5.3e7,
@@ -634,6 +658,22 @@ def test_v1_dashboard_can_start_real_baseline_optimization_workflow(monkeypatch,
                         'all_verified_execution': True,
                         'all_accepted': True,
                     },
+                    'review_records': [{
+                        'candidate': {'pareto_index': 0},
+                        'accepted': True,
+                        'verified_execution': True,
+                        'analysis_results': [{
+                            'case_id': 'review_001',
+                            'solver': 'ansys',
+                            'status': 'completed',
+                            'load_case': {'name': 'earthquake', 'load_type': 'earthquake'},
+                            'objectives': {
+                                'max_girder_end_displacement': 0.18,
+                                'max_tower_base_shear': 4.9e7,
+                                'max_tower_base_moment': 2.2e9,
+                            },
+                        }],
+                    }],
                 }
             ),
             encoding='utf-8',
@@ -765,6 +805,8 @@ def test_v1_dashboard_can_start_real_baseline_optimization_workflow(monkeypatch,
     assert overview_json['surrogateCandidateMetrics']['earthquake:max_girder_end_displacement']['gpr']['fit']['r2'] == 0.99
     assert overview_json['objectiveLimits'][1]['displayUnit'] == 'kN'
     assert overview_json['sampleResponses'][0]['sampleType'] == 'UNCONTROLLED_BASELINE'
+    assert overview_json['recommendedObjectives']['max_tower_base_shear'] == 4.9e7
+    assert overview_json['recommendedObjectiveEvidence']['source'] == 'ACCEPTED_FEM_REVIEW'
     assert (
         overview_json['sampleResponses'][1]['responses']['operationCumulativeDisplacement']['rawValue']
         == 4.28

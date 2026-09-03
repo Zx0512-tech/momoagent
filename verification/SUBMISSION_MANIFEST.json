@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "project": "MOMO Competition Submission",
-  "generatedAt": "2026-09-03T12:13:05.850Z",
-  "fileCount": 573,
-  "totalSizeBytes": 41706120,
+  "generatedAt": "2026-09-03T12:48:44.943Z",
+  "fileCount": 574,
+  "totalSizeBytes": 41719056,
   "files": [
     {
       "path": ".env.example",
@@ -872,13 +872,13 @@
     },
     {
       "path": "momo_agent/backend/app/services/agent_run_comparison.py",
-      "sizeBytes": 22650,
-      "sha256": "b589a174fc146773e79e360ca6fcbbb8b11a7bb545ab28acb419120026102fa4"
+      "sizeBytes": 24447,
+      "sha256": "f11cd290fb52b5e0adc9112792c3999af8e3f581da36735b076346306227065a"
     },
     {
       "path": "momo_agent/backend/app/services/agent_service.py",
-      "sizeBytes": 126970,
-      "sha256": "7018579735e659d799d066818f180c1efbe025a2b1468d15bc71a4420d0853c5"
+      "sizeBytes": 127500,
+      "sha256": "520c985325aa7d692be07f66ad568ccdb5f2311c549c3453e398847a52ce552a"
     },
     {
       "path": "momo_agent/backend/app/services/agent_task_handlers.py",
@@ -936,6 +936,11 @@
       "sha256": "62f2f195dc254b034b1ae785afdcb44e94d3971652e6b408703dcc53b62a0b34"
     },
     {
+      "path": "momo_agent/backend/app/services/optimization_fem_evidence.py",
+      "sizeBytes": 2568,
+      "sha256": "3c61e20fe1a9c32539c5e2fb9f1c223fa6a34e8e72ce0d7de705452b6df344e1"
+    },
+    {
       "path": "momo_agent/backend/app/services/platform_dispatcher.py",
       "sizeBytes": 14844,
       "sha256": "f91f901224c0ea44f2f8600925886252d1a1c47efeb1584ba6ef7f5d0b3e80c9"
@@ -962,8 +967,8 @@
     },
     {
       "path": "momo_agent/backend/app/services/platform_store.py",
-      "sizeBytes": 295779,
-      "sha256": "33dd52f1391f99aa387486c73e1063320d09a853259b54a618e6a46580a11fdd"
+      "sizeBytes": 296351,
+      "sha256": "8ddb37db75171bd32d034bdcc42d21021077d473c3a1505d2f671cef1475178c"
     },
     {
       "path": "momo_agent/backend/app/services/platform_worker.py",
@@ -1182,8 +1187,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_agent_run_comparison.py",
-      "sizeBytes": 10856,
-      "sha256": "c4c131ae6545326f4b4d79d70a7e126ecfe0de3116636912f7f0b100ef03fff1"
+      "sizeBytes": 12506,
+      "sha256": "0ea428a14cee4181606ed94b8df9363ac40fdd0f6edcede6c9e69f4777f6d4fa"
     },
     {
       "path": "momo_agent/backend/tests/test_agent_run_comparison_targets.py",
@@ -1192,8 +1197,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_agent_runtime.py",
-      "sizeBytes": 14138,
-      "sha256": "531f3c9c1d242fa8e81d2c90b50c0a68ef1a002a4f53a27a5a422169ffb65784"
+      "sizeBytes": 15951,
+      "sha256": "9a4ca2dd0aaa45bb636beeb3409810cea5610a2a9625e38c05cb27f258bef8d5"
     },
     {
       "path": "momo_agent/backend/tests/test_agent_runtime_safety.py",
@@ -1347,8 +1352,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_platform_api_v1.py",
-      "sizeBytes": 77967,
-      "sha256": "16c66079134a5cdf68bbd413212479233560122f505ec6ef569a996a18e812e5"
+      "sizeBytes": 80175,
+      "sha256": "ef34c81289d334eee9326310d7c75936106be6c7b29638d778311861ffc2e2fd"
     },
     {
       "path": "momo_agent/backend/tests/test_platform_hosting.py",
@@ -1437,8 +1442,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_traffic_damper_optimization.py",
-      "sizeBytes": 32495,
-      "sha256": "05d6ae07e0891b65d0760db7ab7ce26b586e80be202e815bc7cbd25a72ba2522"
+      "sizeBytes": 34293,
+      "sha256": "7050632f2a8707e65acf32761ca211a0bf12f693844db1aa15a51787df248956"
     },
     {
       "path": "momo_agent/backend/tests/test_traffic_damper_sweep.py",

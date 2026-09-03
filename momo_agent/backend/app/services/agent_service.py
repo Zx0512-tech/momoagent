@@ -52,6 +52,7 @@ from app.services.agent_llm import (
 )
 from app.services.agent_repository import AgentRepository, DEFAULT_OWNER, run_state_lock
 from app.services.agent_project_context import engineering_project_context_service
+from app.services.optimization_fem_evidence import selected_accepted_fem_review
 from app.services.agent_task_proposal import build_engineering_task_proposal
 from app.services.load_import_service import load_import_service
 from app.services.load_artifact_service import load_artifact_service
@@ -1865,13 +1866,23 @@ class AgentService(WorkflowHarnessMixin, AgentConversationMixin):
             str(name).split(':', 1)[-1]: value
             for name, value in zip(objective_names, best_objectives)
         }
+        reviewed = selected_accepted_fem_review(
+            previews.get('real_optimization_summary.json', {}),
+            load_kind=scenario_prefix,
+        )
+        if reviewed is not None:
+            recommended = reviewed['objectives']
+            result['recommendedObjectiveEvidence'] = {
+                'source': 'ACCEPTED_FEM_REVIEW',
+                **{key: reviewed[key] for key in ('paretoIndex', 'reviewRecordIndex', 'caseId', 'solver')},
+            }
         if recommended:
-            result.setdefault('recommendedObjectives', recommended)
-            result.setdefault('baselineObjectives', {
+            result['recommendedObjectives'] = recommended
+            result['baselineObjectives'] = {
                 key: baseline.get(key, baseline.get(f'{scenario_prefix}:{key}'))
                 for key in recommended
                 if key in baseline or f'{scenario_prefix}:{key}' in baseline
-            })
+            }
         if optimization.get('parameter_names') and optimization.get('best_design'):
             result.setdefault('recommendedParameters', dict(zip(
                 optimization['parameter_names'], optimization['best_design'],

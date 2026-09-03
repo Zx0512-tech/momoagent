@@ -10,6 +10,7 @@ from fastapi import HTTPException
 from app.agents.inquiry import RESPONSE_COLUMN_ALIASES, RESPONSE_METRIC_SPECS, resolve_column
 from app.services.agent_project_context import engineering_project_context_service
 from app.services.agent_repository import AgentRepository, DEFAULT_OWNER
+from app.services.optimization_fem_evidence import accepted_fem_review_for_candidate
 from app.services.platform_store import platform_store
 from app.services.result_inquiry import ResultInquiryError, ResultInquiryService
 
@@ -28,7 +29,7 @@ class CrossRunComparisonService:
     """Compare verified engineering runs without making the LLM a numeric evidence source.
 
     ANALYSIS values are read from the verified result catalog and registered CSVs.
-    Optimization values are read from the registered optimization summary/TOPSIS rows.
+    Optimization values are read from the registered, accepted final FEM review.
     Multi-case comparison/sweep runs require a case selector unless exactly one verified case exists.
     """
 
@@ -295,15 +296,48 @@ class CrossRunComparisonService:
         if len(rows) < candidate_rank:
             raise RunComparisonError(f'运行 {run.get("runId")} 没有 TOPSIS 第 {candidate_rank} 名候选。')
         row = rows[candidate_rank - 1]
+        summary = self._load_optimization_summary(artifact_id)
+        contract = run.get('workflowContract') if isinstance(run.get('workflowContract'), dict) else {}
+        intent = run.get('intent') if isinstance(run.get('intent'), dict) else {}
+        review = accepted_fem_review_for_candidate(
+            summary,
+            load_kind=str(contract.get('loadKind') or intent.get('loadKind') or ''),
+            pareto_index=int(row['paretoIndex']),
+        )
+        if review is None:
+            raise RunComparisonError(
+                f'运行 {run.get("runId")} 的 TOPSIS 第 {candidate_rank} 名候选没有唯一、已通过的真实 FEM review。'
+            )
         return self._objective_metrics(
-            row.get('objectives') or {},
+            review['objectives'],
             metric_ids,
             evidence={
                 'artifactId': artifact_id,
                 'candidateRank': candidate_rank,
                 'paretoIndex': row.get('paretoIndex'),
+                'reviewRecordIndex': review['reviewRecordIndex'],
+                'caseId': review.get('caseId'),
+                'source': 'ACCEPTED_FEM_REVIEW',
             },
         )
+
+    @staticmethod
+    def _load_optimization_summary(artifact_id: str) -> dict[str, Any]:
+        try:
+            record = platform_store.get_artifact(artifact_id)
+        except Exception as exc:
+            raise RunComparisonError(f'优化摘要制品 {artifact_id} 不存在。') from exc
+        artifact = record.artifact
+        content = bytes(record.content)
+        if sha256(content).hexdigest() != str(getattr(artifact, 'sha256', '')):
+            raise RunComparisonError('优化摘要 SHA256 校验失败。')
+        try:
+            payload = json.loads(content.decode('utf-8-sig'))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise RunComparisonError('优化摘要不是有效 JSON。') from exc
+        if not isinstance(payload, dict):
+            raise RunComparisonError('优化摘要结构无效。')
+        return payload
 
     @staticmethod
     def _optimization_summary_artifact(run: dict[str, Any]) -> str:

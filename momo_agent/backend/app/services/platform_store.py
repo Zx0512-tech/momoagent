@@ -57,6 +57,7 @@ from app.core.json_safety import coerce_non_finite_floats, strict_json_dumps
 from app.services.agent_engineering import DAMPER_TYPES
 from app.services.agent_evidence import build_output_manifest
 from app.services.load_import_service import StandardizedLoad, load_import_service
+from app.services.optimization_fem_evidence import selected_accepted_fem_review
 from app.services.platform_repository import SQLitePlatformRepository
 from app.services.platform_processes import process_exists
 from app.services.real_execution import (
@@ -4785,6 +4786,11 @@ class PlatformStore:
             str(name).split(':', 1)[-1]: value
             for name, value in zip(objective_names, best_objectives)
         }
+        reviewed = selected_accepted_fem_review(optimization_summary, load_kind=load_kind)
+        if reviewed is not None:
+            recommended_objectives = reviewed['objectives']
+        elif accepted:
+            accepted = False
         baseline_objectives = {
             key: (baseline_summary.get('objectives') or {}).get(
                 key,
@@ -4855,6 +4861,10 @@ class PlatformStore:
             ),
             'baselineObjectives': baseline_objectives,
             'recommendedObjectives': recommended_objectives,
+            **({'recommendedObjectiveEvidence': {
+                'source': 'ACCEPTED_FEM_REVIEW',
+                **{key: reviewed[key] for key in ('paretoIndex', 'reviewRecordIndex', 'caseId', 'solver')},
+            }} if reviewed is not None else {}),
             'recommendedParameters': recommended_parameters,
             'surrogateMetrics': optimization_summary.get('surrogate_selections') or [],
             'surrogateCandidateMetrics': optimization_summary.get('surrogate_candidate_metrics') or {},

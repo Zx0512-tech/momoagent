@@ -371,3 +371,45 @@ def test_agent_service_wires_controlled_visualization_handler() -> None:
     }
 
     assert names == {'analysis.prepare', 'analysis.run', 'analysis.review', 'analysis.visualize'}
+
+
+def test_display_result_values_prefers_accepted_fem_review_over_surrogate_prediction(monkeypatch) -> None:
+    previews = {
+        'art_optimization': {
+            'optimization': {
+                'objective_names': ['earthquake:max_tower_base_shear'],
+                'best_objectives': [48_144_942.0],
+                'parameter_names': ['c', 'alpha'],
+                'best_design': [7800.0, 0.8],
+                'topsis': {'best_index': 0},
+            },
+            'review_records': [{
+                'candidate': {'pareto_index': 0},
+                'accepted': True,
+                'verified_execution': True,
+                'analysis_results': [{
+                    'status': 'completed',
+                    'load_case': {'name': 'earthquake'},
+                    'objectives': {'max_tower_base_shear': 48_150_312.0},
+                }],
+            }],
+        },
+        'art_baseline': {'objectives': {'max_tower_base_shear': 52_299_849.0}},
+        'art_overview': {'scenario': 'EARTHQUAKE'},
+    }
+    monkeypatch.setattr(
+        'app.services.agent_service.platform_store.get_artifact',
+        lambda artifact_id: SimpleNamespace(preview=previews[artifact_id]),
+    )
+
+    result = AgentService._display_result_values({
+        'result': {'recommendedObjectives': {'max_tower_base_shear': 48_144_942.0}},
+        'artifacts': [
+            {'artifactId': 'art_optimization', 'name': 'real_optimization_summary.json'},
+            {'artifactId': 'art_baseline', 'name': 'real_baseline_summary.json'},
+            {'artifactId': 'art_overview', 'name': 'real_earthquake_workflow_overview.json'},
+        ],
+    })
+
+    assert result['recommendedObjectives'] == {'max_tower_base_shear': 48_150_312.0}
+    assert result['recommendedObjectiveEvidence']['source'] == 'ACCEPTED_FEM_REVIEW'

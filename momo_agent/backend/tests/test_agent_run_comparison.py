@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from app.services.agent_project_repository import EngineeringProjectRepository
@@ -303,3 +305,47 @@ def test_diagnostic_run_is_not_a_formal_comparison_source(tmp_path, monkeypatch)
 
     with pytest.raises(RunComparisonError, match='SUCCEEDED \\+ REAL_FEM'):
         service._required_run(repository, 'agr_diag')
+
+
+def test_optimization_comparison_uses_accepted_fem_review_values(tmp_path, monkeypatch) -> None:
+    """正式优化比较必须读取最终 FEM review，不能把代理预测当成真实响应。"""
+    _setup(tmp_path, monkeypatch)
+    summary = {
+        'optimization': {
+            'objective_names': ['earthquake:max_tower_base_shear'],
+            'pareto_solutions': [{
+                'design_parameters': {'c': 7800.0, 'alpha': 0.8},
+                'objective_values': {'earthquake:max_tower_base_shear': 48_144_942.0},
+            }],
+            'topsis': {'ranking': [0], 'closeness': [0.9]},
+        },
+        'review_records': [{
+            'candidate': {'pareto_index': 0},
+            'accepted': True,
+            'verified_execution': True,
+            'analysis_results': [{
+                'status': 'completed',
+                'load_case': {'name': 'earthquake'},
+                'objectives': {'max_tower_base_shear': 48_150_312.0},
+            }],
+        }],
+    }
+    artifact = platform_store.register_artifact(
+        kind='OPTIMIZATION_REPORT',
+        name='real_optimization_summary.json',
+        path='output/real/optimization_summary.json',
+        mime_type='application/json',
+        preview=summary,
+        content=json.dumps(summary).encode('utf-8'),
+    )
+    run = _run('agr_opt')
+    run['taskType'] = 'DAMPER_OPTIMIZATION'
+    run['artifactIds'] = [artifact.artifact_id]
+
+    metrics = CrossRunComparisonService()._optimization_metrics(
+        run,
+        ['max_tower_base_shear'],
+        candidate_rank=1,
+    )
+
+    assert metrics['max_tower_base_shear']['value'] == 48_150_312.0

@@ -772,3 +772,50 @@ def test_traffic_overview_reports_traffic_scenario_and_single_target(tmp_path: P
     # 基线值按 traffic: 前缀取，不是 earthquake:。
     assert overview['baselineObjectives'] == {'cumulative_displacement': 1.2479}
     assert overview['recommendedParameters'] == {'c': 3000.0, 'alpha': 0.6}
+
+
+def test_traffic_overview_uses_accepted_fem_review_for_recommended_response(tmp_path: Path) -> None:
+    store = _store(tmp_path)
+    prepared = SimpleNamespace(
+        workflow_config_path=Path('run/workflow.json'),
+        source_workflow_config_path=Path('templates/traffic_workflow.json'),
+        solver='ANSYS',
+        doe_designs=[],
+        requested_doe_count=1,
+        doe_design_sha256='e' * 64,
+        solver_parallel={'enabled': True, 'max_workers': 4},
+        output_dir=Path('run'),
+    )
+
+    overview = store._earthquake_workflow_overview(
+        workflow_summary={},
+        optimization_summary={
+            'optimization': {
+                'objective_names': ['traffic:cumulative_displacement'],
+                'best_objectives': [0.42],
+                'parameter_names': ['c', 'alpha'],
+                'best_design': [3000.0, 0.6],
+                'topsis': {'best_index': 0},
+            },
+            'review_status': {
+                'all_verified_execution': True,
+                'all_accepted': True,
+            },
+            'review_records': [{
+                'candidate': {'pareto_index': 0},
+                'accepted': True,
+                'verified_execution': True,
+                'analysis_results': [{
+                    'status': 'completed',
+                    'load_case': {'name': 'traffic'},
+                    'objectives': {'cumulative_displacement': 0.41},
+                }],
+            }],
+        },
+        baseline_summary={'objectives': {'traffic:cumulative_displacement': 1.2479}},
+        prepared_workflow=prepared,
+        load_kind='TRAFFIC',
+    )
+
+    assert overview['recommendedObjectives'] == {'cumulative_displacement': 0.41}
+    assert overview['recommendedObjectiveEvidence']['source'] == 'ACCEPTED_FEM_REVIEW'
