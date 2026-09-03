@@ -2241,6 +2241,19 @@ class WorkflowHarnessMixin:
                 len(transcript) - len(assistant_calls),
                 {'role': 'assistant', 'content': turn.content, 'tool_calls': assistant_calls},
             )
+            # 跨 Run 比较已经由服务端基于登记 Evidence 完成；继续请求模型只会
+            # 重复生成 targets，并可能把已验证的 Run ID 改写为不存在的值。
+            if self._structured_inquiry_run_comparison(query_results):
+                return self._complete_native_inquiry(
+                    repository,
+                    session,
+                    run,
+                    catalog,
+                    query_results,
+                    answer=self._deterministic_inquiry_answer(query_results),
+                    narrative_mode='DETERMINISTIC',
+                    cached_tokens=None,
+                )
         return self._fail_native_inquiry(
             repository, session, run, 'HARNESS_LOOP_DETECTED', '追问工具循环超过受控轮数。',
         )

@@ -2347,6 +2347,78 @@ def test_native_topsis_inquiry_uses_query_result_for_final_model_answer(monkeypa
     }
 
 
+def test_native_cross_run_inquiry_completes_after_registered_comparison(monkeypatch) -> None:
+    """比较制品已返回后，不应再让模型重新生成可能漂移的 Run ID。"""
+    service = AgentService()
+    repository = _Repository()
+    source = {
+        'runId': 'agr_baseline',
+        'sessionId': 'ags_harness',
+        'projectId': 'agp_harness',
+        'goal': '基线分析',
+        'taskType': 'ANALYSIS',
+        'status': 'SUCCEEDED',
+        'reportArtifactId': 'art_report',
+        'artifactIds': ['art_csv'],
+    }
+    monkeypatch.setattr(service, '_inquiry_artifacts', lambda _run: {'response.csv': 'art_csv'})
+    monkeypatch.setattr(
+        service,
+        '_build_inquiry_catalog',
+        lambda _run, _result_service, _artifacts: {'artifacts': {}},
+    )
+    monkeypatch.setattr(
+        'app.services.agent_harness.cross_run_comparison_service.compare',
+        lambda **_kwargs: {
+            'schemaVersion': '1.0',
+            'sessionId': 'ags_harness',
+            'projectId': 'agp_harness',
+            'baselineRunId': 'agr_baseline',
+            'compatibility': 'DIRECT',
+            'metricIds': ['max_girder_end_displacement'],
+            'runs': [{'runId': 'agr_baseline'}, {'runId': 'agr_optimized'}],
+            'comparisons': [],
+            'rankings': [],
+            'warnings': [],
+            'interpretationLimit': '仅比较已登记证据。',
+        },
+    )
+    turns = {'count': 0}
+
+    def run_harness_turn(**_kwargs):
+        turns['count'] += 1
+        if turns['count'] > 1:
+            raise AssertionError('比较制品已登记后不得再次请求模型生成 Run ID')
+        return HarnessModelTurn(
+            finishReason='tool_calls',
+            toolCalls=[HarnessToolCall(
+                toolCallId='call_compare_runs',
+                name='result.compare_runs',
+                arguments={
+                    'targets': [{'runId': 'agr_baseline'}, {'runId': 'agr_optimized'}],
+                    'baselineRunId': 'agr_baseline',
+                    'metricIds': ['max_girder_end_displacement'],
+                },
+            )],
+        )
+
+    service.planner = SimpleNamespace(run_harness_turn=run_harness_turn)
+    run = service._create_native_inquiry_run(
+        repository,
+        repository.session,
+        source,
+        '比较两个工程 Run',
+        '2026-08-12T00:00:00Z',
+        prior_messages=[],
+    )
+
+    assert turns['count'] == 1
+    assert run['status'] == 'SUCCEEDED'
+    assert run['resultSummary']['narrativeMode'] == 'DETERMINISTIC'
+    assert run['resultSummary']['inquiryRunComparison']['compatibility'] == 'DIRECT'
+    assert repository.tool_calls[0]['toolName'] == 'result.compare_runs'
+
+
 def test_native_topsis_inquiry_recovers_when_model_omits_the_unique_tool_call(monkeypatch) -> None:
     service = AgentService()
     repository = _Repository()
