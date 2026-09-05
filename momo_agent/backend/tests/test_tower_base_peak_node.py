@@ -1,8 +1,7 @@
-"""塔底剪力/弯矩取峰值最大节点时程的回归测试。
+"""塔底剪力四截面求和、弯矩取峰值最大节点时程的回归测试。
 
-镜像对称双塔的四个塔脚内力等值反号，跨节点求和会精确抵消为 0，
-把真实的单塔截面内力掩盖成"无弯矩"。这里用真实 ANSYS 输出的数量级
-构造同样的镜像结构，锁定新口径。
+剪力按 835--838 四个塔底截面在同一全局轴上求和；弯矩继续锁定已验证的
+单塔截面 SMISC/MMOM 口径，避免镜像双塔弯矩相消。
 """
 
 from __future__ import annotations
@@ -36,7 +35,7 @@ def _mirror_rows(peak: float = 6.2e6, steps: int = 9) -> list[dict[str, float]]:
     return rows
 
 
-def test_mirror_symmetric_towers_no_longer_cancel_to_zero() -> None:
+def test_four_tower_base_section_shears_are_summed() -> None:
     rows = _mirror_rows()
 
     # 求和口径：MZ 跨四个塔脚精确抵消。
@@ -50,7 +49,40 @@ def test_mirror_symmetric_towers_no_longer_cancel_to_zero() -> None:
 
     assert len(resultants) == len(rows)
     assert max(abs(item['tower_base_moment']) for item in resultants) == pytest.approx(6.2e6)
-    assert max(abs(item['tower_base_shear']) for item in resultants) == pytest.approx(4.29e5)
+    peak_shear = max(abs(item['tower_base_shear']) for item in resultants)
+    assert peak_shear == pytest.approx(4 * 4.29e5)
+
+
+def test_four_section_shear_sums_each_axis_before_selecting_envelope() -> None:
+    rows = [
+        {
+            'time': 0.0,
+            'Elem835_FX': 1.0,
+            'Elem836_FX': 2.0,
+            'Elem837_FX': 3.0,
+            'Elem838_FX': 4.0,
+            'Elem835_FY': -1.0,
+            'Elem836_FY': -2.0,
+            'Elem837_FY': -3.0,
+            'Elem838_FY': -4.0,
+        },
+        {
+            'time': 1.0,
+            'Elem835_FX': 11.0,
+            'Elem836_FX': 22.0,
+            'Elem837_FX': 33.0,
+            'Elem838_FX': 44.0,
+            'Elem835_FY': -6.0,
+            'Elem836_FY': -12.0,
+            'Elem837_FY': -18.0,
+            'Elem838_FY': -24.0,
+        },
+    ]
+
+    resultants = _tower_base_section_resultants(rows)
+
+    assert resultants[0]['tower_base_shear'] == 0.0
+    assert resultants[1]['tower_base_shear'] == pytest.approx(100.0)
 
 
 def test_selected_series_is_one_node_history_relative_to_baseline() -> None:

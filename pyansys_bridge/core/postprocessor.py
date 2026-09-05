@@ -1170,7 +1170,32 @@ def _tower_base_section_resultants(
     *,
     baseline_index: int = 0,
 ) -> list[dict[str, float]]:
-    return _tower_base_peak_node_resultants(rows, prefix="Elem", baseline_index=baseline_index)
+    resultants = _tower_base_peak_node_resultants(
+        rows,
+        prefix="Elem",
+        baseline_index=baseline_index,
+    )
+    if not rows:
+        return resultants
+
+    baseline_index = min(max(0, int(baseline_index)), len(rows) - 1)
+    baseline = rows[baseline_index]
+    shear_column_groups = [
+        sorted(
+            column
+            for column in rows[0]
+            if column.startswith("Elem") and column.endswith(f"_{component}")
+        )
+        for component in ("FX", "FY")
+    ]
+    for row, resultant in zip(rows, resultants):
+        axis_sums = [
+            sum(float(row[column]) - float(baseline[column]) for column in columns)
+            for columns in shear_column_groups
+            if columns
+        ]
+        resultant["tower_base_shear"] = _dominant_value(axis_sums) if axis_sums else 0.0
+    return resultants
 
 
 def _tower_base_member_moment_resultants(

@@ -29,6 +29,12 @@ def test_repository_submission_manifest_matches_checked_out_files() -> None:
     )
 
     assert result['fileCount'] == len(result['files'])
+    declared_paths = {item['path'] for item in result['files']}
+    assert {
+        'ansys/user300/README.md',
+        'ansys/user300/eddy_current_userelem.f90',
+        'tools/scripts/build_ansys_user300.py',
+    } <= declared_paths
 
 
 def test_root_verify_submission_entrypoint_re_exports_implementation(monkeypatch: pytest.MonkeyPatch) -> None:

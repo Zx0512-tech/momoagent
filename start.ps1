@@ -10,6 +10,8 @@ if ([string]::IsNullOrWhiteSpace($root)) {
 $backend = Join-Path $root 'momo_agent\backend'
 $venvPython = Join-Path $root '.venv\Scripts\python.exe'
 $runtime = Join-Path $root 'bridge_models\stbridge_opensees\openseespy'
+$jointOperationInput = Join-Path $root 'output\operation_staged_inputs\operation_3600s_dt1_10mps_precombined\operation_wind_traffic_3600s.csv'
+$jointOperationGenerator = Join-Path $root 'tools\scripts\prepare_joint_operation_load.py'
 
 if (-not (Test-Path $venvPython)) {
     throw 'The virtual environment is missing. Run .\install.ps1 first.'
@@ -19,6 +21,12 @@ if (-not (Test-Path (Join-Path $root 'platform-ui\dist\index.html'))) {
 }
 if (-not (Test-Path $runtime)) {
     throw 'The bundled USER300 OpenSeesPy runtime is missing.'
+}
+if (-not (Test-Path $jointOperationInput)) {
+    & $venvPython $jointOperationGenerator
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Failed to generate the required STbridge wind+traffic joint runtime input.'
+    }
 }
 
 # 仅加载经过审核的平台运行配置；未知 MOMO_* 键必须显式告警，不能静默丢弃。
@@ -35,7 +43,8 @@ $allowedNames = @(
     'MOMO_AGENT_RUNTIME',
     'MOMO_AGENT_PERSISTENT_LOOP',
     'MOMO_AGENT_CONTEXT_WINDOW_TOKENS',
-    'MOMO_ANSYS_MAX_CONCURRENT'
+    'MOMO_ANSYS_MAX_CONCURRENT',
+    'MOMO_ANSYS_USER_ELEMENT_PATH'
 )
 if (Test-Path $envFile) {
     foreach ($line in Get-Content -LiteralPath $envFile -Encoding UTF8) {
@@ -52,6 +61,21 @@ if (Test-Path $envFile) {
             Write-Warning "Ignored unsupported .env key: $name"
         }
     }
+}
+
+if (-not [string]::IsNullOrWhiteSpace($env:MOMO_ANSYS_USER_ELEMENT_PATH)) {
+    $configuredUserElementPath = $env:MOMO_ANSYS_USER_ELEMENT_PATH
+    if (-not [IO.Path]::IsPathRooted($configuredUserElementPath)) {
+        $configuredUserElementPath = Join-Path $root $configuredUserElementPath
+    }
+    $userElementPath = [IO.Path]::GetFullPath($configuredUserElementPath)
+    $userElementLibrary = Join-Path $userElementPath 'UserElemLib.dll'
+    if (-not (Test-Path -LiteralPath $userElementLibrary -PathType Leaf)) {
+        throw "ANSYS USER300 runtime is missing: $userElementLibrary"
+    }
+    $env:MOMO_ANSYS_USER_ELEMENT_PATH = $userElementPath
+    $env:ANS_USER_PATH = $userElementPath
+    $env:ANS_USER_PATH_242 = $userElementPath
 }
 
 # start.ps1 是生产 UI 入口；未显式配置时必须进入 LIVE，不能静默降级到 MOCK。

@@ -26,6 +26,7 @@ old = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
 RESCAN_DIRS = (
     "analysis_data",
+    "ansys",
     # 取整个 docs：real_agent_baseline_manifest.json
     # 直接躺在 examples 根下，被 test_real_agent_baseline_manifest.py 当作基线口径
     # 读取，却一直没进提交清单（rglob 会连带覆盖 templates 子目录）。
@@ -42,7 +43,8 @@ RESCAN_DIRS = (
 
 def excluded(rel: str) -> bool:
     return (
-        "/.pytest_cache/" in rel
+        rel.startswith("ansys/build_userelem/")
+        or "/.pytest_cache/" in rel
         or rel.startswith("momo_agent/backend/.pytest_cache/")
         or "/__pycache__/" in rel
         or rel.endswith(".pyc")

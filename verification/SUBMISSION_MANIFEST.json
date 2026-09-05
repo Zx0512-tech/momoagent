@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
   "project": "MOMO Competition Submission",
-  "generatedAt": "2026-09-03T12:48:44.943Z",
-  "fileCount": 574,
-  "totalSizeBytes": 41719056,
+  "generatedAt": "2026-09-05T13:25:46.849Z",
+  "fileCount": 579,
+  "totalSizeBytes": 41745040,
   "files": [
     {
       "path": ".env.example",
-      "sizeBytes": 725,
-      "sha256": "1490ceaa7cbd50308140ff52204cc3aaf734a56bfcfa3f8d8de55c9e7d0ff8b5"
+      "sizeBytes": 873,
+      "sha256": "877ee73e955b21f4166520e21effd5926d4cfeee1bdd05f2e8119ea02895f496"
     },
     {
       "path": ".gitignore",
-      "sizeBytes": 830,
-      "sha256": "8f203941b37e3251fc5bd0ddae75b2f1a9d2601f64f3a2cf730e027a46754ded"
+      "sizeBytes": 852,
+      "sha256": "80c905f3a81968b32b34e19fd8d4f5129f0a1be84d0af64b4bca895ee5359f9d"
     },
     {
       "path": "README.md",
@@ -69,6 +69,16 @@
       "path": "analysis_data/wind_inputs/wind_vertical_8nodes_10mps_3600s.csv",
       "sizeBytes": 431246,
       "sha256": "7ec13c99d9ac602a5beba6e9f3db15ed5538f06f026662874748c160479ba805"
+    },
+    {
+      "path": "ansys/user300/README.md",
+      "sizeBytes": 636,
+      "sha256": "cf6cb9d4d83a765b8ded348551fc57b528d0650453b8328699a2a6ab8946f88a"
+    },
+    {
+      "path": "ansys/user300/eddy_current_userelem.f90",
+      "sizeBytes": 10560,
+      "sha256": "63a758ade158360bdab7059257de7e7e40432dbae110eb8bb5a435fe07568114"
     },
     {
       "path": "bridge_models/stbridge_ansys/PF_reference_output.txt",
@@ -1236,6 +1246,11 @@
       "sha256": "0e372a944907b2080efcd3e564083eb7adbd430a049c4fd68d114b5056bd0808"
     },
     {
+      "path": "momo_agent/backend/tests/test_ansys_user300_runtime.py",
+      "sizeBytes": 1598,
+      "sha256": "461748d907fc29316f50bb991b51078edeb4abdc6a4ff6cf9de1b526a37c5368"
+    },
+    {
       "path": "momo_agent/backend/tests/test_bridge_json_safety.py",
       "sizeBytes": 1619,
       "sha256": "daf272c5e882cee1b7a3929b968b2fa605e1b2d6df649ee7523a59bd8536fa42"
@@ -1432,8 +1447,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_tower_base_peak_node.py",
-      "sizeBytes": 4361,
-      "sha256": "e907eb6af535874d2c327a3f84c611b9b1aaa3e367993a3d25b454f61d2b6924"
+      "sizeBytes": 5213,
+      "sha256": "62f3c078c6ad025633e41605dc26572648bda65aad65fe23508f72f19868b0dd"
     },
     {
       "path": "momo_agent/backend/tests/test_traffic_analysis_agent.py",
@@ -1467,8 +1482,8 @@
     },
     {
       "path": "momo_agent/backend/tests/test_verify_submission.py",
-      "sizeBytes": 3878,
-      "sha256": "1899c64255e5c976a442f4ee1d553b0cb0e2a402ba0ba1b47a3717783065c7c8"
+      "sizeBytes": 4113,
+      "sha256": "8f96edcde55ff721a1b377c071b76e8a33af7d298a8eb71fe3c5a92f271a8959"
     },
     {
       "path": "momo_agent/backend/tests/test_web_app.py",
@@ -2322,8 +2337,8 @@
     },
     {
       "path": "pyansys_bridge/core/ansys_solver.py",
-      "sizeBytes": 10896,
-      "sha256": "aede58e9fa99fad93569986b5a64ab872e6a9227c19bd763cd1f853d41cba17a"
+      "sizeBytes": 12177,
+      "sha256": "dfbc692836d6ddf3852754f1c34aa6b7f9de66e378ca8fd80b7ecb61f6fe138f"
     },
     {
       "path": "pyansys_bridge/core/apdl_validator.py",
@@ -2382,8 +2397,8 @@
     },
     {
       "path": "pyansys_bridge/core/postprocessor.py",
-      "sizeBytes": 60929,
-      "sha256": "9b87e5351a0567601b5e2ad15706731d703d3cfdaae01e82b566e2d3d8aaddfd"
+      "sizeBytes": 61690,
+      "sha256": "ac18ec5300d06d6a019ea8cc3fb46efc656d305ed9f6f763228cfd11e23864e2"
     },
     {
       "path": "pyansys_bridge/core/preprocessor.py",
@@ -2757,18 +2772,23 @@
     },
     {
       "path": "start.ps1",
-      "sizeBytes": 3231,
-      "sha256": "fa10a6af540081568686eccbe8d2a33630ac6a100ebe9e7ac8ccc6336e7e3a47"
+      "sizeBytes": 4450,
+      "sha256": "15ce91e02f8e24ea52884d8f0a20dc791b891fdb6c2ea9df5b75682dea295d7d"
     },
     {
       "path": "tools/rebuild_submission_manifest.py",
-      "sizeBytes": 3585,
-      "sha256": "ada63c12d54798dfac2ae087a9c2cdda9b806a21b5a122c4e2a279b2402b61b4"
+      "sizeBytes": 3649,
+      "sha256": "ae820118d4192763f4212a06d67822ee769c15406e261e15c706f85864ea7f6e"
     },
     {
       "path": "tools/run_configs/openseespy_viscous_c16200_alpha08.json",
       "sizeBytes": 1371,
       "sha256": "e95af8f15d896f38f3f115080bba2ecfd36229edc77e80ff6e040cfbd7107e2d"
+    },
+    {
+      "path": "tools/scripts/build_ansys_user300.py",
+      "sizeBytes": 1914,
+      "sha256": "b3d35e888e1c16687ac9410c407d73b66b45ac6a9ccfe3b9b0d698205a9da1ec"
     },
     {
       "path": "tools/scripts/generate_opensees_user300_calibration.py",
@@ -2779,6 +2799,11 @@
       "path": "tools/scripts/prepare_bundled_traffic_load.py",
       "sizeBytes": 6269,
       "sha256": "0b19f9c13ddb326db99047cfe90d81fbbd1f316f42a3e6b067ddeea7a4bfa52d"
+    },
+    {
+      "path": "tools/scripts/prepare_joint_operation_load.py",
+      "sizeBytes": 6694,
+      "sha256": "c286acbe2fa1eb55d9e34007d247c0a6ef25c94f1cc26af874c816e7171f073f"
     },
     {
       "path": "tools/third_party_sources/opensees_user300/CMakeUserPresets.patch",

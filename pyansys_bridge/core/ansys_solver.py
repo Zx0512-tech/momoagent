@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from pyansys_bridge.core.ansys_damper import (
@@ -10,18 +11,18 @@ from pyansys_bridge.core.ansys_damper import (
     ansys_damper_elements_contract,
     ansys_damper_params_contract,
     ansys_userrc_source,
-    uses_userrc_regularization,
     uses_user300,
-)
-from pyansys_bridge.core.ansys_load_targets import (
-    build_operation_load_targets,
-    operation_load_target_metadata,
+    uses_userrc_regularization,
 )
 from pyansys_bridge.core.ansys_load_rendering import (
     ansys_load_table_commands,
     ansys_solver_execution_commands,
     legacy_vread_rows,
     read_scalar_record_values,
+)
+from pyansys_bridge.core.ansys_load_targets import (
+    build_operation_load_targets,
+    operation_load_target_metadata,
 )
 from pyansys_bridge.core.command_stream_solver import CommandStreamDryRunSolver
 from pyansys_bridge.core.mapdl_manager import MapdlBatchConfig, MapdlBatchManager
@@ -54,6 +55,7 @@ class AnsysSolver(CommandStreamDryRunSolver):
         damper_c_scale: float = ANSYS_DAMPER_C_SCALE,
         interpolate_time_history_tables: bool = False,
         progress_dir: str | Path | None = None,
+        user_element_path: str | Path | None = None,
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
@@ -65,6 +67,7 @@ class AnsysSolver(CommandStreamDryRunSolver):
         self.interpolate_time_history_tables = bool(interpolate_time_history_tables)
         # 只读 ansys.out 探针属于观测配置，不进入指纹和工程归档元数据。
         self.progress_dir = None if progress_dir is None else Path(progress_dir)
+        self.user_element_path = None if user_element_path is None else Path(user_element_path)
         self.mapdl_manager = MapdlBatchManager(
             MapdlBatchConfig.from_options(
                 executable=self.mapdl_executable,
@@ -217,10 +220,37 @@ class AnsysSolver(CommandStreamDryRunSolver):
     def _execution_env(self, case_dir: Path) -> dict[str, str]:
         env = self.mapdl_manager.execution_env(self._workspace_for_case(case_dir))
         if uses_user300(self.damper_module):
-            user_dir = Path(__file__).resolve().parents[2] / "ansys" / "build_userelem"
+            user_dir = self._user_element_directory()
             env["ANS_USER_PATH"] = str(user_dir)
             env["ANS_USER_PATH_242"] = str(user_dir)
         return env
+
+    def _user_element_directory(self) -> Path:
+        configured = self.user_element_path
+        if configured is None:
+            for name in ("MOMO_ANSYS_USER_ELEMENT_PATH", "ANS_USER_PATH_242", "ANS_USER_PATH"):
+                value = os.environ.get(name)
+                if value:
+                    configured = Path(value)
+                    break
+
+        repository_root = Path(__file__).resolve().parents[2]
+        candidates = (
+            (configured,) if configured is not None else (
+                repository_root / "solvers" / "ansys" / "build_userelem",
+                repository_root / "ansys" / "build_userelem",
+            )
+        )
+        for candidate in candidates:
+            resolved = candidate.expanduser().resolve()
+            if (resolved / "UserElemLib.dll").is_file():
+                return resolved
+
+        checked = ", ".join(str(candidate.expanduser().resolve()) for candidate in candidates)
+        raise RuntimeError(
+            "ANSYS USER300 runtime is unavailable: UserElemLib.dll was not found in "
+            f"{checked}. Set MOMO_ANSYS_USER_ELEMENT_PATH to its containing directory."
+        )
 
     def _prepare_execution_files(self, case_dir: Path, context: dict[str, object]) -> None:
         super()._prepare_execution_files(case_dir, context)
